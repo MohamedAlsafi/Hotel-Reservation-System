@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities
+namespace Hotel.Core.Entities.Room
 {
     public class RoomImage : BaseEntity
     {
-        public string ImageUrl { get; set; }  
+        public string ImageUrl { get; set; }
 
         public int RoomId { get; set; }
         public Room Room { get; set; }
