@@ -12,9 +12,7 @@ namespace Hotel.Core.Entities.Room
     public class Room : BaseEntity
     {
 
-        public string RoomNumber { get; set; }
-
-        [Required]
+        public string RoomNumber { get; set; } 
         public RoomType Type { get; set; }
         public FacilityType Facilities { get; set; }
 

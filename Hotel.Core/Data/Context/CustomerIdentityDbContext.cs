@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Context
+namespace Hotel.Core.Data.Context
 {
-    public class CustomerIdentityDbContext :IdentityDbContext
+    public class CustomerIdentityDbContext : IdentityDbContext
     {
-        public CustomerIdentityDbContext(DbContextOptions<CustomerIdentityDbContext> options) :base(options) 
+        public CustomerIdentityDbContext(DbContextOptions<CustomerIdentityDbContext> options) : base(options)
         {
-            
+
         }
     }
 }
