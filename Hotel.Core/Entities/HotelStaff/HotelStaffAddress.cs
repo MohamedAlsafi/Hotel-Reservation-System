@@ -13,4 +13,5 @@ namespace Hotel.Core.Entities.HotelStaff
         public string Country { get; set; }
     
     }
+
 }
