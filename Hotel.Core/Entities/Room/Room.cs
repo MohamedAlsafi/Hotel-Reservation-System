@@ -11,14 +11,12 @@ namespace Hotel.Core.Entities.Room
 {
     public class Room : BaseEntity
     {
-
         public string RoomNumber { get; set; } 
         public RoomType Type { get; set; }
-        public FacilityType Facilities { get; set; }
-
         public decimal Price { get; set; }
 
         public bool IsAvailable { get; set; } = true;
+        public ICollection<RoomFacility> Facilities { get; set; } 
         public ICollection<RoomImage> Images { get; set; }
     }
 }
