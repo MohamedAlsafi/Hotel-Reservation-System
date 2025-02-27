@@ -18,8 +18,13 @@ namespace Hotel.Core.Data.Configuration
             builder.Property(r => r.Type)
                 .HasConversion<string>();
 
-            builder.Property(r => r.Facilities)
-                .HasConversion<string>();
+            builder.Property(r => r.Price)
+             .HasColumnType("decimal(10,2)")
+             .IsRequired();
+
+            builder.HasMany(r => r.Images)
+            .WithOne(img => img.Room)
+            .HasForeignKey(img => img.RoomId);
 
 
         }
