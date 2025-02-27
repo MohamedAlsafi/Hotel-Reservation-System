@@ -20,6 +20,5 @@ namespace Hotel.Core.Entities.Room
 
         public bool IsAvailable { get; set; } = true;
         public ICollection<RoomImage> Images { get; set; }
-
     }
 }
