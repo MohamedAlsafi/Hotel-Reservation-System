@@ -12,8 +12,6 @@ namespace Hotel.Core.Entities.customer
 {
     public class Customer : IdentityUser
     {
-        [Required]
-        public int Id { get; set; }
 
         [Required, StringLength(50)]
         public string FirstName { get; set; }
@@ -23,7 +21,7 @@ namespace Hotel.Core.Entities.customer
 
         [Phone]
         public string PhoneNumber { get; set; } 
-        public Entities.Customer.CustomerAddress Address { get; set; }
+        public CustomerAddress Address { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
