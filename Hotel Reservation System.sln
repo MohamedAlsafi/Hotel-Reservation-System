@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel Reservation System", "Hotel Reservation System\Hotel Reservation System.csproj", "{F8D496E4-8EDF-4832-8000-9ACF15C8384C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel Reservation System", "Hotel Reservation System\Hotel Reservation System.csproj", "{F8D496E4-8EDF-4832-8000-9ACF15C8384C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Core", "Hotel.Core\Hotel.Core.csproj", "{4699F0BF-CE95-42E4-AD8F-FB67E0E02054}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Core", "Hotel.Core\Hotel.Core.csproj", "{4699F0BF-CE95-42E4-AD8F-FB67E0E02054}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Repository", "Hotel.Repository\Hotel.Repository.csproj", "{DCBFD4A8-BE7A-47DC-84CB-B89681193414}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Repository", "Hotel.Repository\Hotel.Repository.csproj", "{DCBFD4A8-BE7A-47DC-84CB-B89681193414}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Service", "Hotel.Service\Hotel.Service.csproj", "{F4C145F5-B11F-4EF4-AD8E-CFFF6EEB5F12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Service", "Hotel.Service\Hotel.Service.csproj", "{F4C145F5-B11F-4EF4-AD8E-CFFF6EEB5F12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

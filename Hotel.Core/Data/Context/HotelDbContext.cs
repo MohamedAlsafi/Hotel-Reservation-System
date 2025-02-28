@@ -1,6 +1,8 @@
-﻿using Hotel.Core.Entities.OfferModel;
-using Hotel.Core.Entities.Room;
+﻿using Hotel.Core.Entities;
+using Hotel.Core.Entities.FeedbackModel;
+using Hotel.Core.Entities.OfferModel;
 using Hotel.Core.Entities.RoomOfferModel;
+using Hotel.Core.Entities.Rooms;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,9 @@ namespace Hotel.Core.Data.Context
         public DbSet<RoomImage> RoomImages { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<RoomOffer> RoomOffers { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options)
         {
 

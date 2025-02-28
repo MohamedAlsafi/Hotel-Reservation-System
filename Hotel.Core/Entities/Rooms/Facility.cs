@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities.Room
+namespace Hotel.Core.Entities.Rooms
 {
     public class Facility : BaseEntity
     {

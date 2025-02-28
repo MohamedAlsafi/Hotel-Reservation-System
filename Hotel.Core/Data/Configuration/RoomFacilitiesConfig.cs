@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.Room;
+﻿using Hotel.Core.Entities.Rooms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hotel.Core.Entities.Enum;
 
-namespace Hotel.Core.Entities.Room
+namespace Hotel.Core.Entities.Rooms
 {
     public class Room : BaseEntity
     {
@@ -16,7 +16,7 @@ namespace Hotel.Core.Entities.Room
         public decimal Price { get; set; }
 
         public bool IsAvailable { get; set; } = true;
-        public ICollection<RoomFacility> Facilities { get; set; } 
-        public ICollection<RoomImage> Images { get; set; }
+        public ICollection<RoomFacility> Facilities { get; set; } = new List<RoomFacility>();
+        public ICollection<RoomImage> Images { get; set; } = new List<RoomImage>();
     }
 }
