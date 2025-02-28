@@ -1,7 +1,6 @@
 ﻿using Hotel.Core.Entities.OfferModel;
-using Hotel.Core.Entities.Rooms;
 
-namespace Hotel.Core.Entities.RoomOfferModel
+namespace Hotel.Core.Entities.Rooms
 {
     public class RoomOffer
     {

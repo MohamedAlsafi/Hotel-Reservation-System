@@ -18,5 +18,8 @@ namespace Hotel.Core.Entities.Rooms
         public bool IsAvailable { get; set; } = true;
         public ICollection<RoomFacility> Facilities { get; set; } = new List<RoomFacility>();
         public ICollection<RoomImage> Images { get; set; } = new List<RoomImage>();
+        public ICollection<RoomStaff> RoomStaff { get; set; } = new HashSet<RoomStaff>();
+       // public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<RoomOffer> Offers { get; set; } = new HashSet<RoomOffer>();
     }
 }

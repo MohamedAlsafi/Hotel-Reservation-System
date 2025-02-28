@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.RoomOfferModel;
+﻿using Hotel.Core.Entities.Rooms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
