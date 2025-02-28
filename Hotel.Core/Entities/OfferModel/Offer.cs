@@ -14,7 +14,6 @@ namespace Hotel.Core.Entities.OfferModel
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal DiscountPercentage { get; set; }
-        public int CreatedBy { get; set; }
         public HotelStaff.HotelStaff? CreatedByStaff { get; set; }
         public ICollection<RoomOffer>? RoomOffers { get; set; } = new List<RoomOffer>();
     }

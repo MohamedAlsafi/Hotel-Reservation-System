@@ -23,7 +23,7 @@ namespace Hotel.Core.Entities.customer
 
         [Phone]
         public string PhoneNumber { get; set; } 
-        public CustomerAddress Address { get; set; }
+        public Entities.Customer.CustomerAddress Address { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
