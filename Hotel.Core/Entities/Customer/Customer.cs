@@ -22,5 +22,7 @@ namespace Hotel.Core.Entities.Customer
         public  CustomerAddress Address { get; set; }
         [EmailAddress]
         public string Email { get; set; }
+
+
     }
 }
