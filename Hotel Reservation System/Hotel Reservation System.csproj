@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Hotel.Repository\Hotel.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
