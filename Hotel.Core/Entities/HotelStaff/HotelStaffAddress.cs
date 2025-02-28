@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.HotelStaff
 {
-    public class HotelStaffAddress:BaseEntity
+    public class HotelStaffAddress
     {
+        public int Id { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string Country { get; set; }

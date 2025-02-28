@@ -1,9 +1,12 @@
 using Hotel.Core.Data.Context;
+using Hotel.Repository.GenericRepository;
+using Hotel.Repository.IGenericRepository;
+using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.Middleware;
+using Hotel_Reservation_System.Profiles;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -18,20 +21,24 @@ namespace Hotel_Reservation_System
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-           
-            #region ApiValidathionErrorr
+
+            builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
+           options.UseSqlServer(builder.Configuration.GetConnectionString("CustomerIdentity")));
+
+            #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>
                {
                    opthion.InvalidModelStateResponseFactory = (actionContext) =>
                    {
-                       var errors = actionContext.ModelState.Where(o => o.Value.Errors.Count() > 0)
+                       var errors = actionContext.ModelState.Where(o => o.Value?.Errors.Count() > 0)
                                                             .SelectMany(o => o.Value.Errors)
                                                             .Select(e => e.ErrorMessage)
                                                             .ToList();
-
-
                        var response = new ApiValidationError()
                        {
                            Errors = errors

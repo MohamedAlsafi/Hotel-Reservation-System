@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Hotel.Core.Entities.Room;
+using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.Dtos.Room;
 using Microsoft.IdentityModel.Tokens;
 using System;
