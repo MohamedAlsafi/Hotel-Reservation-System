@@ -2,11 +2,11 @@
 {
     public class ApiExcaptionResponse : ApiResponse
     {
-        public string? Detailes { get; set; }
+        public string? Details { get; set; }
 
-        public ApiExcaptionResponse(int statuscode, string massege=null, string detailes=null ):base(statuscode,massege)
+        public ApiExcaptionResponse(int statuscode, string message = null, string details=null ):base(statuscode,message)
         {
-            Detailes = detailes;
+            Details = details;
              
         }
     }

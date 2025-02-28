@@ -1,12 +1,12 @@
 ﻿namespace Hotel_Reservation_System.Error
 {
-    public class ApiValidathionErrorr : ApiResponse
+    public class ApiValidationError : ApiResponse
     {
 
         public IEnumerable<string> Errors { get; set; }
 
-        public ApiValidathionErrorr():base (400)
-        {
+        public ApiValidationError():base (400)
+        { 
              Errors = new List<string>();
         }
     }

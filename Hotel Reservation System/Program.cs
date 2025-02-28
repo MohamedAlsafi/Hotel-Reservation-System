@@ -32,7 +32,7 @@ namespace Hotel_Reservation_System
                                                             .ToList();
 
 
-                       var response = new ApiValidathionErrorr()
+                       var response = new ApiValidationError()
                        {
                            Errors = errors
                        };

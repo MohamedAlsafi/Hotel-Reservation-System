@@ -13,7 +13,7 @@ namespace Hotel.Repository.Dtos.Room
         public RoomType Type { get; set; } = RoomType.Single;
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
-        public List<int> FacilityIds { get; set; }  
-        public List<string> ImageUrls { get; set; }
+        public List<int> FacilityIds { get; set; }   = new List<int>();
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }
