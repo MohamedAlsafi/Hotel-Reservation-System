@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Hotel.Repository.Dtos.Room
 {
-    public class RoomResponseDTO
+    public class RoomDTO
     {
-        public int Id { get; set; }
-        public string RoomNumber { get; set; } = string.Empty;
+        public string RoomNumber { get; set; }
         public RoomType Type { get; set; } = RoomType.Single;
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
-        public List<string> Facilities { get; set; } = new List<string>();
-        public List<string> ImageUrls { get; set; } = new List<string>();
+        public List<int> FacilityIds { get; set; }   = new List<int>();
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace Hotel.Core.Entities.FeedbackModel
 {
-    public class Feedback
+    public class Feedback : BaseEntity
     {
         public int FeedbackId { get; set; }
         public int CustomerId { get; set; }
