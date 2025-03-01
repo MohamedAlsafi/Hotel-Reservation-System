@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
 using Hotel.Core.Entities.Rooms;
-using Hotel.Core.Helpers;
 using Hotel.Repository.Dtos.Room;
 
-namespace Hotel_Reservation_System.Profiles
+namespace Hotel.Core.Profiles
 {
-    public class MappingProfile:Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-             CreateMap<RoomImage , RoomDTO>().ForMember(R=>R.ImageUrl , options=>options.MapFrom<PictureUrlResolver>());
+           // CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
             CreateMap<RoomDTO, Room>()
              .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore())
              .ForMember(dest => dest.Images, opt => opt.Ignore());
