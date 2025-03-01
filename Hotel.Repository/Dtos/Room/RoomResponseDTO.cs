@@ -15,6 +15,6 @@ namespace Hotel.Repository.Dtos.Room
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         public List<string> Facilities { get; set; } = new List<string>();
-        public string ImageUrl { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new List<string>();
     }
 }
