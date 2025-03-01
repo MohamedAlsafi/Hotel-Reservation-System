@@ -25,7 +25,6 @@ namespace Hotel.Core.Data.Context
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<HotelStaff> HotelStaffs { get; set; }
-        public DbSet<Customer> Customers { get; set; }
         public DbSet<RoomStaff> RoomStaffs { get; set; }
 
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options)
@@ -45,6 +44,9 @@ namespace Hotel.Core.Data.Context
                     fk.DeleteBehavior = DeleteBehavior.NoAction;
                 }
             }
+
+            modelBuilder.Entity<RoomOffer>().HasKey(s => new {s.OfferId , s.RoomId});
+            modelBuilder.Entity<RoomStaff>().HasKey(s => new { s.StaffId, s.RoomId });
         }
 
     }

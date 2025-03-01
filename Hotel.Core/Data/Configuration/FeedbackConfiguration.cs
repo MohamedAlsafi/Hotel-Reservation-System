@@ -15,7 +15,7 @@ namespace Hotel.Core.Data.Configuration
         {
             builder.ToTable("Feedbacks");
 
-            builder.HasKey(f => f.Id);
+            builder.HasKey(f => f.FeedbackId);
 
             builder.Property(f => f.Comment)
                 .HasMaxLength(500)
