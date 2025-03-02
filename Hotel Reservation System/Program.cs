@@ -1,10 +1,12 @@
 using Hotel.Core.Data.Context;
+using Hotel.Core.Profiles;
 using Hotel.Repository.GenericRepository;
 using Hotel.Repository.IGenericRepository;
+using Hotel.Repository.Services.RoomService;
 using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.Middleware;
-using Hotel_Reservation_System.Profiles;
+using Hotel_Reservation_System.ProfilesVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace Hotel_Reservation_System
@@ -23,7 +25,9 @@ namespace Hotel_Reservation_System
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            builder.Services.AddScoped<IRoomServices, RoomService>();
+
+            builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

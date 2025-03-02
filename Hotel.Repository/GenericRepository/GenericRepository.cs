@@ -103,5 +103,9 @@ namespace Hotel.Repository.GenericRepository
 
         }
 
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
     }
 }

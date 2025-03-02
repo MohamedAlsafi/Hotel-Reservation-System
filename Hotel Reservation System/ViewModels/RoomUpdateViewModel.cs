@@ -1,16 +1,8 @@
-﻿using Hotel.Core.Entities.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Core.Dtos.Room
+﻿namespace Hotel_Reservation_System.ViewModels
 {
-    public class RoomDTO
+    public class RoomUpdateViewModel
     {
         public string RoomNumber { get; set; }
-        public RoomType Type { get; set; } = RoomType.Single;
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         public List<int> FacilityIds { get; set; } = new List<int>();

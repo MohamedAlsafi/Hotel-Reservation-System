@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.Rooms
 {
-    public class RoomFacility 
+    public class RoomFacility : BaseEntity
     {
         public int RoomId { get; set; }
         public Room Room { get; set; }

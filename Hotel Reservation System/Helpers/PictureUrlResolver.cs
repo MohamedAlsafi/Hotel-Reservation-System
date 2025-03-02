@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Hotel.Core.Dtos.Room;
 using Hotel.Core.Entities.Rooms;
-using Hotel.Repository.Dtos.Room;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RoomDTO = Hotel.Core.Dtos.Room.RoomDTO;
 
 namespace Hotel.Core.Helpers
 {

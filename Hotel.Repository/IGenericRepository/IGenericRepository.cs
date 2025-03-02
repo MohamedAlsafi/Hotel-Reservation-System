@@ -20,5 +20,6 @@ namespace Hotel.Repository.IGenericRepository
         public void HardDelete(T item);
         public void UpdateInclude(T entity, params string[] modifiedProperties);
         public void UpdateExclude(T entity, params string[] unmodifiedProperties);
+        Task AddRangeAsync(IEnumerable<T> entities);
     }
 }

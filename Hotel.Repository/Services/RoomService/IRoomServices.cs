@@ -1,11 +1,11 @@
-﻿using Hotel.Repository.Dtos.Room;
+﻿using Hotel.Core.Dtos.Room;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Repository.Services.Room
+namespace Hotel.Repository.Services.RoomService
 {
     public interface IRoomServices
     {
