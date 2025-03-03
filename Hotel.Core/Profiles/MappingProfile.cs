@@ -14,11 +14,11 @@ namespace Hotel.Core.Profiles
              .ForMember(dest => dest.Images, opt => opt.Ignore());
 
             CreateMap<Room, RoomResponseDTO>()
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
-                .ForMember(dest => dest.Facilities, opt => opt.MapFrom(src => src.RoomFacilities.Select(rf => rf.Facility.Name)))
-                .ForMember(dest => dest.ImageUrls, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()));
+     .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
+     .ForMember(dest => dest.Facilities, opt => opt.MapFrom(src => src.RoomFacilities.Select(rf => rf.Facility.Name)))
+     .ForMember(dest => dest.ImageUrls, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()));
 
-            
+
         }
     }
 }
