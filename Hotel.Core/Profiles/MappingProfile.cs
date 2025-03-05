@@ -8,7 +8,7 @@ namespace Hotel.Core.Profiles
     {
         public DomainMappingProfile()
         {
-        //  CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
+          //  CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
             CreateMap<RoomDTO, Room>()
              .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore())
              .ForMember(dest => dest.Images, opt => opt.Ignore());

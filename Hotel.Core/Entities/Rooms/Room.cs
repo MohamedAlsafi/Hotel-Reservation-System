@@ -14,7 +14,6 @@ namespace Hotel.Core.Entities.Rooms
         public string RoomNumber { get; set; } 
         public RoomType Type { get; set; }
         public decimal Price { get; set; }
-
         public bool IsAvailable { get; set; } = true;
         public ICollection<RoomFacility> RoomFacilities { get; set; } = new List<RoomFacility>();
         public ICollection<RoomImage> Images { get; set; } = new List<RoomImage>();

@@ -30,9 +30,10 @@ namespace Hotel_Reservation_System
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("CustomerIdentity")));
+           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
             #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>

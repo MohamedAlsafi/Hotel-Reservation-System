@@ -154,12 +154,17 @@ namespace Hotel.Core.Data.Migrations
                 name: "RoomFacilities",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoomId = table.Column<int>(type: "int", nullable: false),
-                    FacilityId = table.Column<int>(type: "int", nullable: false)
+                    FacilityId = table.Column<int>(type: "int", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomFacilities", x => new { x.RoomId, x.FacilityId });
+                    table.PrimaryKey("PK_RoomFacilities", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RoomFacilities_Facilities_FacilityId",
                         column: x => x.FacilityId,
@@ -249,7 +254,10 @@ namespace Hotel.Core.Data.Migrations
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId1 = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    CustomerId1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -296,6 +304,11 @@ namespace Hotel.Core.Data.Migrations
                 name: "IX_RoomFacilities_FacilityId",
                 table: "RoomFacilities",
                 column: "FacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomFacilities_RoomId",
+                table: "RoomFacilities",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomImages_RoomId",

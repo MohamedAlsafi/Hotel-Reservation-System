@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hotel.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class IdentityWithHotelDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
