@@ -23,11 +23,10 @@ namespace Hotel.Repository.Services.RoomService
         }
         public async Task<RoomResponseDTO> AddRoomAsync(RoomDTO roomDTO)
         {
-            
             var room = _mapper.Map<Room>(roomDTO);
 
             await _unitOfWork.Repository<Room>().AddAsync(room);
-            await _unitOfWork.CompleteAsync(); 
+            await _unitOfWork.CompleteAsync();
 
             if (roomDTO.FacilityIds != null && roomDTO.FacilityIds.Any())
             {
@@ -40,45 +39,53 @@ namespace Hotel.Repository.Services.RoomService
                     .Select(fid => new RoomFacility { RoomId = room.Id, FacilityId = fid })
                     .ToList();
 
-                 await _unitOfWork.Repository<RoomFacility>().AddRangeAsync(roomFacilities);
-               
-
+                await _unitOfWork.Repository<RoomFacility>().AddRangeAsync(roomFacilities);
+                await _unitOfWork.CompleteAsync();
             }
 
             if (!string.IsNullOrEmpty(roomDTO.ImageUrl))
             {
                 var roomImages = new List<RoomImage> { new RoomImage { RoomId = room.Id, ImageUrl = roomDTO.ImageUrl } };
                 await _unitOfWork.Repository<RoomImage>().AddRangeAsync(roomImages);
+                await _unitOfWork.CompleteAsync();
             }
 
-            await _unitOfWork.CompleteAsync();
+            var addedRoom = await SelectRoomDto(_unitOfWork.Repository<Room>()
+                .GetAllByCriteria(r => r.Id == room.Id))
+                .FirstOrDefaultAsync();
 
-            return _mapper.Map<RoomResponseDTO>(room);
+            return addedRoom;
         }
+
 
         public async Task<RoomResponseDTO> GetRoomByIdAsync(int id)
         {
-            var room = await GetRoomEntityByIdAsync(id);
-            if (room is  null)
-                return null;
+            var roomDto = await SelectRoomDto(_unitOfWork.Repository<Room>()
+                .GetAllByCriteria(r => r.Id == id))
+                .FirstOrDefaultAsync();
 
-            return _mapper.Map<RoomResponseDTO>(room);
+            return roomDto;
         }
+
+
+
+        public async Task<List<RoomResponseDTO>> GetAvailableRoomsAsync()
+        {
+            var roomsDto = await SelectRoomDto(_unitOfWork.Repository<Room>()
+                .GetAllByCriteria(r => r.IsAvailable))
+                .ToListAsync();
+
+            return roomsDto;
+        }
+
         public async Task<bool> DeleteRoomAsync(int id)
         {
-            var room = await GetRoomEntityByIdAsync(id); 
+            var room = await GetRoomEntityByIdAsync(id);
             if (room == null) return false;
 
             _unitOfWork.Repository<Room>().SoftDelete(room);
             await _unitOfWork.CompleteAsync();
             return true;
-        }
-
-        public async Task<List<RoomResponseDTO>> GetAvailableRoomsAsync()
-        {
-            var rooms = await _unitOfWork.Repository<Room>()
-            .GetAllByCriteria(r => r.IsAvailable).ToListAsync();
-            return _mapper.Map<List<RoomResponseDTO>>(rooms);
         }
 
 
@@ -114,6 +121,20 @@ namespace Hotel.Repository.Services.RoomService
             return await _unitOfWork.Repository<Room>().GetByIdAsync(id);
         }
 
-        
+        private IQueryable<RoomResponseDTO> SelectRoomDto(IQueryable<Room> query)
+        {
+            return query.Select(r => new RoomResponseDTO
+            {
+                Id = r.Id,
+                RoomNumber = r.RoomNumber,
+                Type = r.Type,
+                Price = r.Price,
+                IsAvailable = r.IsAvailable,
+                Facilities = r.RoomFacilities.Select(rf => rf.Facility.Name).ToList(),
+                ImageUrls = r.Images.Select(img => img.ImageUrl).ToList()  
+            });
+        }
+
+
     }
 }

@@ -1,8 +1,8 @@
-﻿using Hotel.Core.Entities;
-using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.HotelStaff;
 using Hotel.Core.Entities.OfferModel;
+using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
 using Microsoft.EntityFrameworkCore;
 using System;

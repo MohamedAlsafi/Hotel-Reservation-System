@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities
+namespace Hotel.Core.Entities.Reservation
 {
-    public class Reservation:BaseEntity
+    public class Reservation : BaseEntity
     {
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }

@@ -13,48 +13,108 @@ namespace Hotel_Reservation_System.Controllers
         private readonly IRoomServices _roomServices;
         private readonly IMapper _mapper;
 
-        public RoomController( IRoomServices roomServices , IMapper mapper)
+        public RoomController(IRoomServices roomServices, IMapper mapper)
         {
             _roomServices = roomServices;
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<List<RoomResponseViewModel>> GetAllRooms()
+        public async Task<ActionResult<List<RoomResponseViewModel>>> GetAllRooms()
         {
-            var rooms = await _roomServices.GetAvailableRoomsAsync();
-            return _mapper.Map<List<RoomResponseViewModel>>(rooms);
+            try
+            {
+                var rooms = await _roomServices.GetAvailableRoomsAsync();
+                return Ok(_mapper.Map<List<RoomResponseViewModel>>(rooms));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<RoomResponseViewModel> GetRoomById(int id)
+        public async Task<ActionResult<RoomResponseViewModel>> GetRoomById(int id)
         {
-            var room = await _roomServices.GetRoomByIdAsync(id);
-            return _mapper.Map<RoomResponseViewModel>(room);
+            if (id <= 0)
+                return BadRequest("Invalid room ID.");
+
+            try
+            {
+                var room = await _roomServices.GetRoomByIdAsync(id);
+                if (room == null)
+                    return NotFound($"Room with ID {id} not found.");
+
+                return Ok(_mapper.Map<RoomResponseViewModel>(room));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public async Task<RoomResponseViewModel> AddRoom([FromBody] RoomCreateViewModel roomVM)
+        public async Task<ActionResult<RoomResponseViewModel>> AddRoom([FromBody] RoomCreateViewModel roomVM)
         {
-            var roomDTO = _mapper.Map<RoomDTO>(roomVM);
-            var newRoom = await _roomServices.AddRoomAsync(roomDTO);
-            return _mapper.Map<RoomResponseViewModel>(newRoom);
+            if (roomVM == null)
+                return BadRequest("Room data is required.");
+
+            try
+            {
+                var roomDTO = _mapper.Map<RoomDTO>(roomVM);
+                var newRoom = await _roomServices.AddRoomAsync(roomDTO);
+                return CreatedAtAction(nameof(GetRoomById), new { id = newRoom.Id }, _mapper.Map<RoomResponseViewModel>(newRoom));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
-        
         [HttpPut("{id}")]
-        public async Task<RoomResponseViewModel> UpdateRoom(int id, [FromBody] RoomUpdateViewModel roomVM)
+        public async Task<ActionResult<RoomResponseViewModel>> UpdateRoom(int id, [FromBody] RoomUpdateViewModel roomVM)
         {
-            var roomDTO = _mapper.Map<RoomDTO>(roomVM);
-            var updatedRoom = await _roomServices.UpdateRoomAsync(id, roomDTO);
-            return _mapper.Map<RoomResponseViewModel>(updatedRoom);
+            if (id <= 0)
+                return BadRequest("Invalid room ID.");
+
+            if (roomVM == null)
+                return BadRequest("Room data is required.");
+
+            try
+            {
+                var roomDTO = _mapper.Map<RoomDTO>(roomVM);
+                var updatedRoom = await _roomServices.UpdateRoomAsync(id, roomDTO);
+
+                if (updatedRoom == null)
+                    return NotFound($"Room with ID {id} not found.");
+
+                return Ok(_mapper.Map<RoomResponseViewModel>(updatedRoom));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
-        
         [HttpDelete("{id}")]
-        public async Task<bool> DeleteRoom(int id)
+        public async Task<ActionResult<bool>> DeleteRoom(int id)
         {
-            return await _roomServices.DeleteRoomAsync(id);
-        }
+            if (id <= 0)
+                return BadRequest("Invalid room ID.");
 
+            try
+            {
+                var isDeleted = await _roomServices.DeleteRoomAsync(id);
+
+                if (!isDeleted)
+                    return NotFound($"Room with ID {id} not found.");
+
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
     }
+
 }

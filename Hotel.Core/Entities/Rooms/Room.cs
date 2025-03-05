@@ -18,7 +18,7 @@ namespace Hotel.Core.Entities.Rooms
         public ICollection<RoomFacility> RoomFacilities { get; set; } = new List<RoomFacility>();
         public ICollection<RoomImage> Images { get; set; } = new List<RoomImage>();
         public ICollection<RoomStaff> RoomStaff { get; set; } = new HashSet<RoomStaff>();
-        public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
+        public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
         public ICollection<RoomOffer> Offers { get; set; } = new HashSet<RoomOffer>();
     }
 }

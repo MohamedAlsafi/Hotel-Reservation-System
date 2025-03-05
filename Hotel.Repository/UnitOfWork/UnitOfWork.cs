@@ -2,6 +2,7 @@
 using Hotel.Core.Entities;
 using Hotel.Repository.GenericRepository;
 using Hotel.Repository.IGenericRepository;
+using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -37,6 +38,10 @@ namespace Hotel.Repository.UnitOfWork
 
             }
             return _repositories[type] as IGenericRepository<TEntity>;
+        }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
