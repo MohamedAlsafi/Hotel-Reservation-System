@@ -12,6 +12,6 @@ namespace Hotel.Core.Entities.FeedbackModel
         public string? Comment { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Customer Customer { get; set; }
-        public Reservation Reservation { get; set; }
+        public Reservation.Reservation Reservation { get; set; }
     }
 }

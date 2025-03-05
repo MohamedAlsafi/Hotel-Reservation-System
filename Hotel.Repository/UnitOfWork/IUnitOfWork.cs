@@ -12,6 +12,8 @@ namespace Hotel.Repository.UnitOfWork
     {
        public Task<int> CompleteAsync();
        public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
+       public Task<int> SaveChangesAsync();
+
     }
-    
+
 }
