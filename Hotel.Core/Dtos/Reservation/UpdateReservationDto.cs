@@ -12,5 +12,6 @@ namespace Hotel.Core.Dtos.Reservation
         public DateTime CheckOutDate { get; set; }
         public int RoomId { get; set; }  
         public string? PaymenyIntentId { get; set; }
+        public int GuestId { get; set; }
     }
 }

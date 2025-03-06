@@ -39,6 +39,10 @@ namespace Hotel.Repository.UnitOfWork
             }
             return _repositories[type] as IGenericRepository<TEntity>;
         }
-       
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

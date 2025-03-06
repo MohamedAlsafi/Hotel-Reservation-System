@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
+using Hotel.Repository.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Repository.Services.ReservationService
@@ -10,71 +12,70 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ReservationService(IUnitOfWork unitOfWork,IMapper mapper)
+
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
-        {
-            var reservations = await _unitOfWork.Repository<Reservation>().GetAll().ToListAsync();
-            return _mapper.Map<IEnumerable<ReservationDto>>(reservations);
-        }
-
-        public async Task<ReservationDto> GetReservationByIdAsync(int id)
-        {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            return reservation == null ? null : _mapper.Map<ReservationDto>(reservation);
-        }
-
-        public async Task<ReservationDto> CreateReservationAsync(CreateReservationDto reservationDto)
+        public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
             await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
-            await _unitOfWork.CompleteAsync();
-            return _mapper.Map<ReservationDto>(reservation);
+            await _unitOfWork.SaveChangesAsync();
+            var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
+            return new ApiResponse<ReservationViewModel>(true, "Reservation created successfully", reservationViewModel);
         }
 
-        public async Task<bool> UpdateReservationAsync(int id, ReservationDto reservationDto)
+        public async Task<ApiResponse<bool>> CancelReservationAsync(int id)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null) return false;
+            if (reservation == null)
+                return new ApiResponse<bool>(false, "Reservation not found", false);
+
+            _unitOfWork.Repository<Reservation>().SoftDelete(reservation);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResponse<bool>(true, "Reservation cancelled successfully", true);
+        }
+
+        public async Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync(int id)
+        {
+            var reservations = await _unitOfWork.Repository<Reservation>().GetAllAsync();
+            var reservation = reservations.FirstOrDefault(r => r.Id == id );
+
+
+            var reservationViewModels = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
+            return new ApiResponse<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationViewModels);
+        }
+
+        public async Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id)
+        {
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+            if (reservation == null)
+                return new ApiResponse<ReservationViewModel>(false, "Reservation not found", null);
+
+            var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
+            return new ApiResponse<ReservationViewModel>(true, "Reservation retrieved successfully", reservationViewModel);
+        }
+
+        public async Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
+        {
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+            if (reservation == null)
+                return new ApiResponse<bool>(false, "Reservation not found", false);
 
             _mapper.Map(reservationDto, reservation);
-            _unitOfWork.Repository<Reservation>().UpdateInclude(reservation, nameof(Reservation.CheckInDate), nameof(Reservation.CheckOutDate));
-            await _unitOfWork.CompleteAsync();
-            return true;
+            _unitOfWork.Repository<Reservation>().UpdateInclude(reservation);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResponse<bool>(true, "Reservation updated successfully", true);
         }
-
-        public async Task<bool> CancelReservationAsync(int id)
+        public async Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync()
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null) return false;
+            var reservations = await _unitOfWork.Repository<Reservation>().GetAllAsync();
+            var reservationViewModels = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
 
-            _unitOfWork.Repository<Reservation>().SoftDelete(reservation);
-            await _unitOfWork.CompleteAsync();
-            return true;
+            return new ApiResponse<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationViewModels);
         }
-        public async Task<Reservation> AddReservationAsync(ReservationDto Reservation)
-        {
-             var mappedReservation= _mapper.Map<Reservation>(Reservation);
-            await _unitOfWork.Repository<Reservation>().AddAsync(mappedReservation);
-            await _unitOfWork.CompleteAsync();
-        
-            return mappedReservation;
-        }
-        public async Task<bool> DeleteReservationAsync(int id)
-        {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null) return false;
-
-            _unitOfWork.Repository<Reservation>().SoftDelete(reservation);
-            await _unitOfWork.CompleteAsync();
-            return true;
-        }
-
- 
-      
     }
 }

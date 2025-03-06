@@ -11,7 +11,9 @@ namespace Hotel.Repository.IGenericRepository
     public interface IGenericRepository<T> where T : BaseEntity
     {
         public IQueryable<T> GetAll();
-        
+        Task<List<T>> GetAllAsync();
+
+
         public Task<T> GetByIdAsync(int id);
         public IQueryable<T> GetAllByCriteria(Expression<Func<T, bool>> criteria);
         public Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> criteria);

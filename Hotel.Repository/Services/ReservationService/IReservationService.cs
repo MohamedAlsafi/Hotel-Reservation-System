@@ -1,17 +1,17 @@
-﻿using Hotel.Core.Dtos.Reservation;
+﻿using Hotel.Core.Data.Configuration;
+using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
+using Hotel.Repository.ViewModels;
 
 namespace Hotel.Repository.Services.ReservationService
 {
     public interface IReservationService
     {
-        
-        Task<IEnumerable<ReservationDto>> GetAllReservationsAsync();
-        Task<Reservation> AddReservationAsync(ReservationDto reservation);
-        Task<ReservationDto> GetReservationByIdAsync(int id);
-        Task<ReservationDto> CreateReservationAsync(CreateReservationDto reservationDto);
-        Task<bool> UpdateReservationAsync(int id, ReservationDto reservationDto);
-        Task<bool> CancelReservationAsync(int id);
-        Task<bool> DeleteReservationAsync(int id);
+
+        Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto);
+        Task<ApiResponse<bool>> CancelReservationAsync(int id);
+        Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync();
+        Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id);
+        Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
     }
 }

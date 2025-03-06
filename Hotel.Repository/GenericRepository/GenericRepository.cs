@@ -23,7 +23,10 @@ namespace Hotel.Repository.GenericRepository
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<List<T>> GetAllAsync()
+        {
+            return await _dbSet.ToListAsync();  
+        }
         public IQueryable<T> GetAll()
         => _dbSet.Where(c => !c.Deleted);
 
