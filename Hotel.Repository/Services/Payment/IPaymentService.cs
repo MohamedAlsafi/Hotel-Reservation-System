@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Hotel.Core.Dtos.Reservation;
+using Hotel.Core.Entities.Reservation;
+using Hotel_Reservation_System.ViewModels;
+using System;
+
 
 namespace Hotel.Repository.Services.Payment
 {
     public interface IPaymentService
     {
-        Task<bool> MakePaymentAsync();
+        Task<ReservationDto> MakePaymentAsync(int customerId,int ReservationId);
          
     }
 }

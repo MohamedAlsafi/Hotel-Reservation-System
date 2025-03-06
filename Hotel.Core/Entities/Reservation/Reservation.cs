@@ -19,8 +19,11 @@ namespace Hotel.Core.Entities.Reservation
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public decimal TotalPrice { get; set; }
+
+        public decimal Discount { get; set; } = 0;
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public Feedback Feedback { get; set; }
+        public string? PaymentIntentId { get; set; }
 
     }
 }

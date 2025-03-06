@@ -10,7 +10,7 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ReservationService( IUnitOfWork unitOfWork, IMapper mapper)
+        public ReservationService(IUnitOfWork unitOfWork,IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -36,7 +36,7 @@ namespace Hotel.Repository.Services.ReservationService
             return _mapper.Map<ReservationDto>(reservation);
         }
 
-        public async Task<bool> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
+        public async Task<bool> UpdateReservationAsync(int id, ReservationDto reservationDto)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return false;
@@ -56,11 +56,13 @@ namespace Hotel.Repository.Services.ReservationService
             await _unitOfWork.CompleteAsync();
             return true;
         }
-        public async Task<Reservation> AddReservationAsync(Reservation reservation)
+        public async Task<Reservation> AddReservationAsync(ReservationDto Reservation)
         {
-            await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
+             var mappedReservation= _mapper.Map<Reservation>(Reservation);
+            await _unitOfWork.Repository<Reservation>().AddAsync(mappedReservation);
             await _unitOfWork.CompleteAsync();
-            return reservation;
+        
+            return mappedReservation;
         }
         public async Task<bool> DeleteReservationAsync(int id)
         {
@@ -72,9 +74,7 @@ namespace Hotel.Repository.Services.ReservationService
             return true;
         }
 
-        //public Task<ReservationDto> GetReservationWithCustomerAsync(CustomerViewModel customer)
-        //{
-        //    _unitOfWork.Repository<Reservation>().GetAllByCriteria(c => c.Customer.NormalizedUserName );
-        //}
+ 
+      
     }
 }

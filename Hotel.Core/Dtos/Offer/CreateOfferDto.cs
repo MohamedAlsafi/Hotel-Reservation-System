@@ -12,6 +12,6 @@ namespace Hotel.Core.Dtos.Offer
         public decimal Discount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<int> AssignedRoomIds { get; set; } = new();
+        public List<int> AssignedRoomIds { get; set; } = new List<int>();
     }
 }

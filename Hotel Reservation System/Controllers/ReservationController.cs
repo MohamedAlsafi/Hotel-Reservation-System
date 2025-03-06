@@ -23,7 +23,8 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<IActionResult> CreateReservation([FromBody] CreateReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
-            await _reservationService.AddReservationAsync(reservation);
+            var MappedReservation= _mapper.Map<ReservationDto>(reservation);
+            await _reservationService.AddReservationAsync(MappedReservation);
             return CreatedAtAction(nameof(GetReservationById), new { id = reservation.Id }, _mapper.Map<ReservationDto>(reservation));
         }
 
@@ -36,7 +37,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
+        public async Task<IActionResult> UpdateReservation(int id, [FromBody] ReservationDto reservationDto)
         {
             if (reservationDto == null) return BadRequest("Invalid reservation data.");
 

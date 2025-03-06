@@ -7,12 +7,11 @@ namespace Hotel.Repository.Services.ReservationService
     {
         
         Task<IEnumerable<ReservationDto>> GetAllReservationsAsync();
-        Task<Reservation> AddReservationAsync(Reservation reservation);
+        Task<Reservation> AddReservationAsync(ReservationDto reservation);
         Task<ReservationDto> GetReservationByIdAsync(int id);
         Task<ReservationDto> CreateReservationAsync(CreateReservationDto reservationDto);
-        Task<bool> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
+        Task<bool> UpdateReservationAsync(int id, ReservationDto reservationDto);
         Task<bool> CancelReservationAsync(int id);
         Task<bool> DeleteReservationAsync(int id);
-        Task<ReservationDto> GetReservationWithCustomerAsync(CustomerViewModel customer);
     }
 }

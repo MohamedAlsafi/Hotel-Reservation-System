@@ -2,6 +2,10 @@ using Hotel.Core.Data.Context;
 using Hotel.Core.Profiles;
 using Hotel.Repository.GenericRepository;
 using Hotel.Repository.IGenericRepository;
+using Hotel.Repository.Services.OfferService;
+using Hotel.Repository.Services.OfferService.JWT_Token;
+using Hotel.Repository.Services.Payment;
+using Hotel.Repository.Services.ReservationService;
 using Hotel.Repository.Services.RoomService;
 using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
@@ -26,6 +30,10 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IRoomServices, RoomService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IOfferService, OfferService>();
+            builder.Services.AddScoped<IReservationService, ReservationService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();  
 
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
