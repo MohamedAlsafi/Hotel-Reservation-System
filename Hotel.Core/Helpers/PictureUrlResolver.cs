@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Room;
 using Hotel.Core.Entities.Rooms;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;

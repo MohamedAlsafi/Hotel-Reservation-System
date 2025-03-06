@@ -5,14 +5,15 @@ using Hotel.Core.Dtos.Room;
 using Hotel.Core.Entities.OfferModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
+using Hotel.Core.Helpers;
 
 namespace Hotel.Core.Profiles
 {
-    public class DomainMappingProfile   : Profile
+    public class DomainMappingProfile : Profile
     {
         public DomainMappingProfile()
         {
-          //  CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
+           CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
             CreateMap<RoomDTO, Room>()
              .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore())
              .ForMember(dest => dest.Images, opt => opt.Ignore());
@@ -26,6 +27,7 @@ namespace Hotel.Core.Profiles
             CreateMap<Offer, CreateOfferDto>().ReverseMap();
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Reservation, CreateReservationDto>().ReverseMap();
+            CreateMap<Reservation, ReservationDto>().ReverseMap();
         }
     }
 }
