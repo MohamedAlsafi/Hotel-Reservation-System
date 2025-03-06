@@ -13,7 +13,7 @@ namespace Hotel_Reservation_System.Controllers
         private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
 
-        public ReservationController(IReservationService reservationService, IMapper mapper)
+        public ReservationController(IReservationService reservationService, IMapper mapper )
         {
             _reservationService = reservationService;
             _mapper = mapper;
