@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hotel.Core.Dtos.Reservation;
+﻿using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 
 namespace Hotel.Repository.Services.ReservationService
@@ -18,5 +13,6 @@ namespace Hotel.Repository.Services.ReservationService
         Task<bool> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
         Task<bool> CancelReservationAsync(int id);
         Task<bool> DeleteReservationAsync(int id);
+        Task<ReservationDto> GetReservationWithCustomerAsync(CustomerViewModel customer);
     }
 }

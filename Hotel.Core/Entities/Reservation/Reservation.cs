@@ -1,4 +1,5 @@
 ﻿using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Rooms;
 using System;
@@ -18,7 +19,7 @@ namespace Hotel.Core.Entities.Reservation
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public decimal TotalPrice { get; set; }
-        public string PaymentStatus { get; set; } = "Pending";
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public Feedback Feedback { get; set; }
 
     }
