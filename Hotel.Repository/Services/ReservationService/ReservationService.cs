@@ -22,6 +22,10 @@ namespace Hotel.Repository.Services.ReservationService
         public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
+            if (reservationDto.CustomerId == null)
+            {
+                reservation.CustomerId = null;
+            }
             await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
             await _unitOfWork.SaveChangesAsync();
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);

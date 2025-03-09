@@ -19,15 +19,23 @@ namespace Hotel.Core.Data.Configuration
 
             builder.Property(f => f.Comment)
                 .HasMaxLength(500)
-                .IsRequired(false); // Comment is optional
+                .IsRequired(false);
 
             builder.Property(f => f.Rating)
                 .IsRequired();
 
-            // One-to-One Relationship
+            // Define the Customer Relationship
+            builder.HasOne(f => f.Customer)
+             .WithMany(c => c.Feedbacks)
+             .HasForeignKey(f => f.CustomerId);
+
+
+            // Define the Reservation Relationship
             builder.HasOne(f => f.Reservation)
                 .WithOne(r => r.Feedback)
-                .HasForeignKey<Feedback>(f => f.ReservationId);
+                .HasForeignKey<Feedback>(f => f.ReservationId)
+                .IsRequired(false);
         }
     }
+
 }

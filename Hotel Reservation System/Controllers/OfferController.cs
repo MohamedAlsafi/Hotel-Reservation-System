@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Offer;
 using Hotel.Repository.Services.OfferService;
+using Hotel_Reservation_System.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -30,7 +31,9 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<IActionResult> GetOfferById(int id)
         {
             var offer = await _offerService.GetOfferByIdAsync(id);
-            if (offer == null) return NotFound();
+            if (offer == null) 
+                return NotFound(new ApiResponse(404));
+
             return Ok(offer);
         }
 
@@ -43,11 +46,12 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOffer(int id, [FromBody] CreateOfferDto offerDto)
+        public async Task<IActionResult> UpdateOffer(int id, [FromBody] UpdateOfferDto offerDto)
         {
             var MappedOffer = _mapper.Map<UpdateOfferDto>(offerDto);
             var Result = await _offerService.UpdateOfferAsync(id, MappedOffer);
-            if (!Result.Success) return NotFound();
+            if (!Result.Success)
+                return NotFound(new ApiResponse(404));
             return NoContent();
         }
 
@@ -55,7 +59,8 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<IActionResult> DeleteOffer(int id)
         {
             var response = await _offerService.DeleteOfferAsync(id);
-            if (!response.Success) return NotFound();
+            if (!response.Success) 
+                return NotFound(new ApiResponse(404));
             return NoContent();
         }
     }

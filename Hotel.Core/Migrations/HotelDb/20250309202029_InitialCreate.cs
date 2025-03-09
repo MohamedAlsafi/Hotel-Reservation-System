@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Hotel.Core.Data.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Hotel.Core.Migrations.HotelDb
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -124,13 +126,15 @@ namespace Hotel.Core.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     CustomerId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     RoomId = table.Column<int>(type: "int", nullable: false),
                     CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentStatus = table.Column<int>(type: "int", nullable: false),
+                    PaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -272,6 +276,17 @@ namespace Hotel.Core.Data.Migrations
                         column: x => x.ReservationId,
                         principalTable: "Reservations",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Facilities",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Deleted", "Name" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 3, 9, 22, 20, 28, 463, DateTimeKind.Local).AddTicks(7676), null, false, "Wifi" },
+                    { 2, new DateTime(2025, 3, 9, 22, 20, 28, 463, DateTimeKind.Local).AddTicks(7748), null, false, "TV" },
+                    { 3, new DateTime(2025, 3, 9, 22, 20, 28, 463, DateTimeKind.Local).AddTicks(7750), null, false, "Mini Bar" },
+                    { 4, new DateTime(2025, 3, 9, 22, 20, 28, 463, DateTimeKind.Local).AddTicks(7752), null, false, "air conditioning" }
                 });
 
             migrationBuilder.CreateIndex(

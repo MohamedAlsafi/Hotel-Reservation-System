@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.ReservationService;
+using Hotel_Reservation_System.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -27,19 +29,21 @@ namespace Hotel_Reservation_System.Controllers
             await _reservationService.CreateReservationAsync(MappedReservation);
             return CreatedAtAction(nameof(GetReservationById), new { id = MappedReservation.RoomId }, _mapper.Map<ReservationDto>(reservationDto));
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReservationById(int id)
         {
             var reservation = await _reservationService.GetReservationByIdAsync(id);
-            if (reservation == null) return NotFound();
-            return Ok(_mapper.Map<ReservationDto>(reservation));
+
+            var reservationDto = _mapper.Map<ReservationDto>(reservation.Data);
+
+            return Ok(new ApiResponse<ReservationDto>(true, "Reservation retrieved successfully", reservationDto));
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
-            if (reservationDto == null) return BadRequest("Invalid reservation data.");
+            if (reservationDto == null) return BadRequest(new ApiResponse(400,"Invalid reservation data."));
 
             var updated = await _reservationService.UpdateReservationAsync(id, reservationDto);
             if (updated is null) return NotFound();
@@ -52,7 +56,8 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<IActionResult> DeleteReservation(int id)
         {
             var reservation = await _reservationService.GetReservationByIdAsync(id);
-            if (reservation == null) return NotFound();
+            if (reservation == null)
+                return NotFound(new ApiResponse(404));
 
             await _reservationService.CancelReservationAsync(id);
             return NoContent();

@@ -13,7 +13,7 @@ namespace Hotel.Core.Profiles
     {
         public DomainMappingProfile()
         {
-           CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
+            CreateMap<RoomImage, RoomDTO>().ForMember(R => R.ImageUrl, options => options.MapFrom<PictureUrlResolver>());
             CreateMap<RoomDTO, Room>()
              .ForMember(dest => dest.RoomFacilities, opt => opt.Ignore())
              .ForMember(dest => dest.Images, opt => opt.Ignore());
@@ -22,12 +22,16 @@ namespace Hotel.Core.Profiles
              .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
              .ForMember(dest => dest.Facilities, opt => opt.MapFrom(src => src.RoomFacilities.Select(rf => rf.Facility.Name)))
              .ForMember(dest => dest.ImageUrls, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()));
+            CreateMap<CreateReservationDto, ReservationDto>().ReverseMap();
 
             CreateMap<Offer, OfferDto>().ReverseMap();
             CreateMap<Offer, CreateOfferDto>().ReverseMap();
-            CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Reservation, CreateReservationDto>().ReverseMap();
             CreateMap<Reservation, ReservationDto>().ReverseMap();
+
+            CreateMap<UpdateOfferDto, Offer>().ReverseMap();
+            CreateMap<UpdateReservationDto, Reservation>().ReverseMap();
+
         }
     }
 }

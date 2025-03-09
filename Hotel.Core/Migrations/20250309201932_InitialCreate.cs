@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Hotel.Core.Data.Migrations
+namespace Hotel.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityWithHotelDb : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
