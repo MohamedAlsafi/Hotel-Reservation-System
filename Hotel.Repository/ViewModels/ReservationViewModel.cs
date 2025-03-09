@@ -13,6 +13,7 @@ namespace Hotel.Repository.ViewModels
         public DateTime EndDate { get; set; }
         public int RoomId { get; set; }
         public string? PaymenyIntentId { get; set; }
+        public string PaymentStatus { get; set; } = "Pending";
         public int GuestId { get; set; }
     }
 }

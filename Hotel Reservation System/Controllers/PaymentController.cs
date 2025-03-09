@@ -19,15 +19,14 @@ namespace Hotel_Reservation_System.Controllers
         public PaymentController(IPaymentService paymentService )
         {
             _paymentService = paymentService;
-     
         }
         [HttpPost]
         public async Task<ActionResult<PaymentProcessViewModel>> MakePaymentAsync(int ReservationId ,int customerId)
         {
+            if(ReservationId == 0) return BadRequest(new ApiExcaptionResponse(400));
             var result = await _paymentService.MakePaymentAsync(customerId, ReservationId);
-
             if(result is null) return BadRequest(new ApiExcaptionResponse(400));
-            
+         
             if (!string.IsNullOrEmpty(result.PaymentIntentId))
             {
                 return Ok("Payment Succeeded.");

@@ -1,4 +1,5 @@
-﻿using Hotel.Core.Dtos.Reservation;
+﻿using AutoMapper;
+using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.ReservationService;
@@ -19,33 +20,37 @@ namespace Hotel.Repository.Services.Payment
     {
         private readonly IConfiguration _configuration;
         private readonly IReservationService _reservationService;
+        private readonly IMapper _mapper;
 
-        public PaymentService(IConfiguration configuration , IReservationService reservationService)
+        public PaymentService(IConfiguration configuration , IReservationService reservationService , IMapper mapper)
         {
             _configuration = configuration;
             _reservationService = reservationService;
+            this._mapper = mapper;
         }
         public async Task<ReservationDto> MakePaymentAsync(int customerId, int ReservationId)
         {
             if(ReservationId ==0) return null;
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
           var Reservation=await _reservationService.GetReservationByIdAsync(customerId);
+            var mappedReservation = _mapper.Map<ReservationDto>(Reservation);
+
             if ( Reservation is null) return null;
             //Amount = total amount of reservation + discout if any
             var Amount = 0m;
-            if(Reservation.Discount != 0m)
+            if(mappedReservation.Discount!= 0m)
             {
-                Amount = Reservation.TotalPrice - Reservation.Discount;
+                Amount = mappedReservation.TotalPrice - mappedReservation.Discount;
             }
             else
             {
-                Amount = Reservation.TotalPrice;
+                Amount = mappedReservation.TotalPrice;
             }
-            var SubTotal = Reservation.PaymentStatus == "Paid" ? Amount : 0m;
+            var SubTotal = mappedReservation.PaymentStatus == "Paid" ? Amount : 0m;
             var Service = new PaymentIntentService();
 
             PaymentIntent paymentIntent;
-            if (string.IsNullOrEmpty(Reservation.PaymentIntentId))
+            if (string.IsNullOrEmpty(mappedReservation.PaymentIntentId))
             {
 
                 var options = new PaymentIntentCreateOptions
@@ -59,8 +64,8 @@ namespace Hotel.Repository.Services.Payment
 
 
              paymentIntent=   await  Service.CreateAsync(options);
-                Reservation.PaymentIntentId = paymentIntent.Id;
-                Reservation.PaymentStatus = "Paid";
+                mappedReservation.PaymentIntentId = paymentIntent.Id;
+                mappedReservation.PaymentStatus = "Paid";
             }
             else
             {
@@ -68,13 +73,13 @@ namespace Hotel.Repository.Services.Payment
                 {
                     Amount = (long?)Amount,
                 };
-               var updatedPaymentIntent =  await Service.UpdateAsync(Reservation.PaymentIntentId , Options);
-               Reservation.PaymentIntentId = updatedPaymentIntent.Id;
+               var updatedPaymentIntent =  await Service.UpdateAsync(mappedReservation.PaymentIntentId , Options);
+               mappedReservation.PaymentIntentId= updatedPaymentIntent.Id;
 
             }
-             
-            await _reservationService.UpdateReservationAsync(customerId, Reservation);
-            return Reservation;
+            var updateReservationDto = _mapper.Map<UpdateReservationDto>(mappedReservation);
+            await _reservationService.UpdateReservationAsync(customerId, updateReservationDto);
+            return  mappedReservation;
 
           
 

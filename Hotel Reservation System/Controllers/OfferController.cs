@@ -1,4 +1,5 @@
-﻿using Hotel.Core.Dtos.Offer;
+﻿using AutoMapper;
+using Hotel.Core.Dtos.Offer;
 using Hotel.Repository.Services.OfferService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace Hotel_Reservation_System.Controllers
     public class OfferController : ControllerBase
     {
         private readonly IOfferService _offerService;
+        private readonly IMapper _mapper;
 
-        public OfferController(IOfferService offerService)
+        public OfferController(IOfferService offerService , IMapper mapper)
         {
             _offerService = offerService;
+            _mapper = mapper;
         }
         
         [HttpGet]
@@ -33,25 +36,26 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateOffer([FromBody] CreateOfferDto offerDto)
+        public async Task<ActionResult<OfferDto>> CreateOffer([FromBody] CreateOfferDto offerDto)
         {
             var createdOffer = await _offerService.CreateOfferAsync(offerDto);
-            return CreatedAtAction(nameof(GetOfferById), new { id = createdOffer.Id }, createdOffer);
+            return CreatedAtAction(nameof(GetOfferById), new { id = createdOffer }, createdOffer);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOffer(int id, [FromBody] CreateOfferDto offerDto)
         {
-            var success = await _offerService.UpdateOfferAsync(id, offerDto);
-            if (!success) return NotFound();
+            var MappedOffer = _mapper.Map<UpdateOfferDto>(offerDto);
+            var Result = await _offerService.UpdateOfferAsync(id, MappedOffer);
+            if (!Result.Success) return NotFound();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOffer(int id)
         {
-            var success = await _offerService.DeleteOfferAsync(id);
-            if (!success) return NotFound();
+            var response = await _offerService.DeleteOfferAsync(id);
+            if (!response.Success) return NotFound();
             return NoContent();
         }
     }

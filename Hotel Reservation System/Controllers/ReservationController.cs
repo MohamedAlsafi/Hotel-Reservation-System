@@ -22,10 +22,10 @@ namespace Hotel_Reservation_System.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateReservation([FromBody] CreateReservationDto reservationDto)
         {
-            var reservation = _mapper.Map<Reservation>(reservationDto);
-            var MappedReservation= _mapper.Map<ReservationDto>(reservation);
-            await _reservationService.AddReservationAsync(MappedReservation);
-            return CreatedAtAction(nameof(GetReservationById), new { id = reservation.Id }, _mapper.Map<ReservationDto>(reservation));
+           // var reservation = _mapper.Map<Reservation>(reservationDto);
+            var MappedReservation= _mapper.Map<CreateReservationDto>(reservationDto);
+            await _reservationService.CreateReservationAsync(MappedReservation);
+            return CreatedAtAction(nameof(GetReservationById), new { id = MappedReservation.RoomId }, _mapper.Map<ReservationDto>(reservationDto));
         }
 
         [HttpGet("{id}")]
@@ -37,12 +37,12 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReservation(int id, [FromBody] ReservationDto reservationDto)
+        public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
             if (reservationDto == null) return BadRequest("Invalid reservation data.");
 
             var updated = await _reservationService.UpdateReservationAsync(id, reservationDto);
-            if (!updated) return NotFound();
+            if (updated is null) return NotFound();
 
             return NoContent();
         }
@@ -54,7 +54,7 @@ namespace Hotel_Reservation_System.Controllers
             var reservation = await _reservationService.GetReservationByIdAsync(id);
             if (reservation == null) return NotFound();
 
-            await _reservationService.DeleteReservationAsync(id);
+            await _reservationService.CancelReservationAsync(id);
             return NoContent();
         }
     }
