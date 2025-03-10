@@ -11,14 +11,19 @@ using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.Middleware;
 using Hotel_Reservation_System.ProfilesVM;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
+using Hotel.Core.DataSeed;
+
 namespace Hotel_Reservation_System
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -42,8 +47,6 @@ namespace Hotel_Reservation_System
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
-
-
             #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>
                {
@@ -65,7 +68,24 @@ namespace Hotel_Reservation_System
 
 
             var app = builder.Build();
+            using var Scope = app.Services.CreateScope();
+            var services = Scope.ServiceProvider;
 
+            var context = services.GetRequiredService<HotelDbContext>(); //ask CLR to create an obj from dbcontext explicitilly
+            var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+            try
+            {
+                //await context.Database.MigrateAsync();
+                await SeedDataAsync.SeedAsync(context);
+
+
+            }
+            catch (Exception ex)
+            {
+                var logger = loggerFactory.CreateLogger<Program>();
+                logger.LogError(ex, "Exception About Database.");
+
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
