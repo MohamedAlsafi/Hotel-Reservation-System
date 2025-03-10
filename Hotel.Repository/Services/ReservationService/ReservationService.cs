@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.Core.Data.Configuration;
+using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
@@ -12,19 +13,26 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly HotelDbContext _dbContext;
 
-        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper , HotelDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
         public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
-            if (reservationDto.CustomerId == null)
+            if (!await _dbContext.Reservations.AnyAsync(c => c.Id == reservationDto.CustomerId))
             {
-                reservation.CustomerId = null;
+                return null!; 
+            }
+
+            if (!await _dbContext.Rooms.AnyAsync(r => r.Id == reservationDto.RoomId))
+            {
+                return null!; 
             }
             await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
             await _unitOfWork.SaveChangesAsync();

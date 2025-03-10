@@ -13,6 +13,7 @@ using Hotel_Reservation_System.Middleware;
 using Hotel_Reservation_System.ProfilesVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -33,14 +34,14 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IReservationService, ReservationService>();
-            builder.Services.AddScoped<ITokenService, TokenService>();  
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            builder.Services.AddScoped<GlobalTransactionMiddleware>();
 
 
             #region ApiValidationErrorr
@@ -72,12 +73,11 @@ namespace Hotel_Reservation_System
                 app.UseSwaggerUI();
             }
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<GlobalTransactionMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

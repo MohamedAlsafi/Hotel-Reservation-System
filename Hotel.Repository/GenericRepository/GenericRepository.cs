@@ -3,6 +3,7 @@ using Hotel.Core.Entities;
 using Hotel.Repository.IGenericRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace Hotel.Repository.GenericRepository
@@ -10,18 +11,16 @@ namespace Hotel.Repository.GenericRepository
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly HotelDbContext _context;
-        DbSet<T> _dbSet;
-
-        public GenericRepository(HotelDbContext context)
+        private readonly DbSet<T> _dbSet;
+        public GenericRepository(HotelDbContext context )
         {
             _context = context;
-            _dbSet = _context.Set<T>();
         }
 
+      
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
         public async Task<List<T>> GetAllAsync()
         {
@@ -73,7 +72,6 @@ namespace Hotel.Repository.GenericRepository
                     prop.IsModified = true;
                 }
             }
-            _context.SaveChanges();
 
         }
         public void UpdateExclude(T entity, params string[] unmodifiedProperties)
@@ -97,7 +95,6 @@ namespace Hotel.Repository.GenericRepository
                 }
             }
 
-            _context.SaveChanges();
 
         }
 

@@ -28,11 +28,11 @@ namespace Hotel.Repository.Services.Payment
             _reservationService = reservationService;
             this._mapper = mapper;
         }
-        public async Task<ReservationDto> MakePaymentAsync(int customerId, int ReservationId)
+        public async Task<ReservationDto> MakePaymentAsync(int RoomId)
         {
-            if(ReservationId ==0) return null;
+            if(RoomId == 0) return null;
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
-          var Reservation=await _reservationService.GetReservationByIdAsync(customerId);
+          var Reservation=await _reservationService.GetReservationByIdAsync(RoomId);
             var mappedReservation = _mapper.Map<ReservationDto>(Reservation);
 
             if ( Reservation is null) return null;
@@ -78,11 +78,8 @@ namespace Hotel.Repository.Services.Payment
 
             }
             var updateReservationDto = _mapper.Map<UpdateReservationDto>(mappedReservation);
-            await _reservationService.UpdateReservationAsync(customerId, updateReservationDto);
+            await _reservationService.UpdateReservationAsync(RoomId , updateReservationDto);
             return  mappedReservation;
-
-          
-
         }
     }
 }

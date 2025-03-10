@@ -3,6 +3,7 @@ using Hotel.Core.Entities;
 using Hotel.Repository.GenericRepository;
 using Hotel.Repository.IGenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections;
 using System.Collections.Generic;
 

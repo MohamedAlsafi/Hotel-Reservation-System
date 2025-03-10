@@ -2,6 +2,7 @@
 using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
+using Hotel.Repository.Services.Payment;
 using Hotel.Repository.Services.ReservationService;
 using Hotel_Reservation_System.Error;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +15,23 @@ namespace Hotel_Reservation_System.Controllers
     {
         private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
+        private readonly IPaymentService _paymentService;
 
-        public ReservationController(IReservationService reservationService, IMapper mapper )
+        public ReservationController(IReservationService reservationService, IMapper mapper  , IPaymentService paymentService)
         {
             _reservationService = reservationService;
             _mapper = mapper;
+            this._paymentService = paymentService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateReservation([FromBody] CreateReservationDto reservationDto)
+        public async Task<ActionResult<CustomerReservationViewModel>> CreateReservation([FromBody] ReservationDto reservationDto)
         {
-           // var reservation = _mapper.Map<Reservation>(reservationDto);
-            var MappedReservation= _mapper.Map<CreateReservationDto>(reservationDto);
+            var MappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
             await _reservationService.CreateReservationAsync(MappedReservation);
-            return CreatedAtAction(nameof(GetReservationById), new { id = MappedReservation.RoomId }, _mapper.Map<ReservationDto>(reservationDto));
+            var payment = _paymentService.MakePaymentAsync(reservationDto.RoomId);
+            if (payment is null) return BadRequest(new ApiResponse(400, "Payment failed."));
+            return CreatedAtAction(nameof(GetReservationById), new { id = reservationDto.RoomId },reservationDto);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReservationById(int id)
@@ -41,7 +45,7 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
+        public async Task<ActionResult<CustomerReservationViewModel>> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
             if (reservationDto == null) return BadRequest(new ApiResponse(400,"Invalid reservation data."));
 
@@ -53,7 +57,7 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation(int id)
+        public async Task<ActionResult<CustomerReservationViewModel>> DeleteReservation(int id)
         {
             var reservation = await _reservationService.GetReservationByIdAsync(id);
             if (reservation == null)
