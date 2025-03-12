@@ -15,27 +15,36 @@ namespace Hotel.Repository.Services.ReservationService
         private readonly IMapper _mapper;
         private readonly HotelDbContext _dbContext;
 
-        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper , HotelDbContext dbContext)
+
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper, HotelDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _dbContext = dbContext;
+
         }
 
         public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
-            var reservation = _mapper.Map<Reservation>(reservationDto);
-            if (!await _dbContext.Reservations.AnyAsync(c => c.Id == reservationDto.CustomerId))
-            {
-                return null!; 
-            }
+            if (reservationDto.CheckInDate >= reservationDto.CheckOutDate)
+                return new ApiResponse<ReservationViewModel>(false, "Start date must be before end date", null);
+
+            if (!await _dbContext.Customers.AnyAsync(c => c.Id == reservationDto.CustomerId))
+                return new ApiResponse<ReservationViewModel>(false, "Customer does not exist", null);
 
             if (!await _dbContext.Rooms.AnyAsync(r => r.Id == reservationDto.RoomId))
-            {
-                return null!; 
-            }
+                return new ApiResponse<ReservationViewModel>(false, "Room does not exist", null);
+
+            var isRoomAvailable = !await _dbContext.Reservations.AnyAsync(r => r.RoomId == reservationDto.RoomId &&
+                (r.CheckInDate < reservationDto.CheckOutDate && r.CheckOutDate > reservationDto.CheckInDate));
+
+            if (!isRoomAvailable)
+                return new ApiResponse<ReservationViewModel>(false, "Room is already booked for the selected dates", null);
+
+            var reservation = _mapper.Map<Reservation>(reservationDto);
             await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
             await _unitOfWork.SaveChangesAsync();
+
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
             return new ApiResponse<ReservationViewModel>(true, "Reservation created successfully", reservationViewModel);
         }
