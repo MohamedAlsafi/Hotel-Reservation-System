@@ -11,13 +11,12 @@ using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.Middleware;
 using Hotel_Reservation_System.ProfilesVM;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Logging;
 using Hotel.Core.DataSeed;
+using Hotel.Core.Entities.customer;
+using Microsoft.AspNetCore.Identity;
+using Hotel_Reservation_System.Helpers;
 
 namespace Hotel_Reservation_System
 {
@@ -47,6 +46,10 @@ namespace Hotel_Reservation_System
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
+            builder.Services.AddIdentity<Customer, IdentityRole>()
+                .AddEntityFrameworkStores<CustomerIdentityDbContext>()
+                .AddDefaultTokenProviders();
+            builder.Services.AddIdentityService(builder.Configuration);
             #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>
                {

@@ -5,6 +5,7 @@ using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.Payment;
 using Hotel.Repository.Services.ReservationService;
 using Hotel_Reservation_System.Error;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -25,6 +26,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<CustomerReservationViewModel>> CreateReservation([FromBody] ReservationDto reservationDto)
         {
             var MappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
@@ -34,6 +36,7 @@ namespace Hotel_Reservation_System.Controllers
             return CreatedAtAction(nameof(GetReservationById), new { id = reservationDto.RoomId },reservationDto);
         }
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetReservationById(int id)
         {
             var reservation = await _reservationService.GetReservationByIdAsync(id);
@@ -43,7 +46,7 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(new ApiResponse<ReservationDto>(true, "Reservation retrieved successfully", reservationDto));
         }
 
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<CustomerReservationViewModel>> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
@@ -57,6 +60,7 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<CustomerReservationViewModel>> DeleteReservation(int id)
         {
             var reservation = await _reservationService.GetReservationByIdAsync(id);
