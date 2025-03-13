@@ -1,5 +1,8 @@
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Hotel.Core.Data.Context;
 using Hotel.Core.Profiles;
+using Hotel.Core.Validators;
 using Hotel.Repository.GenericRepository;
 using Hotel.Repository.IGenericRepository;
 using Hotel.Repository.Services.OfferService;
@@ -13,6 +16,7 @@ using Hotel_Reservation_System.Middleware;
 using Hotel_Reservation_System.ProfilesVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Hotel.Core.Dtos.Room.Create;
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -41,7 +45,10 @@ namespace Hotel_Reservation_System
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddControllers()
+             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateRoomValidator>());
 
+            builder.Services.AddScoped<IValidator<CreateRoomDTO>, CreateRoomValidator>();
 
             #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>

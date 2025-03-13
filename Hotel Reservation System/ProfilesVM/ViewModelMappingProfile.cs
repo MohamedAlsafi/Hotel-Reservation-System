@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Room;
+using Hotel.Core.Dtos.Room.Create;
+using Hotel.Core.Dtos.Room.Update;
+using Hotel.Core.Entities.Enum;
+using Hotel.Core.Entities.Rooms;
 using Hotel_Reservation_System.ViewModels;
+using Hotel_Reservation_System.ViewModels.Room;
+using RoomResponseViewModel = Hotel_Reservation_System.ViewModels.Room.RoomResponseViewModel;
 
 namespace Hotel_Reservation_System.ProfilesVM
 {
@@ -10,8 +16,26 @@ namespace Hotel_Reservation_System.ProfilesVM
         {
             //  map `DTOs` و `ViewModels`
             CreateMap<RoomResponseDTO, RoomResponseViewModel>();
-            CreateMap<RoomCreateViewModel, RoomDTO>();
-            CreateMap<RoomUpdateViewModel, RoomDTO>();
+            CreateMap<ViewModels.Room.RoomCreateViewModel, CreateRoomDTO>();
+            CreateMap<CreateRoomResponseDTO, RoomResponseViewModel>();
+
+            // تحويل من ViewModel إلى DTO
+            CreateMap<RoomBasicInfoResponseViewModel, UpdateRoomBasicDto>();
+            CreateMap<UpdateRoomBasicResponseDto, RoomBasicInfoResponseViewModel>();
+
+            CreateMap<UpdateRoomFacilitiesViewModel, UpdateRoomFacilitiesDto>();
+            CreateMap<UpdateRoomFacilitiesResponseDto, RoomFacilitiesResponseViewModel>();
+
+            CreateMap<UpdateRoomImagesViewModel, UpdateRoomImagesDto>();
+            CreateMap<UpdateRoomImagesResponseDto, RoomImagesResponseViewModel>();
+
+            CreateMap<UpdateRoomDetailsViewModel, UpdateRoomBasicDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
+           . ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)) 
+            .ReverseMap(); 
+
+
+
         }
     }
 }

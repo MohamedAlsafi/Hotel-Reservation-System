@@ -5,15 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Dtos.Room
+namespace Hotel.Core.Dtos.Room.Create
 {
-    public class RoomResponseDTO
+    public class CreateRoomResponseDTO
     {
         public int Id { get; set; }
         public string RoomNumber { get; set; } = string.Empty;
-        public RoomType Type { get; set; } = RoomType.Single;
+        public string Type { get; set; }
         public decimal Price { get; set; }
-        public bool IsAvailable { get; set; }
         public List<string> Facilities { get; set; } = new List<string>();
         public List<string> ImageUrls { get; set; } = new List<string>();
     }
