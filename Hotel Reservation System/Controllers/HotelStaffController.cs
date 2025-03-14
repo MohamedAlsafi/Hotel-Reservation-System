@@ -16,10 +16,10 @@ namespace Hotel_Reservation_System.Controllers
     [ApiController]
     public class HotelStaffController : ControllerBase
     {
-        private readonly HotelDbContext _dbContext;
+        private readonly CustomerIdentityDbContext _dbContext;
         private readonly ITokenService _tokenService;
 
-        public HotelStaffController(HotelDbContext dbContext,ITokenService tokenService)
+        public HotelStaffController(CustomerIdentityDbContext dbContext,ITokenService tokenService)
         {
             this._dbContext = dbContext;
             this._tokenService = tokenService;
@@ -37,7 +37,8 @@ namespace Hotel_Reservation_System.Controllers
                 Email = model.Email, FirstName = model.FirstName,
                 LastName = model.LastName, Password = model.Password,
                 PhoneNumber = model.PhoneNumber, 
-               Role = (HotelStaffRole)Enum.Parse(typeof(HotelStaffRole), model.Role)
+               Role = (HotelStaffRole)Enum.Parse(typeof(HotelStaffRole), model.Role),
+               UserName = model.Email.Split('@')[0]
             };
             if(User is null) return BadRequest(new ApiExcaptionResponse(400));
             try
