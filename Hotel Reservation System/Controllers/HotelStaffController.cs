@@ -18,19 +18,17 @@ namespace Hotel_Reservation_System.Controllers
     {
         private readonly HotelDbContext _dbContext;
         private readonly ITokenService _tokenService;
-        private readonly UserManager<HotelStaff> _userManager;
 
-        public HotelStaffController(HotelDbContext dbContext , ITokenService tokenService , UserManager<HotelStaff> userManager)
+        public HotelStaffController(HotelDbContext dbContext,ITokenService tokenService)
         {
             this._dbContext = dbContext;
             this._tokenService = tokenService;
-            this._userManager = userManager;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<HotelStaffDTO>> Register(RegisterStaffDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            var existingUser = await _dbContext.HotelStaff.FirstOrDefaultAsync(x => x.Email == model.Email);
             if (existingUser != null)
                 return BadRequest(new ApiExcaptionResponse(400, "Email already exists"));
 
@@ -42,13 +40,23 @@ namespace Hotel_Reservation_System.Controllers
                Role = (HotelStaffRole)Enum.Parse(typeof(HotelStaffRole), model.Role)
             };
             if(User is null) return BadRequest(new ApiExcaptionResponse(400));
-            var result = await _userManager.CreateAsync(User, model.Password);
-            if (!result.Succeeded) return BadRequest(new ApiExcaptionResponse(400));
+            try
+            {
+                await _dbContext.HotelStaff.AddAsync(User);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception 
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
             var ResultDto = new HotelStaffDTO()
             {
                 Email = model.Email,
                 UserName = model.Email.Split('@')[0],
-                Token = await _tokenService.GetTokenAsyncForHotelStaff(User, _userManager)
+                Token = _tokenService.GetTokenAsyncForHotelStaff(User.Id, User.Email, User.Role).Result
+
             };
             return Ok(ResultDto);
 
@@ -56,17 +64,18 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserDTO>> Login(LoginDTO model)
+        public async Task<ActionResult<HotelStaffDTO>> Login(LoginDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var user = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
+            var user = await _dbContext.HotelStaff.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
 
             if(user is null) return Unauthorized(new ApiExcaptionResponse(401));
+
             var ResultDto = new HotelStaffDTO()
             {
                 Email = user.Email,
                 UserName = user.Email.Split('@')[0],
-                Token = await _tokenService.GetTokenAsyncForHotelStaff(user, _userManager)
+                Token  = _tokenService.GetTokenAsyncForHotelStaff(user.Id, user.Email, user.Role).Result
             };
 
             return Ok(ResultDto);

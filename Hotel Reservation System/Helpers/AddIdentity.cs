@@ -1,5 +1,6 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,7 @@ namespace Hotel_Reservation_System.Helpers
 
             });
             Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<CustomerIdentityDbContext>();
+
             Services.AddScoped<ITokenService, TokenService>();
             return Services;
         }

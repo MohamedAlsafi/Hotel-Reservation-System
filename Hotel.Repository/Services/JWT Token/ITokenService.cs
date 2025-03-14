@@ -1,4 +1,5 @@
 ﻿using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -13,7 +14,7 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
     {
         public Task<string> GetTokenAsync(Customer user, UserManager<Customer> userManager);
 
-        public Task<string> GetTokenAsyncForHotelStaff(HotelStaff user, UserManager<HotelStaff> userManager);
+        public Task<string> GetTokenAsyncForHotelStaff(int userId,  string userName  ,HotelStaffRole role);
 
 
     }

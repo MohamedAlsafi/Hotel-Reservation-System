@@ -16,6 +16,6 @@ namespace Hotel.Core.Entities.Enum.HotelStaff
         public string Email { get; set; }
         public string Password { get; set; }
         public string Address { get; set; }
-        public HotelStaffRole Role { get; set; } = HotelStaffRole.Receptionist;
+        public HotelStaffRole Role { get; set; } 
     }
 }

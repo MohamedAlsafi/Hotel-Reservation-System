@@ -1,4 +1,5 @@
 ﻿using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -51,19 +52,14 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
             return new JwtSecurityTokenHandler().WriteToken(Token);
         }
 
-        public async Task<string> GetTokenAsyncForHotelStaff(HotelStaff user, UserManager<HotelStaff> userManager)
+        public Task<string> GetTokenAsyncForHotelStaff(int userId, string userName, HotelStaffRole role)
         {
             var AuthClaims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Email , user.Email),
-                new Claim(ClaimTypes.GivenName , user.FirstName),
-                new Claim(ClaimTypes.MobilePhone , user.PhoneNumber),
+                new Claim(ClaimTypes.NameIdentifier , userId.ToString()),
+                new Claim(ClaimTypes.Name , userName),
+                new Claim(ClaimTypes.Role , role.ToString())
             };
-            var Roles = await userManager.GetRolesAsync(user);
-            foreach (var role in Roles)
-            {
-                AuthClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
             var authKeyString = _configuration["Jwt:Key"];
             if (authKeyString?.Length < 32)
             {
@@ -75,10 +71,11 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 expires: DateTime.Now.AddDays(double.Parse(_configuration["Jwt:DurationInDays"])),
+
                 claims: AuthClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256Signature)
             );
-            return new JwtSecurityTokenHandler().WriteToken(Token);
+            return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(Token));
         }
     }
     

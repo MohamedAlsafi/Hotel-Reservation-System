@@ -16,17 +16,17 @@ namespace Hotel.Core.Data.Context
 {
     public class HotelDbContext : DbContext
     {
-        public DbSet<Room> Rooms { get; set; }
-        public DbSet<Facility> Facilities { get; set; }
-        public DbSet<RoomFacility> RoomFacilities { get; set; }
-        public DbSet<RoomImage> RoomImages { get; set; }
-        public DbSet<Offer> Offers { get; set; }
-        public DbSet<RoomOffer> RoomOffers { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<HotelStaff> HotelStaffs { get; set; }
-        public DbSet<RoomStaff> RoomStaffs { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Room> Room { get; set; }
+        public DbSet<Facility> Facility { get; set; }
+        public DbSet<RoomFacility> RoomFacility { get; set; }
+        public DbSet<RoomImage> RoomImage { get; set; }
+        public DbSet<Offer> Offer { get; set; }
+        public DbSet<RoomOffer> RoomOffer { get; set; }
+        public DbSet<Reservation> Reservation { get; set; }
+        public DbSet<Feedback> Feedback { get; set; }
+        public DbSet<HotelStaff> HotelStaff { get; set; }
+        public DbSet<RoomStaff> RoomStaff { get; set; }
+        public DbSet<Customer> Customer { get; set; }
 
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options)
         {

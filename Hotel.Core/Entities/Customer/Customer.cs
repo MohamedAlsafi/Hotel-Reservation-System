@@ -22,8 +22,7 @@ namespace Hotel.Core.Entities.customer
 
         [Phone]
         public string PhoneNumber { get; set; }
-      
-
+     
         [EmailAddress]
         public string Email { get; set; }
 
