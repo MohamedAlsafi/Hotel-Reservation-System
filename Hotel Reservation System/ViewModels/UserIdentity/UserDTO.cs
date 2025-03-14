@@ -8,7 +8,6 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         public string UserName { get; set; }
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
         public string Token { get; set; }
     }
 }

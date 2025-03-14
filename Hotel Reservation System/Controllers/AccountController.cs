@@ -49,16 +49,15 @@ namespace Hotel_Reservation_System.Controllers
             if (!result.Succeeded) return BadRequest(new ApiExcaptionResponse(400));
             var ResultDto = new UserDTO()
             {
-                UserName = userDTO.FirstName,
+                UserName = userDTO.Email.Split('@')[0],
                 Email = userDTO.Email,
-                Token = await _tokenService.GetTokenAsync(User, _userManager)
+                //Token = await _tokenService.GetTokenAsync(User, _userManager)
 
             };
             return Ok(ResultDto);
 
 
         }
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {

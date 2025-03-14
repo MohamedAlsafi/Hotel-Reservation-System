@@ -8,9 +8,10 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         [EmailAddress]
         [Required]
         public string Email { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+       
     }
 }
