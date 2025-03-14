@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.Core.Data.Configuration;
+using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
@@ -12,12 +13,15 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly CustomerIdentityDbContext _customerIdentityDbContext;
 
-        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper, CustomerIdentityDbContext customerIdentityDbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _customerIdentityDbContext = customerIdentityDbContext;
         }
+
 
         public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
