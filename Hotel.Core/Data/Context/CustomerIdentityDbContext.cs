@@ -7,9 +7,9 @@ namespace Hotel.Core.Data.Context
 {
     public class CustomerIdentityDbContext : IdentityDbContext<Customer>
     {
+
         public CustomerIdentityDbContext(DbContextOptions<CustomerIdentityDbContext> options) : base(options)
         {
-
         }
     }
 }

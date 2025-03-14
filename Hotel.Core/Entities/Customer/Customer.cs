@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -25,6 +26,8 @@ namespace Hotel.Core.Entities.customer
 
         [EmailAddress]
         public string Email { get; set; }
+        [PasswordPropertyText]
+        public string Password { get; set; }
 
         public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
     }

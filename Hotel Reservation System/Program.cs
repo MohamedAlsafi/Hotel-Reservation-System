@@ -40,9 +40,7 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IReservationService, ReservationService>();
-            builder.Services.AddIdentity<Customer, IdentityRole>()
-                .AddEntityFrameworkStores<CustomerIdentityDbContext>()
-                .AddDefaultTokenProviders();
+           
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
