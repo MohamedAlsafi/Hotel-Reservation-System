@@ -11,9 +11,8 @@ namespace Hotel.Core.Entities.Rooms
     {
         [Key]
         public int RoomId { get; set; }
-        public Room Room { get; set; }
-
+        public Room Room { get; set; } = new Room();
         public int StaffId { get; set; }
-        public HotelStaff.HotelStaff Staff { get; set; }
+        public HotelStaff.HotelStaff Staff { get; set; } = new HotelStaff.HotelStaff();
     }
 }
