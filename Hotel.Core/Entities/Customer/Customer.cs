@@ -26,9 +26,9 @@ namespace Hotel.Core.Entities.customer
 
         [EmailAddress]
         public string Email { get; set; }
-        [PasswordPropertyText]
-        public string Password { get; set; }
 
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
         public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
     }
 }

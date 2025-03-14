@@ -14,30 +14,38 @@ namespace Hotel_Reservation_System.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly UserManager<Customer> _userManager;
+        private readonly SignInManager<Customer> _signInManager;
 
-        public AccountController(ITokenService tokenService , UserManager<Customer> userManager)
+        public AccountController(ITokenService tokenService , UserManager<Customer> userManager , SignInManager<Customer> signInManager)
         {
             this._tokenService = tokenService;
             this._userManager = userManager;
+            this._signInManager = signInManager;
         }
         [HttpPost("Register")]
         public  async Task<ActionResult<UserDTO>> Register(RegisterDTO userDTO)
         {
-            if (userDTO is null) return  BadRequest(new ApiExcaptionResponse(400));
-            if (await _userManager.FindByEmailAsync(userDTO.Email) is null) 
-                return BadRequest(new ApiExcaptionResponse(400));
+            if (userDTO is null) return BadRequest(new ApiExcaptionResponse(400));
+
+            var existingUser = await _userManager.FindByEmailAsync(userDTO.Email);
+            if (existingUser != null)
+                return BadRequest(new ApiExcaptionResponse(400, "Email already exists"));
 
             var User = new Customer
             {
-                    UserName = userDTO.DisplayName,
+                    FirstName = userDTO.FirstName,
+                    LastName = userDTO.LastName,
+                    UserName = userDTO.Email.Split('@')[0],
                     Email = userDTO.Email,
+                    Password=userDTO.Password,
+                    PhoneNumber=userDTO.PhoneNumber
             };
-            
-                var result = await _userManager.CreateAsync(User, User.Password);
+
+            var result = await _userManager.CreateAsync(User);
                 if (!result.Succeeded) return BadRequest(new ApiExcaptionResponse(400));
                 var ResultDto = new UserDTO()
                 {
-                    UserName = userDTO.DisplayName,
+                    UserName = userDTO.FirstName,
                     Email = userDTO.Email,
                     Token = await _tokenService.GetTokenAsync(User, _userManager)
 
@@ -46,5 +54,26 @@ namespace Hotel_Reservation_System.Controllers
 
 
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
+        {
+            var User = await _userManager.FindByEmailAsync(loginDTO.Email);
+            if (User is null) return Unauthorized(new ApiExcaptionResponse(401));
+
+            var Result = await _signInManager.CheckPasswordSignInAsync(User, loginDTO.Password, false);
+
+            if (!Result.Succeeded) return BadRequest(new ApiExcaptionResponse(401));
+            var ResultDto = new UserDTO()
+            {
+                Email = User.Email,
+                UserName = User.Email.Split('@')[0],
+                Token = await _tokenService.GetTokenAsync(User, _userManager)
+
+            };
+            return Ok(ResultDto);
+        }
+
     }
+    
 }

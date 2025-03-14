@@ -5,7 +5,9 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
     public class RegisterDTO
     {
         [Required]
-        public string DisplayName { get; set; }
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "This field is required.")]
         [DataType(DataType.Password)]
