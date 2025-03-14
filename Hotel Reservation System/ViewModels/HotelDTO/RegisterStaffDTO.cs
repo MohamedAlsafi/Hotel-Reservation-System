@@ -1,8 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Hotel.Core.Entities.Enum;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Hotel_Reservation_System.ViewModels.UserIdentity
+namespace Hotel.Core.Dtos.HotelDTO
 {
-    public class RegisterStaffDTO
+   public class RegisterStaffDTO
     {
         [Required]
         public string FirstName { get; set; }
@@ -16,7 +22,8 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         public string Email { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public string Role { get; set; }
+
+        [Required]
+        public string Role { get; set; } 
     }
 }
