@@ -45,8 +45,8 @@ namespace Hotel.Core.Data.Context
                 }
             }
 
-            modelBuilder.Entity<RoomOffer>().HasKey(s => new {s.OfferId , s.RoomId});
-            modelBuilder.Entity<RoomStaff>().HasKey(s => new { s.StaffId, s.RoomId });
+            //modelBuilder.Entity<RoomOffer>().HasKey(s => new {s.OfferId , s.RoomId});
+            //modelBuilder.Entity<RoomStaff>().HasKey(s => new { s.StaffId, s.RoomId });
         }
 
     }

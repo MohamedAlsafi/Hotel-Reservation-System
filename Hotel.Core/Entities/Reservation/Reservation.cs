@@ -12,14 +12,12 @@ namespace Hotel.Core.Entities.Reservation
 {
     public class Reservation : BaseEntity
     {
-        public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public int RoomId { get; set; }
         public Room? Room { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public decimal TotalPrice { get; set; }
-
         public decimal Discount { get; set; } = 0;
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public Feedback Feedback { get; set; }

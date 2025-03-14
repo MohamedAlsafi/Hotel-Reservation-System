@@ -27,5 +27,6 @@ namespace Hotel.Core.Entities.customer
         public string Email { get; set; }
 
         public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
     }
 }

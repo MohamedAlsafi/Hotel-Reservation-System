@@ -4,6 +4,7 @@ using Hotel.Core.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Core.Migrations.HotelDb
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314085307_TestForForiegnKeys")]
+    partial class TestForForiegnKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,10 @@ namespace Hotel.Core.Migrations.HotelDb
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerId1")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -58,7 +64,7 @@ namespace Hotel.Core.Migrations.HotelDb
 
                     b.HasKey("FeedbackId");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerId1");
 
                     b.HasIndex("ReservationId")
                         .IsUnique();
@@ -168,10 +174,7 @@ namespace Hotel.Core.Migrations.HotelDb
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomerId1")
+                    b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Deleted")
@@ -194,7 +197,7 @@ namespace Hotel.Core.Migrations.HotelDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("RoomId");
 
@@ -230,28 +233,28 @@ namespace Hotel.Core.Migrations.HotelDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 9, 22, 30, 47, 623, DateTimeKind.Local).AddTicks(7256),
+                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4619),
                             Deleted = false,
                             Name = "Wifi"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 3, 9, 22, 30, 47, 623, DateTimeKind.Local).AddTicks(7327),
+                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4694),
                             Deleted = false,
                             Name = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 3, 9, 22, 30, 47, 623, DateTimeKind.Local).AddTicks(7329),
+                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4699),
                             Deleted = false,
                             Name = "Mini Bar"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 3, 9, 22, 30, 47, 623, DateTimeKind.Local).AddTicks(7331),
+                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4704),
                             Deleted = false,
                             Name = "air conditioning"
                         });
@@ -274,6 +277,9 @@ namespace Hotel.Core.Migrations.HotelDb
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
 
@@ -292,11 +298,11 @@ namespace Hotel.Core.Migrations.HotelDb
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomFacility", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RoomId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -310,14 +316,17 @@ namespace Hotel.Core.Migrations.HotelDb
                     b.Property<int>("FacilityId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("RoomId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoomId");
 
                     b.HasIndex("FacilityId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("RoomId1");
 
                     b.ToTable("RoomFacilities");
                 });
@@ -355,30 +364,46 @@ namespace Hotel.Core.Migrations.HotelDb
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomOffer", b =>
                 {
+                    b.Property<int>("RoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
+
                     b.Property<int>("OfferId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("RoomId1")
                         .HasColumnType("int");
 
-                    b.HasKey("OfferId", "RoomId");
+                    b.HasKey("RoomId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("RoomId1");
 
                     b.ToTable("RoomOffers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomStaff", b =>
                 {
+                    b.Property<int>("RoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
+
+                    b.Property<int>("RoomId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("StaffId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.HasKey("RoomId");
 
-                    b.HasKey("StaffId", "RoomId");
+                    b.HasIndex("RoomId1");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("RoomStaffs");
                 });
@@ -451,14 +476,15 @@ namespace Hotel.Core.Migrations.HotelDb
                 {
                     b.HasOne("Hotel.Core.Entities.customer.Customer", "Customer")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("CustomerId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Hotel.Core.Entities.Reservation.Reservation", "Reservation")
                         .WithOne("Feedback")
                         .HasForeignKey("Hotel.Core.Entities.FeedbackModel.Feedback", "ReservationId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 
@@ -478,8 +504,8 @@ namespace Hotel.Core.Migrations.HotelDb
             modelBuilder.Entity("Hotel.Core.Entities.Reservation.Reservation", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.customer.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId1")
+                        .WithMany("Reservations")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Hotel.Core.Entities.Rooms.Room", "Room")
@@ -503,7 +529,7 @@ namespace Hotel.Core.Migrations.HotelDb
 
                     b.HasOne("Hotel.Core.Entities.Rooms.Room", "Room")
                         .WithMany("RoomFacilities")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("RoomId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -533,7 +559,7 @@ namespace Hotel.Core.Migrations.HotelDb
 
                     b.HasOne("Hotel.Core.Entities.Rooms.Room", "Room")
                         .WithMany("Offers")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("RoomId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -546,7 +572,7 @@ namespace Hotel.Core.Migrations.HotelDb
                 {
                     b.HasOne("Hotel.Core.Entities.Rooms.Room", "Room")
                         .WithMany("RoomStaff")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("RoomId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -573,7 +599,8 @@ namespace Hotel.Core.Migrations.HotelDb
 
             modelBuilder.Entity("Hotel.Core.Entities.Reservation.Reservation", b =>
                 {
-                    b.Navigation("Feedback");
+                    b.Navigation("Feedback")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.Facility", b =>
@@ -597,6 +624,8 @@ namespace Hotel.Core.Migrations.HotelDb
             modelBuilder.Entity("Hotel.Core.Entities.customer.Customer", b =>
                 {
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
