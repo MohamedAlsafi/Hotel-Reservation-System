@@ -4,16 +4,19 @@ using Hotel.Core.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hotel.Core.Data.Migrations
+namespace Hotel.Core.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314094949_FixingAndModifications")]
+    partial class FixingAndModifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +27,11 @@ namespace Hotel.Core.Data.Migrations
 
             modelBuilder.Entity("Hotel.Core.Entities.FeedbackModel.Feedback", b =>
                 {
-                    b.Property<int>("FeedbackId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .HasMaxLength(500)
@@ -50,16 +53,13 @@ namespace Hotel.Core.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.HasKey("FeedbackId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomerId1");
 
@@ -104,7 +104,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HotelStaffs", (string)null);
+                    b.ToTable("HotelStaffs");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.OfferModel.Offer", b =>
@@ -148,7 +148,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("CreatedByStaffId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Reservation.Reservation", b =>
@@ -198,7 +198,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Reservations", (string)null);
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.Facility", b =>
@@ -224,34 +224,34 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Facilities", (string)null);
+                    b.ToTable("Facilities");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4619),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2048),
                             Deleted = false,
                             Name = "Wifi"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4694),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2131),
                             Deleted = false,
                             Name = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4699),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2135),
                             Deleted = false,
                             Name = "Mini Bar"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4704),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2140),
                             Deleted = false,
                             Name = "air conditioning"
                         });
@@ -290,7 +290,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomFacility", b =>
@@ -325,7 +325,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("RoomId1");
 
-                    b.ToTable("RoomFacilities", (string)null);
+                    b.ToTable("RoomFacilities");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomImage", b =>
@@ -356,7 +356,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("RoomImages", (string)null);
+                    b.ToTable("RoomImages");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomOffer", b =>
@@ -379,7 +379,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("RoomId1");
 
-                    b.ToTable("RoomOffers", (string)null);
+                    b.ToTable("RoomOffers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.Rooms.RoomStaff", b =>
@@ -402,7 +402,7 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("RoomStaffs", (string)null);
+                    b.ToTable("RoomStaffs");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.customer.Customer", b =>
@@ -466,13 +466,13 @@ namespace Hotel.Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.FeedbackModel.Feedback", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.customer.Customer", "Customer")
-                        .WithMany("Feedbacks")
+                        .WithMany()
                         .HasForeignKey("CustomerId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -620,8 +620,6 @@ namespace Hotel.Core.Data.Migrations
 
             modelBuilder.Entity("Hotel.Core.Entities.customer.Customer", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618

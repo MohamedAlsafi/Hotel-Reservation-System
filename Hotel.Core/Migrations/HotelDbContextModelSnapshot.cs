@@ -4,19 +4,16 @@ using Hotel.Core.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hotel.Core.Migrations.HotelDb
+namespace Hotel.Core.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20250314085307_TestForForiegnKeys")]
-    partial class TestForForiegnKeys
+    partial class HotelDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,11 +24,11 @@ namespace Hotel.Core.Migrations.HotelDb
 
             modelBuilder.Entity("Hotel.Core.Entities.FeedbackModel.Feedback", b =>
                 {
-                    b.Property<int>("FeedbackId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .HasMaxLength(500)
@@ -53,16 +50,13 @@ namespace Hotel.Core.Migrations.HotelDb
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.HasKey("FeedbackId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomerId1");
 
@@ -233,28 +227,28 @@ namespace Hotel.Core.Migrations.HotelDb
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4619),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2048),
                             Deleted = false,
                             Name = "Wifi"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4694),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2131),
                             Deleted = false,
                             Name = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4699),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2135),
                             Deleted = false,
                             Name = "Mini Bar"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 3, 14, 10, 53, 6, 962, DateTimeKind.Local).AddTicks(4704),
+                            CreatedAt = new DateTime(2025, 3, 14, 11, 49, 48, 169, DateTimeKind.Local).AddTicks(2140),
                             Deleted = false,
                             Name = "air conditioning"
                         });
@@ -469,13 +463,13 @@ namespace Hotel.Core.Migrations.HotelDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.FeedbackModel.Feedback", b =>
                 {
                     b.HasOne("Hotel.Core.Entities.customer.Customer", "Customer")
-                        .WithMany("Feedbacks")
+                        .WithMany()
                         .HasForeignKey("CustomerId1")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -623,8 +617,6 @@ namespace Hotel.Core.Migrations.HotelDb
 
             modelBuilder.Entity("Hotel.Core.Entities.customer.Customer", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
