@@ -15,11 +15,11 @@ namespace Hotel_Reservation_System.Controllers
     [ApiController]
     public class HotelStaffController : ControllerBase
     {
-        private readonly HotelDbContext _dbContext;
+        private readonly CustomerIdentityDbContext _dbContext;
         private readonly ITokenService _tokenService;
         private readonly UserManager<HotelStaff> _userManager;
 
-        public HotelStaffController(HotelDbContext dbContext , ITokenService tokenService , UserManager<HotelStaff> userManager)
+        public HotelStaffController(CustomerIdentityDbContext dbContext , ITokenService tokenService , UserManager<HotelStaff> userManager)
         {
             this._dbContext = dbContext;
             this._tokenService = tokenService;
@@ -29,7 +29,7 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ActionResult<UserDTO>> Login(HotelStaffDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var user = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
+            var user = await _dbContext.HotelStaff.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
 
             if(user is null) return Unauthorized(new ApiExcaptionResponse(401));
             var ResultDto = new HotelStaffDTO()
