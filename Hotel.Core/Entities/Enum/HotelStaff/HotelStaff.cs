@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Hotel.Core.Entities.Enum.HotelStaff
 {
   public class HotelStaff : IdentityUser
-    {
+   {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
