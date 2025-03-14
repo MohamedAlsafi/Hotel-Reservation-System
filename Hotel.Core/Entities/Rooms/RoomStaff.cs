@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.Core.Entities.Enum.HotelStaff;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace Hotel.Core.Entities.Rooms
         public int RoomId { get; set; }
         public Room Room { get; set; } = new Room();
         public int StaffId { get; set; }
-        public HotelStaff.HotelStaff Staff { get; set; } = new HotelStaff.HotelStaff();
+        public HotelStaff Staff { get; set; } = new HotelStaff();
     }
 }

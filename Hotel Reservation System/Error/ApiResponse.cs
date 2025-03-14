@@ -14,16 +14,18 @@ namespace Hotel_Reservation_System.Error
             Massege = massege ?? GetDefaultMessageForStatusCode(stauscode);
         }
 
-        private string GetDefaultMessageForStatusCode(int statusCode) 
+        private string? GetDefaultMessageForStatusCode(int statusCode) 
         {
             return statusCode switch
             {
-                400 => "A Bad Request, you have made",
-                401 => "Authorized, you are not",
-                404 => "Resource was not Found",
-                500 => "Errors are the path to the dark side. Errors lead to anger. Anger leads to hate.Hate leads to career thange",
-                _ => null
 
+                200 => "Ok",
+                204 => "No Content",
+                400 => "BadRequest",
+                401 => "Unauthorized",
+                404 => "Resources Not Found",
+                500 => "Internal Server Error",
+                _ => null
             };
         }
     }

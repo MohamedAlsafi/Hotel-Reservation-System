@@ -44,11 +44,11 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            //builder.Services.AddControllers()
+             //builder.Services.AddControllers()
             // .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateRoomValidator>());
 
             builder.Services.AddScoped<IValidator<CreateRoomDTO>, CreateRoomValidator>();

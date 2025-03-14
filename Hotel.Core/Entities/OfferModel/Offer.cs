@@ -1,4 +1,5 @@
-﻿using Hotel.Core.Entities.Rooms;
+﻿using Hotel.Core.Entities.Enum.HotelStaff;
+using Hotel.Core.Entities.Rooms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Hotel.Core.Entities.OfferModel
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal DiscountPercentage { get; set; }
-        public HotelStaff.HotelStaff? CreatedByStaff { get; set; }
+        public HotelStaff? CreatedByStaff { get; set; }
         public ICollection<RoomOffer>? RoomOffers { get; set; } = new List<RoomOffer>();
     }
 }
