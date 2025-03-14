@@ -79,6 +79,7 @@ namespace Hotel_Reservation_System
                 app.UseSwaggerUI();
             }
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<GlobalTransactionMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

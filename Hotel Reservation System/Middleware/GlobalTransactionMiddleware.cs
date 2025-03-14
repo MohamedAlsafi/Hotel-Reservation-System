@@ -1,4 +1,5 @@
 ﻿using Hotel.Core.Data.Context;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
 
 namespace Hotel_Reservation_System.Middleware
@@ -10,27 +11,22 @@ namespace Hotel_Reservation_System.Middleware
         {
             _dbContext = dbContext;
         }
-        public Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            _dbContext.Database.BeginTransaction();
-          if(context.Request.Method == HttpMethods.Post || context.Request.Method == HttpMethods.Put || context.Request.Method == HttpMethods.Delete)
-          {
-                context.Request.EnableBuffering();
-          }
-            else if (context.Request.Method == HttpMethods.Get)
+            IDbContextTransaction Transaction = null;
+            try
             {
-                   return next(context);
+                Transaction = _dbContext.Database.BeginTransaction();
+                await next(context);
+                Transaction.Commit();
+
             }
-                var result = next(context);
-            if (context.Response.StatusCode >= 400)
+            catch (Exception)
             {
-                _dbContext.Database.RollbackTransaction();
+                
+                Transaction?.Rollback();
+                throw;
             }
-            else
-            {
-                _dbContext.Database.CommitTransaction();
-            }
-            return result;
 
 
         }
