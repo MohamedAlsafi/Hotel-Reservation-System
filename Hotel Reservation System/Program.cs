@@ -17,6 +17,9 @@ using Hotel_Reservation_System.ProfilesVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Core.Dtos.Room.Create;
+using Microsoft.AspNetCore.Identity;
+using Hotel.Core.Entities.customer;
+using Hotel_Reservation_System.Helpers;
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -37,19 +40,21 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IReservationService, ReservationService>();
-            builder.Services.AddScoped<ITokenService, TokenService>();  
-
+            builder.Services.AddIdentity<Customer, IdentityRole>()
+                .AddEntityFrameworkStores<CustomerIdentityDbContext>()
+                .AddDefaultTokenProviders();
+            builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddDbContext<CustomerIdentityDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddControllers()
-             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateRoomValidator>());
+            //builder.Services.AddControllers()
+            // .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateRoomValidator>());
 
             builder.Services.AddScoped<IValidator<CreateRoomDTO>, CreateRoomValidator>();
-
+            builder.Services.AddIdentityService(builder.Configuration);
             #region ApiValidationErrorr
             builder.Services.Configure<ApiBehaviorOptions>(opthion =>
                {
