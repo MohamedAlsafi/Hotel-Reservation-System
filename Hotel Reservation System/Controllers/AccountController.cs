@@ -27,7 +27,7 @@ namespace Hotel_Reservation_System.Controllers
             this._signInManager = signInManager;
         }
         [HttpPost("Register")]
-        public async Task<ActionResult<UserDTO>> Register(RegisterStaffDTO userDTO)
+        public async Task<ActionResult<UserDTO>> Register(RegisterDTO userDTO)
         {
             if (userDTO is null) return BadRequest(new ApiExcaptionResponse(400));
 
@@ -42,7 +42,9 @@ namespace Hotel_Reservation_System.Controllers
                 UserName = userDTO.Email.Split('@')[0],
                 Email = userDTO.Email,
                 Password = userDTO.Password,
-                PhoneNumber = userDTO.PhoneNumber
+                PhoneNumber = userDTO.PhoneNumber,
+                NormalizedEmail = userDTO.Email.Normalize()
+
             };
 
             var result = await _userManager.CreateAsync(User, userDTO.Password);

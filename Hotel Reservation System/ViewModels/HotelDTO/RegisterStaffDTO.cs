@@ -24,6 +24,9 @@ namespace Hotel.Core.Dtos.HotelDTO
         public string PhoneNumber { get; set; }
 
         [Required]
-        public string Role { get; set; } 
+        public string Role { get; set; }
+
+        [Required]
+        public string Address { get; set; }
     }
 }

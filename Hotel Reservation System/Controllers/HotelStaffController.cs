@@ -1,5 +1,6 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos;
+using Hotel.Core.Dtos.HotelDTO;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;

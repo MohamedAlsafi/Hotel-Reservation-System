@@ -1,18 +1,9 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Reservation;
-using Hotel.Core.Entities.Enum;
-using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.ReservationService;
-using Hotel.Repository.UnitOfWork;
-using Hotel_Reservation_System.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Stripe;
-using Stripe.Checkout;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Hotel.Repository.Services.Payment
 {

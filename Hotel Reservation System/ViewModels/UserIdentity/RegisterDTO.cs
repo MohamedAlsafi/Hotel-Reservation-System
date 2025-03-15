@@ -2,7 +2,7 @@
 
 namespace Hotel_Reservation_System.ViewModels.UserIdentity
 {
-    public class RegisterStaffDTO
+    public class RegisterDTO
     {
         [Required]
         public string FirstName { get; set; }
@@ -16,7 +16,5 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         public string Email { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public string Role { get; set; }
     }
 }
