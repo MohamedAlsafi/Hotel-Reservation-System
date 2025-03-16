@@ -1,5 +1,5 @@
 ﻿using Hotel.Core.Data.Context;
-using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.CustomerEntities;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

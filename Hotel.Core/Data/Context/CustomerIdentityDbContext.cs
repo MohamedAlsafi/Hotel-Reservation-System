@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.CustomerEntities;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.OfferModel;
@@ -24,6 +24,7 @@ namespace Hotel.Core.Data.Context
         public DbSet<HotelStaff> HotelStaff { get; set; }
         public DbSet<RoomStaff> RoomStaff { get; set; }
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerData> CustomerData { get; set; }
         public CustomerIdentityDbContext(DbContextOptions<CustomerIdentityDbContext> options) : base(options)
         {
         }

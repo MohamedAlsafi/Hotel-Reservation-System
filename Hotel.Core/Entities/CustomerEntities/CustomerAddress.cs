@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities.customer
+namespace Hotel.Core.Entities.CustomerEntities
 {
     public class CustomerAddress 
     {

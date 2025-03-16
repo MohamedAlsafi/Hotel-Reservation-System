@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.CustomerEntities;
 using System;
 
 namespace Hotel.Core.Entities.FeedbackModel

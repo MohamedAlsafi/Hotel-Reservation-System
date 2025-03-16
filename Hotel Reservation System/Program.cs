@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Core.Dtos.Room.Create;
 using Microsoft.AspNetCore.Identity;
-using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.CustomerEntities;
 using Hotel_Reservation_System.Helpers;
 namespace Hotel_Reservation_System
 {

@@ -1,20 +1,14 @@
-﻿using Hotel.Core.Entities.FeedbackModel;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities.customer
+namespace Hotel.Core.Entities.CustomerEntities
 {
-    public class Customer : IdentityUser
-    {
-     
-        public new int Id { get; set; }
+     public  class CustomerData :BaseEntity
+     {
         [Required, StringLength(50)]
         public string FirstName { get; set; }
 
@@ -23,7 +17,7 @@ namespace Hotel.Core.Entities.customer
 
         [Phone]
         public string PhoneNumber { get; set; }
-      
+
 
         [EmailAddress]
         public string Email { get; set; }

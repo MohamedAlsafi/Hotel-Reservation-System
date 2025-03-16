@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.CustomerEntities;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
@@ -72,7 +72,7 @@ namespace Hotel_Reservation_System.Controllers
             {
                 Email = User.Email,
                 UserName = User.Email.Split('@')[0],
-                Token = await _tokenService.GetTokenAsync(User, _userManager)
+                Token = await   _tokenService.GetTokenAsync(User, _userManager)
 
             };
             return Ok(ResultDto);

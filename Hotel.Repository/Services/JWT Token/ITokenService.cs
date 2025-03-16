@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.CustomerEntities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

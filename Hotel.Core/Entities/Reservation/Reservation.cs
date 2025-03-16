@@ -1,4 +1,4 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using Hotel.Core.Entities.CustomerEntities;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Rooms;
