@@ -23,7 +23,8 @@ namespace Hotel.Core.Data.Context
         public DbSet<Feedback> Feedback { get; set; }
         public DbSet<HotelStaff> HotelStaff { get; set; }
         public DbSet<RoomStaff> RoomStaff { get; set; }
-        public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerData> Customer { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<HotelInvoice> HotelInvoice { get; set; }
         public DbSet<HotelService> HotelService { get; set; }
         public CustomerIdentityDbContext(DbContextOptions<CustomerIdentityDbContext> options) : base(options)
