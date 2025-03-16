@@ -12,7 +12,8 @@ namespace Hotel.Core.Entities.Reservation
 {
     public class Reservation : BaseEntity
     {
-        public Customer? Customer { get; set; }
+        public CustomerData Customer { get; set; }
+        public int CustomerDataId { get; set; }
         public int RoomId { get; set; }
         public Room? Room { get; set; }
         public DateTime CheckInDate { get; set; }

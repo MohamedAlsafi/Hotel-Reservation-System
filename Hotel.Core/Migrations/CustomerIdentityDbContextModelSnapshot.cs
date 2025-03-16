@@ -111,17 +111,7 @@ namespace Hotel.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -134,12 +124,7 @@ namespace Hotel.Core.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -326,9 +311,6 @@ namespace Hotel.Core.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerDataId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -351,8 +333,6 @@ namespace Hotel.Core.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerDataId");
 
                     b.HasIndex("CustomerId");
 
@@ -390,28 +370,28 @@ namespace Hotel.Core.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3806),
+                            CreatedAt = new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(766),
                             Deleted = false,
                             Name = "Wifi"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3872),
+                            CreatedAt = new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(830),
                             Deleted = false,
                             Name = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3876),
+                            CreatedAt = new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(834),
                             Deleted = false,
                             Name = "Mini Bar"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3880),
+                            CreatedAt = new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(839),
                             Deleted = false,
                             Name = "air conditioning"
                         });
@@ -733,11 +713,6 @@ namespace Hotel.Core.Migrations
 
             modelBuilder.Entity("Hotel.Core.Entities.Reservation.Reservation", b =>
                 {
-                    b.HasOne("Hotel.Core.Entities.CustomerEntities.CustomerData", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("CustomerDataId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Hotel.Core.Entities.CustomerEntities.Customer", "Customer")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId")
@@ -874,11 +849,6 @@ namespace Hotel.Core.Migrations
                 });
 
             modelBuilder.Entity("Hotel.Core.Entities.CustomerEntities.Customer", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("Hotel.Core.Entities.CustomerEntities.CustomerData", b =>
                 {
                     b.Navigation("Reservations");
                 });

@@ -11,12 +11,6 @@ namespace Hotel.Core.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "CustomerDataId",
-                table: "Reservation",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "CustomerData",
                 columns: table => new
@@ -25,12 +19,8 @@ namespace Hotel.Core.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,59 +32,35 @@ namespace Hotel.Core.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3806));
+                value: new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(766));
 
             migrationBuilder.UpdateData(
                 table: "Facility",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3872));
+                value: new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(830));
 
             migrationBuilder.UpdateData(
                 table: "Facility",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "CreatedAt",
-                value: new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3876));
+                value: new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(834));
 
             migrationBuilder.UpdateData(
                 table: "Facility",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "CreatedAt",
-                value: new DateTime(2025, 3, 16, 14, 21, 11, 786, DateTimeKind.Local).AddTicks(3880));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservation_CustomerDataId",
-                table: "Reservation",
-                column: "CustomerDataId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Reservation_CustomerData_CustomerDataId",
-                table: "Reservation",
-                column: "CustomerDataId",
-                principalTable: "CustomerData",
-                principalColumn: "Id");
+                value: new DateTime(2025, 3, 16, 14, 33, 37, 632, DateTimeKind.Local).AddTicks(839));
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Reservation_CustomerData_CustomerDataId",
-                table: "Reservation");
-
             migrationBuilder.DropTable(
                 name: "CustomerData");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Reservation_CustomerDataId",
-                table: "Reservation");
-
-            migrationBuilder.DropColumn(
-                name: "CustomerDataId",
-                table: "Reservation");
 
             migrationBuilder.UpdateData(
                 table: "Facility",

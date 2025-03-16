@@ -7,23 +7,26 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.CustomerEntities
 {
-     public  class CustomerData :BaseEntity
+     public  class CustomerData 
      {
-        [Required, StringLength(50)]
-        public string FirstName { get; set; }
+       
+            [Key]
+            public int Id { get; set; }
 
-        [Required, StringLength(50)]
-        public string LastName { get; set; }
+            [Required, StringLength(50)]
+            public required string FirstName { get; set; }
 
-        [Phone]
-        public string PhoneNumber { get; set; }
+            [Required, StringLength(50)]
+            public required string LastName { get; set; }
+
+            public string? Email { get; set; }
+
+            [Phone]
+            public string? PhoneNumber { get; set; }
+
+            public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
+        
 
 
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-        public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
     }
 }

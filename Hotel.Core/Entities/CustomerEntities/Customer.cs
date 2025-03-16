@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.CustomerEntities
 {
-    public class Customer : IdentityUser
+    public class Customer : BaseEntity
     {
      
-        public  int Id { get; set; }
         [Required, StringLength(50)]
         public string FirstName { get; set; }
 
@@ -30,6 +29,5 @@ namespace Hotel.Core.Entities.CustomerEntities
 
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
     }
 }
