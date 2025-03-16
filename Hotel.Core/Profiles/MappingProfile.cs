@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Offer;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Dtos.Room;
@@ -9,7 +10,6 @@ using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.OfferModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
-using Hotel_Reservation_System.ViewModels.UserIdentity;
 
 namespace Hotel.Core.Profiles
 {
@@ -56,6 +56,12 @@ namespace Hotel.Core.Profiles
             CreateMap<Reservation, CreateReservationDto>().ReverseMap();
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Feedback , FeedbackDto>().ReverseMap();
+
+
+            //Mapping Feedback
+            CreateMap<Feedback, FeedbackDto>().ReverseMap();
+            CreateMap<Feedback, AddFeedbackDto>().ReverseMap();
+            CreateMap<AddFeedbackDto, FeedbackDto>().ReverseMap();
         }
     }
 }

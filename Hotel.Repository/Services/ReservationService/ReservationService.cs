@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Hotel.Core.Data.Configuration;
 using Hotel.Core.Data.Context;
+using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
 using Hotel.Repository.ViewModels;
-using Hotel_Reservation_System.ViewModels.UserIdentity;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using Hotel.Core.Entities.Enum;
 
-namespace Hotel_Reservation_System.ViewModels.UserIdentity
+namespace Hotel.Core.Dtos.FeedbackDtos
 {
     public class FeedbackDto
     {

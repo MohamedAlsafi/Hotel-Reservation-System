@@ -20,6 +20,7 @@ using Hotel.Core.Dtos.Room.Create;
 using Microsoft.AspNetCore.Identity;
 using Hotel.Core.Entities.customer;
 using Hotel_Reservation_System.Helpers;
+using Hotel.Repository.Services.FeedbackServices;
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -40,6 +41,7 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IReservationService, ReservationService>();
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
            
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));

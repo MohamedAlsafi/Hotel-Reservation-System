@@ -5,7 +5,7 @@ namespace Hotel.Core.Entities.FeedbackModel
 {
     public class Feedback : BaseEntity
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public int ReservationId { get; set; }
         public int Rating { get; set; }  // 1 to 5 scale
         public string? Comment { get; set; }
