@@ -2,9 +2,12 @@
 using Hotel.Core.Data.Configuration;
 using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.Reservation;
+using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
 using Hotel.Repository.ViewModels;
+using Hotel_Reservation_System.ViewModels.UserIdentity;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Repository.Services.ReservationService
@@ -62,7 +65,6 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
             return new ApiResponse<ReservationViewModel>(true, "Reservation retrieved successfully", reservationViewModel);
         }
-
         public async Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
@@ -80,6 +82,14 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationViewModels = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
 
             return new ApiResponse<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationViewModels);
+        }
+
+        public async Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback)
+        {
+            var feedback = _mapper.Map<Feedback>(mappedFeedback);
+            await _unitOfWork.Repository<Feedback>().AddAsync(feedback);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResponse<bool>(true, "Feedback provided successfully", true);
         }
     }
 }

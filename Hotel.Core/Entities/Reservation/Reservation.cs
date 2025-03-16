@@ -12,7 +12,7 @@ namespace Hotel.Core.Entities.Reservation
 {
     public class Reservation : BaseEntity
     {
-        public Customer? Customer { get; set; }
+        public Customer Customer { get; set; } // Fully qualified name to avoid conflict
         public int RoomId { get; set; }
         public Room? Room { get; set; }
         public DateTime CheckInDate { get; set; }
@@ -22,6 +22,5 @@ namespace Hotel.Core.Entities.Reservation
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public Feedback Feedback { get; set; }
         public string? PaymentIntentId { get; set; }
-
     }
 }

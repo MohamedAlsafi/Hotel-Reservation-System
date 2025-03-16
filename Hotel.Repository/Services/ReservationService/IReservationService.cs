@@ -2,6 +2,7 @@
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.ViewModels;
+using Hotel_Reservation_System.ViewModels.UserIdentity;
 
 namespace Hotel.Repository.Services.ReservationService
 {
@@ -13,5 +14,6 @@ namespace Hotel.Repository.Services.ReservationService
         Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync();
         Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id);
         Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
+        Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback);
     }
 }

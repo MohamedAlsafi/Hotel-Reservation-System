@@ -1,6 +1,10 @@
-﻿using Hotel.Core.Entities.customer;
+﻿using AutoMapper;
+using Hotel.Core.Dtos.Reservation;
+using Hotel.Core.Entities.customer;
 using Hotel.Repository.Services.OfferService.JWT_Token;
+using Hotel.Repository.Services.ReservationService;
 using Hotel_Reservation_System.Error;
+using Hotel_Reservation_System.ViewModels.Room;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,12 +23,18 @@ namespace Hotel_Reservation_System.Controllers
         private readonly ITokenService _tokenService;
         private readonly UserManager<Customer> _userManager;
         private readonly SignInManager<Customer> _signInManager;
+        private readonly IReservationService _reservationService;
+        private readonly IMapper _mapper;
 
-        public AccountController(ITokenService tokenService, UserManager<Customer> userManager, SignInManager<Customer> signInManager)
+        public AccountController(ITokenService tokenService
+            , UserManager<Customer> userManager, SignInManager<Customer> signInManager 
+            , IReservationService reservationService , IMapper mapper)
         {
-            this._tokenService = tokenService;
-            this._userManager = userManager;
-            this._signInManager = signInManager;
+           _tokenService = tokenService;
+           _userManager = userManager;
+            _signInManager = signInManager;
+            _reservationService = reservationService;
+            this._mapper = mapper;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO userDTO)
@@ -95,6 +105,53 @@ namespace Hotel_Reservation_System.Controllers
             };
             return Ok(obj);
 
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("SearchForRoom")]
+        public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
+        {
+            if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
+            var BookedRoom = await _reservationService.GetReservationByIdAsync(roomId);
+            if (BookedRoom is null)
+            {
+                var roomDto = new RoomDto
+                {
+                    Id = BookedRoom.RoomId,
+                    Facilities = BookedRoom.Facilities,
+                    ImageUrls = BookedRoom.ImageUrls,
+                    Price = BookedRoom.Price,
+                };
+                return Ok(roomDto );
+
+            }
+               if (BookedRoom is not null)
+                return BadRequest(new ApiExcaptionResponse(400, "Room Is Not Available!"));
+            return Ok();
+        }
+
+        [Authorize(Roles ="Customer")]
+        [HttpPost("MakeReservation")]
+
+        public async Task<ActionResult<ReservationDto>> MakeReservation(ReservationDto reservationDto)
+        {
+            if (reservationDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
+            var mappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
+            var reservation = await _reservationService.CreateReservationAsync(mappedReservation);
+            if (reservation is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
+            return Ok(reservation);
+        }
+
+        [Authorize]
+        [HttpPost("ProvideFeedback")]
+
+        public async Task<ActionResult<FeedbackDto>> ProvideFeedback(FeedbackDto feedbackDto)
+        {
+            if (feedbackDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
+            var mappedFeedback = _mapper.Map<FeedbackDto>(feedbackDto);
+            var feedback = await _reservationService.ProvideFeedbackAsync(mappedFeedback);
+            if (feedback is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
+            return Ok(feedback);
         }
 
     }

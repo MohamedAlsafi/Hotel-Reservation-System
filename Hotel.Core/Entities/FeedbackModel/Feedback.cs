@@ -1,5 +1,4 @@
 ﻿using Hotel.Core.Entities.customer;
-using System;
 
 namespace Hotel.Core.Entities.FeedbackModel
 {

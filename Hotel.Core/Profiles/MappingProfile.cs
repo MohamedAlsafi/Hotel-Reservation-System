@@ -5,9 +5,11 @@ using Hotel.Core.Dtos.Room;
 using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Dtos.Room.Update;
 using Hotel.Core.Entities.Enum;
+using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.OfferModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
+using Hotel_Reservation_System.ViewModels.UserIdentity;
 
 namespace Hotel.Core.Profiles
 {
@@ -53,6 +55,7 @@ namespace Hotel.Core.Profiles
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Reservation, CreateReservationDto>().ReverseMap();
             CreateMap<Reservation, ReservationDto>().ReverseMap();
+            CreateMap<Feedback , FeedbackDto>().ReverseMap();
         }
     }
 }

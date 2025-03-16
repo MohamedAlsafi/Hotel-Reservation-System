@@ -1,0 +1,13 @@
+﻿using Hotel.Core.Entities.Enum;
+
+namespace Hotel_Reservation_System.ViewModels.UserIdentity
+{
+    public class FeedbackDto
+    {
+        public int CustomerId { get; set; }
+        public int ReservationId { get; set; }
+        public CustomerFeedback Rating { get; set; }  // 1 to 5 scale
+        public string? Comment { get; set; }
+        public new DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+}

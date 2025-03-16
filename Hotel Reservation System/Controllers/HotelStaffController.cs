@@ -1,6 +1,7 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos;
 using Hotel.Core.Dtos.HotelDTO;
+using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
@@ -22,8 +23,8 @@ namespace Hotel_Reservation_System.Controllers
 
         public HotelStaffController(CustomerIdentityDbContext dbContext,ITokenService tokenService)
         {
-            this._dbContext = dbContext;
-            this._tokenService = tokenService;
+            _dbContext = dbContext;
+            _tokenService = tokenService;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<HotelStaffDTO>> Register(RegisterStaffDTO model)
@@ -82,5 +83,7 @@ namespace Hotel_Reservation_System.Controllers
 
             return Ok(ResultDto);
         }
+
+     
     }
 }
