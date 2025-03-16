@@ -41,9 +41,12 @@ namespace Hotel.Core.Data.Context
                     fk.DeleteBehavior = DeleteBehavior.NoAction;
                 }
             }
-
-            //modelBuilder.Entity<RoomOffer>().HasKey(s => new {s.OfferId , s.RoomId});
-            //modelBuilder.Entity<RoomStaff>().HasKey(s => new { s.StaffId, s.RoomId });
+            modelBuilder.Entity<CustomerData>()
+           .Property(c => c.Id)
+           .ValueGeneratedOnAdd();
         }
+        //modelBuilder.Entity<RoomOffer>().HasKey(s => new {s.OfferId , s.RoomId});
+        //modelBuilder.Entity<RoomStaff>().HasKey(s => new { s.StaffId, s.RoomId });
     }
+    
 }
