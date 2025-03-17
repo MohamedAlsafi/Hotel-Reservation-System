@@ -25,10 +25,19 @@ namespace Hotel.Repository.Services.FeedbackServices
         {
             try
             {
+                // Check for duplicate feedback
+                var existingFeedback =  _unitOfWork.Repository<Feedback>()
+                    .GetAllByCriteria(f => f.ReservationId == dto.ReservationId && f.CustomerId == dto.CustomerId);
+
+                if (existingFeedback != null && existingFeedback.Any())
+                {
+                    throw new InvalidOperationException("Feedback already exists for this reservation.");
+                }
+
                 var feedback = _mapper.Map<Feedback>(dto);
+                feedback.CreatedAt = DateTime.UtcNow;
 
                 await _unitOfWork.Repository<Feedback>().AddAsync(feedback);
-
                 await _unitOfWork.SaveChangesAsync();
 
                 return _mapper.Map<FeedbackDto>(feedback);
@@ -40,10 +49,47 @@ namespace Hotel.Repository.Services.FeedbackServices
                 {
                     Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
-                throw; 
+                throw;
             }
         }
 
+        public async Task<List<FeedbackDto>> GetAllFeedbackAsync()
+        {
+            var feedbacks = await _unitOfWork.Repository<Feedback>().GetAllAsync();
+            return _mapper.Map<List<FeedbackDto>>(feedbacks);
+        }
 
+        public async Task<FeedbackDto> GetFeedbackByIdAsync(int id)
+        {
+            var feedback = await _unitOfWork.Repository<Feedback>().GetByIdAsync(id);
+            if (feedback == null)
+            {
+                throw new KeyNotFoundException($"Feedback with ID {id} not found.");
+            }
+
+            return _mapper.Map<FeedbackDto>(feedback);
+        }
+
+        public async Task<List<FeedbackDto>> GetFeedbackByUserIdAsync(int userId)
+        {
+            var feedbacks =  _unitOfWork.Repository<Feedback>().GetAllByCriteria(f => f.CustomerId == userId);
+            return _mapper.Map<List<FeedbackDto>>(feedbacks);
+        }
+        public async Task<FeedbackDto> RespondToFeedbackAsync(int id, FeedbackResponseDto responseDto)
+        {
+            var feedback = await _unitOfWork.Repository<Feedback>().GetByIdAsync(id);
+            if (feedback == null)
+            {
+                throw new KeyNotFoundException($"Feedback with ID {id} not found.");
+            }
+
+            feedback.Response = responseDto.Response;
+         
+
+            _unitOfWork.Repository<Feedback>().UpdateInclude(feedback);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<FeedbackDto>(feedback);
+        }
     }
 }

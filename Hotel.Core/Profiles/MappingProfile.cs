@@ -62,6 +62,8 @@ namespace Hotel.Core.Profiles
             CreateMap<Feedback, FeedbackDto>().ReverseMap();
             CreateMap<Feedback, AddFeedbackDto>().ReverseMap();
             CreateMap<AddFeedbackDto, FeedbackDto>().ReverseMap();
+            CreateMap<FeedbackResponseDto, FeedbackDto>().ReverseMap();
+            CreateMap<FeedbackResponseDto, Feedback>().ReverseMap();
         }
     }
 }

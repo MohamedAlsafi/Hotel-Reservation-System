@@ -10,9 +10,9 @@ namespace Hotel.Repository.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly HotelDbContext _dbContext;
+        private readonly CustomerIdentityDbContext _dbContext;
         private readonly  Hashtable _repositories;
-        public UnitOfWork(HotelDbContext dbContext )
+        public UnitOfWork(CustomerIdentityDbContext dbContext )
         {
             _dbContext = dbContext;
             _repositories = new Hashtable();

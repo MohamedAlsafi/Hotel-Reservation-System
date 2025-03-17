@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.13" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\FeedbackDtos\NewFolder\" />
+  </ItemGroup>
+
 </Project>

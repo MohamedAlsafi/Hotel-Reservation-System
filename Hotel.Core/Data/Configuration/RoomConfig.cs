@@ -27,6 +27,8 @@ namespace Hotel.Core.Data.Configuration
             .HasForeignKey(img => img.RoomId);
 
 
+
+
         }
     }
 }

@@ -10,7 +10,10 @@ namespace Hotel.Repository.Services.FeedbackServices
 {
     public interface IFeedbackService
     {
-        public Task<FeedbackDto> AddFeedbackAsync(AddFeedbackDto dto);
+        Task<FeedbackDto> AddFeedbackAsync(AddFeedbackDto dto);
+        Task<List<FeedbackDto>> GetAllFeedbackAsync();
+        Task<List<FeedbackDto>> GetFeedbackByUserIdAsync(int userId);
 
+        Task<FeedbackDto> RespondToFeedbackAsync(int id, FeedbackResponseDto responseDto);
     }
 }

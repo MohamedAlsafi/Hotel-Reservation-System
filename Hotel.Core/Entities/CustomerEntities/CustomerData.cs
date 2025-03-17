@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.Core.Entities.FeedbackModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,8 +10,7 @@ namespace Hotel.Core.Entities.CustomerEntities
 {
    public class CustomerData :BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+      
         [Required, StringLength(50)]
         public required string FirstName { get; set; }
 
@@ -21,7 +21,6 @@ namespace Hotel.Core.Entities.CustomerEntities
 
         [Phone]
         public string? PhoneNumber { get; set; }
-
         public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
 
     }

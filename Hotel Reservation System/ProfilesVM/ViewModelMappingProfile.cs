@@ -41,6 +41,10 @@ namespace Hotel_Reservation_System.ProfilesVM
             CreateMap<AddFeedbackViewModel, AddFeedbackDto>().ReverseMap();
             CreateMap<AddFeedbackViewModel, FeedbackResponseViewModel>().ReverseMap();
             CreateMap<FeedbackDto, FeedbackResponseViewModel>().ReverseMap();
+            CreateMap<FeedbackResponseDto, FeedbackToResponseViewModel>().ReverseMap();
+            CreateMap<FeedbackResponseDto, FeedbackResponseViewModel>().ReverseMap();
+
+
             #endregion
 
         }

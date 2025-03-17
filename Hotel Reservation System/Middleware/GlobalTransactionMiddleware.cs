@@ -6,8 +6,8 @@ namespace Hotel_Reservation_System.Middleware
 {
     public class GlobalTransactionMiddleware : IMiddleware
     {
-        private readonly HotelDbContext  _dbContext;
-        public GlobalTransactionMiddleware(HotelDbContext dbContext)
+        private readonly CustomerIdentityDbContext  _dbContext;
+        public GlobalTransactionMiddleware(CustomerIdentityDbContext dbContext)
         {
             _dbContext = dbContext;
         }
