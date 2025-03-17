@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.CustomerEntities
 {
-    public class Customer : IdentityUser
+    public class Customer : BaseEntity
     {
      
         [Required, StringLength(50)]
@@ -29,5 +29,7 @@ namespace Hotel.Core.Entities.CustomerEntities
 
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string Address { get; set; }
     }
 }

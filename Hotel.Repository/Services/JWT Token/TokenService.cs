@@ -20,7 +20,7 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
         {
             _configuration = configuration;
         }
-        public async Task<string> GetTokenAsync(Customer user, UserManager<Customer> userManager)
+        public async Task<string> GetTokenAsync(Customer user, string userManager)
         {
             var AuthClaims = new List<Claim>()
             {
@@ -28,11 +28,11 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
                 new Claim(ClaimTypes.GivenName , user.FirstName),
                 new Claim(ClaimTypes.MobilePhone , user.PhoneNumber),
             };
-            var Roles = await userManager.GetRolesAsync(user);
-            foreach (var role in Roles)
-            {
-                AuthClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            //var Roles = await userManager.FirstOrDefault(user);
+            //foreach (var role in Roles)
+            //{
+            //    AuthClaims.Add(new Claim(ClaimTypes.Role, role));
+            //}
             var authKeyString = _configuration["Jwt:Key"];
             if (authKeyString?.Length < 32)
             {

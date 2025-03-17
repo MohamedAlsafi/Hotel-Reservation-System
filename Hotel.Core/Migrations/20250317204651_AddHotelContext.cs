@@ -8,74 +8,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hotel.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class WalahiT3bt : Migration
+    public partial class AddHotelContext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomerData",
+                name: "Customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerData", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Facility",
+                name: "Facilities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -87,11 +47,11 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Facility", x => x.Id);
+                    table.PrimaryKey("PK_Facilities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "HotelStaff",
+                name: "HotelStaffs",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -116,11 +76,11 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HotelStaff", x => x.Id);
+                    table.PrimaryKey("PK_HotelStaffs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Room",
+                name: "Rooms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -135,111 +95,11 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Room", x => x.Id);
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Offer",
+                name: "Offers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -256,20 +116,21 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Offer", x => x.Id);
+                    table.PrimaryKey("PK_Offers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Offer_HotelStaff_CreatedByStaffId",
+                        name: "FK_Offers_HotelStaffs_CreatedByStaffId",
                         column: x => x.CreatedByStaffId,
-                        principalTable: "HotelStaff",
+                        principalTable: "HotelStaffs",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation",
+                name: "Reservations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     CustomerDataId = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
                     CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -284,21 +145,21 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservation", x => x.Id);
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservation_CustomerData_CustomerDataId",
-                        column: x => x.CustomerDataId,
-                        principalTable: "CustomerData",
+                        name: "FK_Reservations_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Reservation_Room_RoomId",
+                        name: "FK_Reservations_Rooms_RoomId",
                         column: x => x.RoomId,
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomFacility",
+                name: "RoomFacilities",
                 columns: table => new
                 {
                     RoomId = table.Column<int>(type: "int", nullable: false)
@@ -312,21 +173,21 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomFacility", x => x.RoomId);
+                    table.PrimaryKey("PK_RoomFacilities", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_RoomFacility_Facility_FacilityId",
+                        name: "FK_RoomFacilities_Facilities_FacilityId",
                         column: x => x.FacilityId,
-                        principalTable: "Facility",
+                        principalTable: "Facilities",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RoomFacility_Room_RoomId1",
+                        name: "FK_RoomFacilities_Rooms_RoomId1",
                         column: x => x.RoomId1,
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomImage",
+                name: "RoomImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -339,16 +200,16 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomImage", x => x.Id);
+                    table.PrimaryKey("PK_RoomImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoomImage_Room_RoomId",
+                        name: "FK_RoomImages_Rooms_RoomId",
                         column: x => x.RoomId,
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomStaff",
+                name: "RoomStaffs",
                 columns: table => new
                 {
                     RoomId = table.Column<int>(type: "int", nullable: false)
@@ -359,21 +220,21 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomStaff", x => x.RoomId);
+                    table.PrimaryKey("PK_RoomStaffs", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_RoomStaff_HotelStaff_StaffId1",
+                        name: "FK_RoomStaffs_HotelStaffs_StaffId1",
                         column: x => x.StaffId1,
-                        principalTable: "HotelStaff",
+                        principalTable: "HotelStaffs",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RoomStaff_Room_RoomId1",
+                        name: "FK_RoomStaffs_Rooms_RoomId1",
                         column: x => x.RoomId1,
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomOffer",
+                name: "RoomOffers",
                 columns: table => new
                 {
                     RoomId = table.Column<int>(type: "int", nullable: false)
@@ -383,16 +244,16 @@ namespace Hotel.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomOffer", x => x.RoomId);
+                    table.PrimaryKey("PK_RoomOffers", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_RoomOffer_Offer_OfferId",
+                        name: "FK_RoomOffers_Offers_OfferId",
                         column: x => x.OfferId,
-                        principalTable: "Offer",
+                        principalTable: "Offers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RoomOffer_Room_RoomId1",
+                        name: "FK_RoomOffers_Rooms_RoomId1",
                         column: x => x.RoomId1,
-                        principalTable: "Room",
+                        principalTable: "Rooms",
                         principalColumn: "Id");
                 });
 
@@ -414,66 +275,27 @@ namespace Hotel.Core.Migrations
                 {
                     table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_CustomerData_CustomerId",
+                        name: "FK_Feedbacks_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "CustomerData",
+                        principalTable: "Customers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Reservation_ReservationId",
+                        name: "FK_Feedbacks_Reservations_ReservationId",
                         column: x => x.ReservationId,
-                        principalTable: "Reservation",
+                        principalTable: "Reservations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
-                table: "Facility",
+                table: "Facilities",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Deleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 3, 16, 15, 27, 43, 466, DateTimeKind.Local).AddTicks(260), null, false, "Wifi" },
-                    { 2, new DateTime(2025, 3, 16, 15, 27, 43, 466, DateTimeKind.Local).AddTicks(311), null, false, "TV" },
-                    { 3, new DateTime(2025, 3, 16, 15, 27, 43, 466, DateTimeKind.Local).AddTicks(313), null, false, "Mini Bar" },
-                    { 4, new DateTime(2025, 3, 16, 15, 27, 43, 466, DateTimeKind.Local).AddTicks(315), null, false, "air conditioning" }
+                    { 1, new DateTime(2025, 3, 17, 22, 46, 50, 422, DateTimeKind.Local).AddTicks(6560), null, false, "Wifi" },
+                    { 2, new DateTime(2025, 3, 17, 22, 46, 50, 422, DateTimeKind.Local).AddTicks(6634), null, false, "TV" },
+                    { 3, new DateTime(2025, 3, 17, 22, 46, 50, 422, DateTimeKind.Local).AddTicks(6639), null, false, "Mini Bar" },
+                    { 4, new DateTime(2025, 3, 17, 22, 46, 50, 422, DateTimeKind.Local).AddTicks(6644), null, false, "air conditioning" }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedbacks_CustomerId",
@@ -487,53 +309,53 @@ namespace Hotel.Core.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offer_CreatedByStaffId",
-                table: "Offer",
+                name: "IX_Offers_CreatedByStaffId",
+                table: "Offers",
                 column: "CreatedByStaffId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_CustomerDataId",
-                table: "Reservation",
-                column: "CustomerDataId");
+                name: "IX_Reservations_CustomerId",
+                table: "Reservations",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_RoomId",
-                table: "Reservation",
+                name: "IX_Reservations_RoomId",
+                table: "Reservations",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomFacility_FacilityId",
-                table: "RoomFacility",
+                name: "IX_RoomFacilities_FacilityId",
+                table: "RoomFacilities",
                 column: "FacilityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomFacility_RoomId1",
-                table: "RoomFacility",
+                name: "IX_RoomFacilities_RoomId1",
+                table: "RoomFacilities",
                 column: "RoomId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomImage_RoomId",
-                table: "RoomImage",
+                name: "IX_RoomImages_RoomId",
+                table: "RoomImages",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomOffer_OfferId",
-                table: "RoomOffer",
+                name: "IX_RoomOffers_OfferId",
+                table: "RoomOffers",
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomOffer_RoomId1",
-                table: "RoomOffer",
+                name: "IX_RoomOffers_RoomId1",
+                table: "RoomOffers",
                 column: "RoomId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomStaff_RoomId1",
-                table: "RoomStaff",
+                name: "IX_RoomStaffs_RoomId1",
+                table: "RoomStaffs",
                 column: "RoomId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomStaff_StaffId1",
-                table: "RoomStaff",
+                name: "IX_RoomStaffs_StaffId1",
+                table: "RoomStaffs",
                 column: "StaffId1");
         }
 
@@ -541,58 +363,37 @@ namespace Hotel.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
-                name: "RoomFacility");
+                name: "RoomFacilities");
 
             migrationBuilder.DropTable(
-                name: "RoomImage");
+                name: "RoomImages");
 
             migrationBuilder.DropTable(
-                name: "RoomOffer");
+                name: "RoomOffers");
 
             migrationBuilder.DropTable(
-                name: "RoomStaff");
+                name: "RoomStaffs");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Facilities");
 
             migrationBuilder.DropTable(
-                name: "Reservation");
+                name: "Offers");
 
             migrationBuilder.DropTable(
-                name: "Facility");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Offer");
+                name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "CustomerData");
-
-            migrationBuilder.DropTable(
-                name: "Room");
-
-            migrationBuilder.DropTable(
-                name: "HotelStaff");
+                name: "HotelStaffs");
         }
     }
 }

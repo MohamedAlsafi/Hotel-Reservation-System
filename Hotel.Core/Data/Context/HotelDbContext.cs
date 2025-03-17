@@ -16,12 +16,37 @@ namespace Hotel.Core.Data.Context
 {
     public class HotelDbContext : DbContext
     {
-
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Facility> Facilities { get; set; }
+        public DbSet<RoomFacility> RoomFacilities { get; set; }
+        public DbSet<RoomImage> RoomImages { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<RoomOffer> RoomOffers { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<HotelStaff> HotelStaffs { get; set; }
+        public DbSet<RoomStaff> RoomStaffs { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options)
         {
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(modelBuilder);
 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var foreignKeys = entityType.GetForeignKeys();
+                foreach (var fk in foreignKeys)
+                {
+                    fk.DeleteBehavior = DeleteBehavior.NoAction;
+                }
+            }
+        }
     }
+
 }
+

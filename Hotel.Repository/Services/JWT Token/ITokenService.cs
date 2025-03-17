@@ -10,7 +10,7 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
 {
     public interface ITokenService
     {
-        public Task<string> GetTokenAsync(Customer user, UserManager<Customer> userManager);
+        public Task<string> GetTokenAsync(Customer user, string userManager);
 
     }
 }
