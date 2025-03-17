@@ -15,10 +15,10 @@ namespace Hotel_Reservation_System.Controllers
     [ApiController]
     public class HotelStaffController : ControllerBase
     {
-        private readonly CustomerIdentityDbContext _dbContext;
+        private readonly    HotelDbContext _dbContext;
         private readonly ITokenService _tokenService;
 
-        public HotelStaffController(CustomerIdentityDbContext dbContext,ITokenService tokenService)
+        public HotelStaffController(HotelDbContext dbContext,ITokenService tokenService)
         {
             _dbContext = dbContext;
             _tokenService = tokenService;
@@ -27,7 +27,7 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ActionResult<HotelStaffDTO>> Register(RegisterStaffDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var existingUser = await _dbContext.HotelStaff.FirstOrDefaultAsync(x => x.Email == model.Email);
+            var existingUser = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email);
             if (existingUser != null)
                 return BadRequest(new ApiExcaptionResponse(400, "Email already exists"));
 
@@ -42,7 +42,7 @@ namespace Hotel_Reservation_System.Controllers
             if(User is null) return BadRequest(new ApiExcaptionResponse(400));
             try
             {
-                await _dbContext.HotelStaff.AddAsync(User);
+                await _dbContext.HotelStaffs.AddAsync(User);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -67,7 +67,7 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ActionResult<HotelStaffDTO>> Login(LoginDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var user = await _dbContext.HotelStaff.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
+            var user = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
 
             if(user is null) return Unauthorized(new ApiExcaptionResponse(401));
 

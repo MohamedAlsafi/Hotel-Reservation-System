@@ -16,13 +16,13 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly CustomerIdentityDbContext _customerIdentityDbContext;
+        private readonly HotelDbContext _dbContext;
 
-        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper, CustomerIdentityDbContext customerIdentityDbContext)
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper, HotelDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _customerIdentityDbContext = customerIdentityDbContext;
+            _dbContext = dbContext;
         }
 
 

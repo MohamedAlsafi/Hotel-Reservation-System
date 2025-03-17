@@ -9,10 +9,10 @@ namespace Hotel.Repository.GenericRepository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        private readonly CustomerIdentityDbContext _context;
+        private readonly HotelDbContext _context;
         DbSet<T> _dbSet;
 
-        public GenericRepository(CustomerIdentityDbContext context)
+        public GenericRepository(HotelDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();

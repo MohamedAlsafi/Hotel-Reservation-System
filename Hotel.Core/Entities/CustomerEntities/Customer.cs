@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Hotel.Core.Entities.customer
 {
-    public class Customer : IdentityUser
+    public class Customer : BaseEntity
     {
 
         [Required, StringLength(50)]

@@ -29,7 +29,6 @@ namespace Hotel_Reservation_System.Helpers
 
 
             });
-            Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<CustomerIdentityDbContext>();
 
             Services.AddScoped<ITokenService, TokenService>();
             return Services;

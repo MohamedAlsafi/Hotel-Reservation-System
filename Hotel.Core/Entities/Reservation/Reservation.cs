@@ -1,4 +1,5 @@
-﻿using Hotel.Core.Entities.CustomerEntities;
+﻿using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.CustomerEntities;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Rooms;
@@ -14,7 +15,7 @@ namespace Hotel.Core.Entities.Reservation
     {
 
         public int CustomerId { get; set; }
-        public CustomerData Customer { get; set; } 
+        public Customer Customer { get; set; }
         public int RoomId { get; set; }
         public Room Room { get; set; }
         public DateTime CheckInDate { get; set; }
