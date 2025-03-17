@@ -1,14 +1,11 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos;
 using Hotel.Core.Dtos.HotelDTO;
-using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -28,6 +28,6 @@ namespace Hotel.Core.Entities.customer
 
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public ICollection<Reservation.Reservation> Reservations { get; set; } = new HashSet<Reservation.Reservation>();
+
     }
 }
