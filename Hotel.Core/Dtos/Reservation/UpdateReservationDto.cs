@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.Core.Entities.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,6 @@ namespace Hotel.Core.Dtos.Reservation
         public DateTime CheckOutDate { get; set; }
         public int RoomId { get; set; }  
         public string? PaymenyIntentId { get; set; }
-        public int GuestId { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
     }
 }

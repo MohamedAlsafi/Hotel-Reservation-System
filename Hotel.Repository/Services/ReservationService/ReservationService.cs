@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using Hotel.Core.Data.Configuration;
-using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.UnitOfWork;
 using Hotel.Repository.ViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Repository.Services.ReservationService
 {
@@ -16,13 +13,11 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly HotelDbContext _dbContext;
 
-        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper, HotelDbContext dbContext)
+        public ReservationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _dbContext = dbContext;
         }
 
 
@@ -35,31 +30,24 @@ namespace Hotel.Repository.Services.ReservationService
             return new ApiResponse<ReservationViewModel>(true, "Reservation created successfully", reservationViewModel);
         }
 
-        public async Task<ApiResponse<bool>> CancelReservationAsync(int id)
+        public async Task<ApiResponse<ReservationViewModel>> CancelReservationAsync(int id)
         {
+            if(id <= 0)
+                return new ApiResponse<ReservationViewModel>(false, "Invalid reservation id", null!);
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null)
-                return new ApiResponse<bool>(false, "Reservation not found", false);
+            if (reservation is null)
+                return new ApiResponse<ReservationViewModel>(false, "Reservation not found", null!);
 
             _unitOfWork.Repository<Reservation>().SoftDelete(reservation);
             await _unitOfWork.SaveChangesAsync();
-            return new ApiResponse<bool>(true, "Reservation cancelled successfully", true);
+            return new ApiResponse<ReservationViewModel>(true, "Reservation cancelled successfully", null!);
         }
 
-        public async Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync(int id)
-        {
-            var reservations = await _unitOfWork.Repository<Reservation>().GetAllAsync();
-            var reservation = reservations.FirstOrDefault(r => r.Id == id );
-
-
-            var reservationViewModels = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
-            return new ApiResponse<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationViewModels);
-        }
 
         public async Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null)
+            if (reservation is null)
                 return new ApiResponse<ReservationViewModel>(false, "Reservation not found", null);
 
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
@@ -70,19 +58,11 @@ namespace Hotel.Repository.Services.ReservationService
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null)
                 return new ApiResponse<bool>(false, "Reservation not found", false);
-
-            _mapper.Map(reservationDto, reservation);
-            _unitOfWork.Repository<Reservation>().UpdateInclude(reservation);
+           await _unitOfWork.Repository<Reservation>().UpdateInclude(reservation , nameof(Reservation.RoomId) , nameof(Reservation.TotalPrice) , nameof(Reservation.PaymentStatus));
             await _unitOfWork.SaveChangesAsync();
             return new ApiResponse<bool>(true, "Reservation updated successfully", true);
         }
-        public async Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync()
-        {
-            var reservations = await _unitOfWork.Repository<Reservation>().GetAllAsync();
-            var reservationViewModels = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
 
-            return new ApiResponse<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationViewModels);
-        }
 
         public async Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback)
         {

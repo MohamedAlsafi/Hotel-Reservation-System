@@ -16,5 +16,6 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         public string Email { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
+       
     }
 }

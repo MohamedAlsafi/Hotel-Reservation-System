@@ -21,7 +21,6 @@ namespace Hotel.Repository.GenericRepository
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-      //      await _context.SaveChangesAsync();
         }
         public async Task<List<T>> GetAllAsync()
         {
@@ -49,32 +48,32 @@ namespace Hotel.Repository.GenericRepository
             _dbSet.Remove(item);
         }
 
-        public void SoftDelete(T item)
+        public async Task SoftDelete(T item)
         {
             item.Deleted = true;
-            UpdateInclude(item, nameof(BaseEntity.Deleted));
+           await UpdateInclude(item, nameof(BaseEntity.Deleted));
         }
 
-        public void UpdateInclude(T entity, params string[] modifiedProperties)
+        public async Task UpdateInclude(T entity, params string[] Includes)
         {
-            if (!_dbSet.Any(x => x.Id == entity.Id && !x.Deleted))
-                return;
-            var local = _dbSet.Local.FirstOrDefault(x => x.Id == entity.Id);
+            var local = _context.Set<T>().Local.FirstOrDefault(x => x.Id == entity.Id);
             EntityEntry entityEntry;
             if (local is null)
                 entityEntry = _context.Entry(entity);
+
             else
-                entityEntry = _context.ChangeTracker.Entries<T>().FirstOrDefault(x => x.Entity.Id == entity.Id);
-            foreach (var prop in entityEntry.Properties)
+                entityEntry = _context.ChangeTracker.Entries<T>().FirstOrDefault(X => X.Entity.Id == entity.Id);
+
+            foreach (var property in entityEntry.Properties)
             {
-                if (modifiedProperties.Contains(prop.Metadata.Name))
+                if (Includes.Contains(property.Metadata.Name))
                 {
-                    prop.CurrentValue = entity.GetType().GetProperty(prop.Metadata.Name).GetValue(entity);
-                    prop.IsModified = true;
+                    property.CurrentValue = entity.GetType().GetProperty(property.Metadata.Name).GetValue(entity);
+                    property.IsModified = true;
+
                 }
             }
-            _context.SaveChanges();
-
+            await _context.SaveChangesAsync();
         }
         public void UpdateExclude(T entity, params string[] unmodifiedProperties)
         {

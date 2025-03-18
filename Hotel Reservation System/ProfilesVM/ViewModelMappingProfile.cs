@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.FeedbackDtos;
+using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Dtos.Room;
 using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Dtos.Room.Update;
 using Hotel.Core.Entities.Enum;
+using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
+using Hotel.Repository.ViewModels;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Feedback;
 using Hotel_Reservation_System.ViewModels.Room;
@@ -35,6 +39,13 @@ namespace Hotel_Reservation_System.ProfilesVM
             .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
            . ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)) 
             .ReverseMap();
+            CreateMap<Reservation, ReservationViewModel>().ReverseMap();
+            CreateMap<CreateReservationDto, ReservationDto>().ReverseMap();
+            CreateMap<ApiResponse<ReservationViewModel> , ReservationDto>().ReverseMap();
+            CreateMap<ReservationViewModel, Reservation>().ReverseMap();
+
+
+
 
             #region Feedback
 

@@ -10,8 +10,7 @@ namespace Hotel.Repository.Services.ReservationService
     {
 
         Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto);
-        Task<ApiResponse<bool>> CancelReservationAsync(int id);
-        Task<ApiResponse<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync();
+        Task<ApiResponse<ReservationViewModel>> CancelReservationAsync(int id);
         Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id);
         Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
         Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback);

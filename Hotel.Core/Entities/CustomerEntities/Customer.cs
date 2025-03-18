@@ -29,5 +29,7 @@ namespace Hotel.Core.Entities.customer
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        public string UserName { get; set; }
+
     }
 }

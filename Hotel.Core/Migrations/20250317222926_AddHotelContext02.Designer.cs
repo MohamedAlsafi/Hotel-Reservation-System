@@ -4,6 +4,7 @@ using Hotel.Core.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Core.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317222926_AddHotelContext02")]
+    partial class AddHotelContext02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,28 +243,28 @@ namespace Hotel.Core.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 3, 18, 0, 46, 53, 372, DateTimeKind.Local).AddTicks(9280),
+                            CreatedAt = new DateTime(2025, 3, 18, 0, 29, 25, 963, DateTimeKind.Local).AddTicks(5464),
                             Deleted = false,
                             Name = "Wifi"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 3, 18, 0, 46, 53, 372, DateTimeKind.Local).AddTicks(9353),
+                            CreatedAt = new DateTime(2025, 3, 18, 0, 29, 25, 963, DateTimeKind.Local).AddTicks(5536),
                             Deleted = false,
                             Name = "TV"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 3, 18, 0, 46, 53, 372, DateTimeKind.Local).AddTicks(9358),
+                            CreatedAt = new DateTime(2025, 3, 18, 0, 29, 25, 963, DateTimeKind.Local).AddTicks(5541),
                             Deleted = false,
                             Name = "Mini Bar"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 3, 18, 0, 46, 53, 372, DateTimeKind.Local).AddTicks(9363),
+                            CreatedAt = new DateTime(2025, 3, 18, 0, 29, 25, 963, DateTimeKind.Local).AddTicks(5546),
                             Deleted = false,
                             Name = "air conditioning"
                         });

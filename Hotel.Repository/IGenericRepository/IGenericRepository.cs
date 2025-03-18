@@ -18,9 +18,9 @@ namespace Hotel.Repository.IGenericRepository
         public IQueryable<T> GetAllByCriteria(Expression<Func<T, bool>> criteria);
         public Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> criteria);
         public Task AddAsync(T entity);
-        public void SoftDelete(T item);
+        public Task SoftDelete(T item);
         public void HardDelete(T item);
-        public void UpdateInclude(T entity, params string[] modifiedProperties);
+        public Task UpdateInclude(T entity, params string[] modifiedProperties);
         public void UpdateExclude(T entity, params string[] unmodifiedProperties);
         Task AddRangeAsync(IEnumerable<T> entities);
     }

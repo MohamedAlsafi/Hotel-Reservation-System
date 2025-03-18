@@ -4,6 +4,7 @@ using Hotel.Core.Dtos.HotelDTO;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
+using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +16,19 @@ namespace Hotel_Reservation_System.Controllers
     [ApiController]
     public class HotelStaffController : ControllerBase
     {
-        private readonly    HotelDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
 
-        public HotelStaffController(HotelDbContext dbContext,ITokenService tokenService)
+        public HotelStaffController(IUnitOfWork unitOfWork ,ITokenService tokenService)
         {
-            _dbContext = dbContext;
+            this._unitOfWork = unitOfWork;
             _tokenService = tokenService;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<HotelStaffDTO>> Register(RegisterStaffDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var existingUser = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email);
+            var existingUser = await _unitOfWork.Repository<HotelStaff>().GetByCriteriaAsync(x => x.Email == model.Email);
             if (existingUser != null)
                 return BadRequest(new ApiExcaptionResponse(400, "Email already exists"));
 
@@ -42,8 +43,8 @@ namespace Hotel_Reservation_System.Controllers
             if(User is null) return BadRequest(new ApiExcaptionResponse(400));
             try
             {
-                await _dbContext.HotelStaffs.AddAsync(User);
-                await _dbContext.SaveChangesAsync();
+                await _unitOfWork.Repository<HotelStaff>().AddAsync(User);
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -67,9 +68,8 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ActionResult<HotelStaffDTO>> Login(LoginDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
-            var user = await _dbContext.HotelStaffs.FirstOrDefaultAsync(x => x.Email == model.Email && x.Password == model.Password);
-
-            if(user is null) return Unauthorized(new ApiExcaptionResponse(401));
+            var user = _unitOfWork.Repository<HotelStaff>().GetByCriteriaAsync(x => x.Email == model.Email).Result;
+            if (user is null) return Unauthorized(new ApiExcaptionResponse(401));
 
             var ResultDto = new HotelStaffDTO()
             {

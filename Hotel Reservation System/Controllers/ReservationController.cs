@@ -2,6 +2,8 @@
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.ReservationService;
+using Hotel.Repository.ViewModels;
+using Hotel_Reservation_System.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -20,42 +22,48 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateReservation([FromBody] CreateReservationDto reservationDto)
+        public async Task<ActionResult<ReservationDto>> CreateReservation([FromBody] CreateReservationDto reservationDto)
         {
-           // var reservation = _mapper.Map<Reservation>(reservationDto);
+            if(reservationDto == null) return BadRequest(new ApiExcaptionResponse(400 , "Invalid Reservation Data"));
             var MappedReservation= _mapper.Map<CreateReservationDto>(reservationDto);
-            await _reservationService.CreateReservationAsync(MappedReservation);
+             var Reservation=await _reservationService.CreateReservationAsync(MappedReservation);
+            if(Reservation is null) return BadRequest(new ApiExcaptionResponse(400));
             return CreatedAtAction(nameof(GetReservationById), new { id = MappedReservation.RoomId }, _mapper.Map<ReservationDto>(reservationDto));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetReservationById(int id)
+        [HttpGet("GetReservationById/{id}")]
+        public async Task<ActionResult<ReservationDto>> GetReservationById(int id)
         {
+            if(id <= 0) return BadRequest("Invalid reservation id.");
             var reservation = await _reservationService.GetReservationByIdAsync(id);
-            if (reservation == null) return NotFound();
-            return Ok(_mapper.Map<ReservationDto>(reservation));
-        }
+            if (reservation is null) return NotFound(new ApiExcaptionResponse(404, "Reservation not found"));
+            var mappedReservation = _mapper.Map<ReservationDto>(reservation);
+            return Ok(mappedReservation);
+        }   
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
+        [HttpPut("UpdateReservstion/{id}")]
+        public async Task<ActionResult<ReservationViewModel>> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
-            if (reservationDto == null) return BadRequest("Invalid reservation data.");
-
+            if(id <= 0) return BadRequest("Invalid reservation id.");
+            if (reservationDto is null) return BadRequest(new ApiExcaptionResponse(400 , "Invalid data"));
             var updated = await _reservationService.UpdateReservationAsync(id, reservationDto);
-            if (updated is null) return NotFound();
 
-            return NoContent();
+            if (updated is null) return NotFound(new ApiExcaptionResponse(404, "There are no updated data."));
+
+            return Ok();
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation(int id)
+        public async Task<ActionResult<ReservationViewModel>> DeleteReservation(int id)
         {
+            if(id <= 0) return BadRequest("Invalid reservation id.");
             var reservation = await _reservationService.GetReservationByIdAsync(id);
-            if (reservation == null) return NotFound();
+            if (reservation is null) return NotFound(new ApiExcaptionResponse(404 ,"Reservation not found"));
 
-            await _reservationService.CancelReservationAsync(id);
-            return NoContent();
+            var mapped =  await _reservationService.CancelReservationAsync(id);
+      
+            return Ok();
         }
     }
 }
