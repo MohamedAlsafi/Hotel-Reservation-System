@@ -45,9 +45,9 @@ namespace Hotel_Reservation_System.Controllers
                 var responseViewModels = _mapper.Map<List<FeedbackResponseViewModel>>(feedbacks);
                 return new ApiResponse<List<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new ApiResponse<List<FeedbackResponseViewModel>>(false, "An error occurred while retrieving feedback", null);
+                return new ApiResponse<List<FeedbackResponseViewModel>>(false, "An error occurred while retrieving feedback", null!);
             }
         }
 
@@ -64,11 +64,14 @@ namespace Hotel_Reservation_System.Controllers
             {
                 return new ApiResponse<FeedbackResponseViewModel>(false, ex.Message, null);
             }
+           
             catch (Exception ex)
             {
                 return new ApiResponse<FeedbackResponseViewModel>(false, "An error occurred while retrieving feedback", null);
             }
+            
         }
+        
         [HttpPost("{id}/respond")]
         //[Authorize(Roles = "Admin,Staff")]
         public async Task<ApiResponse<FeedbackResponseViewModel>> RespondToFeedback(int id, [FromBody] FeedbackToResponseViewModel model)
@@ -99,7 +102,7 @@ namespace Hotel_Reservation_System.Controllers
                 var responseViewModels = _mapper.Map<List<FeedbackResponseViewModel>>(feedbacks);
                 return new ApiResponse<List<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ApiResponse<List<FeedbackResponseViewModel>>(false, "An error occurred while retrieving feedback", null);
             }

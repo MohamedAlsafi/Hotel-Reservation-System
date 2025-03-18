@@ -72,11 +72,13 @@ namespace Hotel.Repository.Services.FeedbackServices
 
         public async Task<List<FeedbackDto>> GetFeedbackByUserIdAsync(int userId)
         {
-            var feedbacks =  _unitOfWork.Repository<Feedback>().GetAllByCriteria(f => f.CustomerId == userId);
+            var feedbacks = await Task.Run(() => _unitOfWork.Repository<Feedback>().GetAllByCriteria(f => f.CustomerId == userId));
             return _mapper.Map<List<FeedbackDto>>(feedbacks);
         }
         public async Task<FeedbackDto> RespondToFeedbackAsync(int id, FeedbackResponseDto responseDto)
         {
+            if(id <= 0) return null!;
+            if (responseDto is null) return null!;
             var feedback = await _unitOfWork.Repository<Feedback>().GetByIdAsync(id);
             if (feedback == null)
             {
@@ -84,12 +86,11 @@ namespace Hotel.Repository.Services.FeedbackServices
             }
 
             feedback.Response = responseDto.Response;
-         
 
-            _unitOfWork.Repository<Feedback>().UpdateInclude(feedback);
+           await _unitOfWork.Repository<Feedback>().UpdateInclude(feedback);
             await _unitOfWork.SaveChangesAsync();
-
-            return _mapper.Map<FeedbackDto>(feedback);
+           var mappedFeedback = _mapper.Map<FeedbackDto>(feedback);
+            return mappedFeedback;
         }
     }
 }

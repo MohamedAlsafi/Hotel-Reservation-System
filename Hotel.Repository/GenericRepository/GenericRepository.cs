@@ -62,14 +62,21 @@ namespace Hotel.Repository.GenericRepository
                 entityEntry = _context.Entry(entity);
 
             else
-                entityEntry = _context.ChangeTracker.Entries<T>().FirstOrDefault(X => X.Entity.Id == entity.Id);
+                entityEntry = _context.ChangeTracker.Entries<T>().FirstOrDefault(X => X.Entity.Id == entity.Id)!;
 
             foreach (var property in entityEntry.Properties)
             {
                 if (Includes.Contains(property.Metadata.Name))
                 {
-                    property.CurrentValue = entity.GetType().GetProperty(property.Metadata.Name).GetValue(entity);
-                    property.IsModified = true;
+                    foreach (var propertyEntry in entityEntry.Properties)
+                    {
+                        var propertyInfo = entity.GetType().GetProperty(property.Metadata.Name);
+                        if (propertyInfo != null)
+                        {
+                            property.CurrentValue = propertyInfo.GetValue(entity);
+                            property.IsModified = true;
+                        }
+                    }
 
                 }
             }
