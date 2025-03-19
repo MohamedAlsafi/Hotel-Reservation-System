@@ -17,5 +17,7 @@ namespace Hotel.Core.Entities.OfferModel
         public decimal DiscountPercentage { get; set; }
         public HotelStaff? CreatedByStaff { get; set; }
         public ICollection<RoomOffer>? RoomOffers { get; set; } = new List<RoomOffer>();
+        public bool IsRoomAvailable { get; set; }
+
     }
 }

@@ -19,9 +19,9 @@ namespace Hotel.Repository.Services.Payment
             _reservationService = reservationService;
             this._mapper = mapper;
         }
-        public async Task<ReservationDto> MakePaymentAsync(int customerId, int ReservationId)
+        public async Task<ReservationDto> MakePaymentOrUpdateAsync(int customerId, int ReservationId)
         {
-            if(ReservationId ==0) return null;
+            if(ReservationId ==0) return null!;
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
           var Reservation=await _reservationService.GetReservationByIdAsync(customerId);
             var mappedReservation = _mapper.Map<ReservationDto>(Reservation);

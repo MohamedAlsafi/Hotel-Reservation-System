@@ -24,6 +24,7 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ApiResponse<FeedbackResponseViewModel>> AddFeedback(AddFeedbackViewModel model)
         {
 

@@ -47,7 +47,7 @@ namespace Hotel.Repository.Services.OfferService
 
         public async Task<ApiResponse<IEnumerable<OfferViewModel>>> GetAllOffersAsync()
         {
-            var offers = await _unitOfWork.Repository<Offer>().GetAll().ToListAsync();
+            var offers = await _unitOfWork.Repository<Offer>().GetAll().Where(o=>o.IsRoomAvailable).ToListAsync();
             var offerVms = _mapper.Map<IEnumerable<OfferViewModel>>(offers);
             return new ApiResponse<IEnumerable<OfferViewModel>>(true, "Offers retrieved successfully", offerVms);
         }
@@ -63,11 +63,12 @@ namespace Hotel.Repository.Services.OfferService
 
         public async Task<ApiResponse<bool>> UpdateOfferAsync(int id, UpdateOfferDto offerDto)
         {
+            if (offerDto is null) return new ApiResponse<bool>(false, "Can't update offer", false);
             var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id);
-            if (offer == null) return new ApiResponse<bool>(false, "Offer not found", false);
+            if (offer is null) return new ApiResponse<bool>(false, "Offer not found", false);
 
             _mapper.Map(offerDto, offer);
-            _unitOfWork.Repository<Offer>().UpdateInclude(offer);
+             await _unitOfWork.Repository<Offer>().UpdateInclude(offer);
             await _unitOfWork.SaveChangesAsync();
 
             return new ApiResponse<bool>(true, "Offer updated successfully", true);

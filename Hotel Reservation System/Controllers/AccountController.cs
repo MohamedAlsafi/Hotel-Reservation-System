@@ -118,7 +118,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost("SearchForRoom")]
+        [HttpPost("SearchForRoom/{roomId}")]
         public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
         {
             if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
@@ -140,10 +140,10 @@ namespace Hotel_Reservation_System.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Customer")]
+      //  [Authorize(Roles = "Customer")]
         [HttpPost("MakeReservation")]
 
-        public async Task<ActionResult<ReservationDto>> MakeReservation(ReservationDto reservationDto)
+        public async Task<ActionResult<ReservationDto>> MakeReservationForSpecificCustomer(ReservationDto reservationDto)
         {
             if (reservationDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
             var mappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
@@ -155,7 +155,7 @@ namespace Hotel_Reservation_System.Controllers
         [Authorize]
         [HttpPost("ProvideFeedback")]
 
-        public async Task<ActionResult<FeedbackDto>> ProvideFeedback(FeedbackDto feedbackDto)
+        public async Task<ActionResult<FeedbackDto>> ProvideFeedbackFromSpecificCustomer(FeedbackDto feedbackDto)
         {
             if (feedbackDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
             var mappedFeedback = _mapper.Map<FeedbackDto>(feedbackDto);

@@ -8,7 +8,7 @@ namespace Hotel.Repository.Services.Payment
 {
     public interface IPaymentService
     {
-        Task<ReservationDto> MakePaymentAsync(int customerId,int ReservationId);
+        Task<ReservationDto> MakePaymentOrUpdateAsync(int customerId,int ReservationId);
          
     }
 }

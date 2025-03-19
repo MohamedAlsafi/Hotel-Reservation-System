@@ -1,5 +1,6 @@
 ﻿using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.CustomerEntities;
+using Hotel.Core.Entities.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,10 +10,9 @@ namespace Hotel.Core.Entities.FeedbackModel
     {
         public int? CustomerId { get; set; }
         public int ReservationId { get; set; }
-
-        [Range(1, 5)]
-        public int Rating { get; set; }  // 1 to 5 scale
+        public CustomerFeedback Rating { get; set; }  // 1 to 5 scale
         public string? Comment { get; set; }
+
         public string Response { get; set; }
 
         public new DateTime CreatedAt { get; set; } = DateTime.UtcNow;

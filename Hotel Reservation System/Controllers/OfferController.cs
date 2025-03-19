@@ -19,7 +19,7 @@ namespace Hotel_Reservation_System.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAllOffers()
+        public async Task<IActionResult> GetAllAvailableOffers()
         {
             var offers = await _offerService.GetAllOffersAsync();
             return Ok(offers);
