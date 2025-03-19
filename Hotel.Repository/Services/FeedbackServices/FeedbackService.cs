@@ -3,11 +3,6 @@ using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.FeedbackDtos.FeedbackResponseDtos;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Repository.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hotel.Repository.Services.FeedbackServices
 {
