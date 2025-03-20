@@ -1,6 +1,7 @@
 ﻿using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -32,14 +33,17 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
                 Claims = new Dictionary<string, object>
                 {
                     { ClaimTypes.NameIdentifier, user.FirstName },
-                    { ClaimTypes.Email, user.Email} ,
-                    {ClaimTypes.MobilePhone , user.PhoneNumber }
-
+                    { ClaimTypes.Email, user.Email },
+                    { ClaimTypes.MobilePhone, user.PhoneNumber },
+                    {ClaimTypes.Role , Roles.Admin }
                 },
+               
                 Expires = DateTime.UtcNow.AddDays(double.Parse(_configuration["Jwt:DurationInDays"])),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key)), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _configuration["Jwt:Issuer"]
             };
+
+            
 
             var token = TokenHandler.CreateToken(TokenDescriptor);
             return await Task.FromResult(TokenHandler.WriteToken(token));

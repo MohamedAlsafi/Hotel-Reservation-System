@@ -36,7 +36,7 @@ namespace Hotel.Repository.GenericRepository
               => await _dbSet.Where(criteria).FirstOrDefaultAsync();
 
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet
                 .Where(c => !c.Deleted && c.Id == id)

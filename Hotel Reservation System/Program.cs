@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Identity;
 using Hotel.Core.Entities.customer;
 using Hotel_Reservation_System.Helpers;
 using Hotel.Repository.Services.FeedbackServices;
+using Hotel.Repository.Services.PasswordHashing;
+using Hotel.Repository.Services.Username_Hashing;
 namespace Hotel_Reservation_System
 {
     public class Program
@@ -42,7 +44,10 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IReservationService, ReservationService>();
             builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-           
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IUsernameHasher, UserNameHaser>();
+
+
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
             builder.Services.AddDbContext<HotelDbContext>(options =>
@@ -88,7 +93,6 @@ namespace Hotel_Reservation_System
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

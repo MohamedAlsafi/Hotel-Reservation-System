@@ -24,7 +24,7 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ActionResult<PaymentProcessViewModel>> MakePaymentAsync(int ReservationId ,int customerId)
         {
             if(ReservationId == 0) return BadRequest(new ApiExcaptionResponse(400));
-            var result = await _paymentService.MakePaymentAsync(customerId, ReservationId);
+            var result = await _paymentService.MakePaymentOrUpdateAsync(customerId, ReservationId);
             if(result is null) return BadRequest(new ApiExcaptionResponse(400));
          
             if (!string.IsNullOrEmpty(result.PaymentIntentId))

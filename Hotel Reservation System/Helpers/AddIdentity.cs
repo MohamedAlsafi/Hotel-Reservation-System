@@ -1,10 +1,13 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Entities.customer;
+using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace Hotel_Reservation_System.Helpers
@@ -26,10 +29,22 @@ namespace Hotel_Reservation_System.Helpers
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                 };
+                Options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
 
-
+                        var claimsIdentity = context?.Principal?.Identity as ClaimsIdentity; 
+                       claimsIdentity?.AddClaim(new Claim(ClaimTypes.Role, Roles.User.ToString()));
+                    }
+                    
+                };
             });
-
+            Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ElavatedRights", policy => policy.RequireRole("Admin" , "User" , "Staff"));
+               
+            });
             Services.AddScoped<ITokenService, TokenService>();
             return Services;
         }

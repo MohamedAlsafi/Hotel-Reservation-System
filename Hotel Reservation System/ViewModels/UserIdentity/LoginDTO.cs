@@ -12,6 +12,6 @@ namespace Hotel_Reservation_System.ViewModels.UserIdentity
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-       
+      
     }
 }
