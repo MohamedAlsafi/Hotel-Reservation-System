@@ -11,8 +11,9 @@ namespace Hotel.Repository.Services.FeedbackServices
     public interface IFeedbackService
     {
         Task<FeedbackDto> AddFeedbackAsync(AddFeedbackDto dto);
-        Task<List<FeedbackDto>> GetAllFeedbackAsync();
+        Task<IEnumerable<FeedbackDto>> GetAllFeedbackAsync();
         Task<List<FeedbackDto>> GetFeedbackByUserIdAsync(int userId);
+        Task<FeedbackDto> GetFeedbackByIdAsync(int feedbackId);
 
         Task<FeedbackDto> RespondToFeedbackAsync(int id, FeedbackResponseDto responseDto);
     }

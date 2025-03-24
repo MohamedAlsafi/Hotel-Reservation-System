@@ -6,6 +6,7 @@ using Hotel.Core.Dtos.Room;
 using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Dtos.Room.Update;
 using Hotel.Core.Entities.Enum;
+using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Core.Entities.Reservation;
 using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.ViewModels;
@@ -54,6 +55,7 @@ namespace Hotel_Reservation_System.ProfilesVM
             CreateMap<FeedbackDto, FeedbackResponseViewModel>().ReverseMap();
             CreateMap<FeedbackResponseDto, FeedbackToResponseViewModel>().ReverseMap();
             CreateMap<FeedbackResponseDto, FeedbackResponseViewModel>().ReverseMap();
+            CreateMap<FeedbackResponseDto, Feedback>().ReverseMap();
 
 
             #endregion

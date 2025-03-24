@@ -8,6 +8,5 @@ namespace Hotel_Reservation_System.ViewModels.Feedback
         public int ReservationId { get; set; }
         public CustomerFeedback Rating { get; set; }  // 1 to 5 scale
         public string? Comment { get; set; }
-        public string Response { get; set; }
     }
 }

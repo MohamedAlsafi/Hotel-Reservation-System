@@ -22,5 +22,6 @@ namespace Hotel.Core.Data.Configuration
             Message = message;
             Data = data;
         }
+
     }
 }

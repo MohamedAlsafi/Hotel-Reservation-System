@@ -13,7 +13,7 @@ namespace Hotel.Core.Entities.FeedbackModel
         public CustomerFeedback Rating { get; set; }  // 1 to 5 scale
         public string? Comment { get; set; }
 
-        public string Response { get; set; }
+        public string? Response { get; set; } = null;
 
         public new DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [ForeignKey(nameof(ReservationId))]
