@@ -11,45 +11,38 @@ namespace Hotel_Reservation_System.Middleware
         private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IWebHostEnvironment _env;
 
-        public ExceptionMiddleware(RequestDelegate next ,ILogger<ExceptionMiddleware> logger ,IWebHostEnvironment env)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IWebHostEnvironment env)
         {
             _next = next;
             _logger = logger;
             _env = env;
         }
 
-        public async Task InvokeAsync(HttpContext httpcontext)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next.Invoke(httpcontext); //go to the next middelware
-
+                await _next(httpContext);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "[{Middleware}] {ExceptionType}: {Message}", nameof(ExceptionMiddleware), ex.GetType().Name, ex.Message);
 
-                _logger.LogError(ex.Message); //devolpment enviroment 
+                httpContext.Response.StatusCode = ex switch
+                {
+                    InvalidOperationException or ArgumentException => (int)HttpStatusCode.BadRequest, // 400
+                    KeyNotFoundException => (int)HttpStatusCode.NotFound, // 404
+                    _ => (int)HttpStatusCode.InternalServerError // 500
+                };
 
-                httpcontext.Response.StatusCode=(int) HttpStatusCode.InternalServerError;
-                httpcontext.Response.ContentType = "application/json";
+                httpContext.Response.ContentType = "application/json";
 
-                var response = _env.IsDevelopment() ?
-                    new ApiExcaptionResponse((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace.ToString())
-                    : new ApiExcaptionResponse((int)HttpStatusCode.InternalServerError);
+                var response = _env.IsDevelopment()
+                    ? new ApiExcaptionResponse(httpContext.Response.StatusCode, $"{ex.GetType().Name}: {ex.Message}", ex.StackTrace)
+                    : new ApiExcaptionResponse(httpContext.Response.StatusCode, "An unexpected error occurred. Please try again later.");
 
-                var json =JsonSerializer.Serialize(response);
-
-                await httpcontext.Response.WriteAsync(json);
-
-
+                await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
-
         }
-
-
-
-
-
-
     }
 }
