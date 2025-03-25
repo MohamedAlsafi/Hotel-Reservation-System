@@ -9,10 +9,10 @@ namespace Hotel.Repository.Services.ReservationService
     public interface IReservationService
     {
 
-        Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto);
-        Task<ApiResponse<ReservationViewModel>> CancelReservationAsync(int id);
-        Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id);
-        Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
-        Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback);
+        Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto);
+        Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id);
+        Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id);
+        Task<ResponseViewModel<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
+        Task<ResponseViewModel<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback);
     }
 }

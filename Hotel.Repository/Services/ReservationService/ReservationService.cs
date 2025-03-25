@@ -21,55 +21,55 @@ namespace Hotel.Repository.Services.ReservationService
         }
 
 
-        public async Task<ApiResponse<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
+        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
         {
             var reservation = _mapper.Map<Reservation>(reservationDto);
             await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
             await _unitOfWork.SaveChangesAsync();
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
-            return new ApiResponse<ReservationViewModel>(true, "Reservation created successfully", reservationViewModel);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationViewModel);
         }
 
-        public async Task<ApiResponse<ReservationViewModel>> CancelReservationAsync(int id)
+        public async Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id)
         {
             if(id <= 0)
-                return new ApiResponse<ReservationViewModel>(false, "Invalid reservation id", null!);
+                return new ResponseViewModel<ReservationViewModel>(false, "Invalid reservation id", null!);
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation is null)
-                return new ApiResponse<ReservationViewModel>(false, "Reservation not found", null!);
+                return new ResponseViewModel<ReservationViewModel>(false, "Reservation not found", null!);
 
             _unitOfWork.Repository<Reservation>().SoftDelete(reservation);
             await _unitOfWork.SaveChangesAsync();
-            return new ApiResponse<ReservationViewModel>(true, "Reservation cancelled successfully", null!);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation cancelled successfully", null!);
         }
 
 
-        public async Task<ApiResponse<ReservationViewModel>> GetReservationByIdAsync(int id)
+        public async Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation is null)
-                return new ApiResponse<ReservationViewModel>(false, "Reservation not found", null);
+                return new ResponseViewModel<ReservationViewModel>(false, "Reservation not found", null);
 
             var reservationViewModel = _mapper.Map<ReservationViewModel>(reservation);
-            return new ApiResponse<ReservationViewModel>(true, "Reservation retrieved successfully", reservationViewModel);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation retrieved successfully", reservationViewModel);
         }
-        public async Task<ApiResponse<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
+        public async Task<ResponseViewModel<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null)
-                return new ApiResponse<bool>(false, "Reservation not found", false);
+                return new ResponseViewModel<bool>(false, "Reservation not found", false);
            await _unitOfWork.Repository<Reservation>().UpdateInclude(reservation , nameof(Reservation.RoomId) , nameof(Reservation.TotalPrice) , nameof(Reservation.PaymentStatus));
             await _unitOfWork.SaveChangesAsync();
-            return new ApiResponse<bool>(true, "Reservation updated successfully", true);
+            return new ResponseViewModel<bool>(true, "Reservation updated successfully", true);
         }
 
 
-        public async Task<ApiResponse<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback)
+        public async Task<ResponseViewModel<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback)
         {
             var feedback = _mapper.Map<Feedback>(mappedFeedback);
             await _unitOfWork.Repository<Feedback>().AddAsync(feedback);
             await _unitOfWork.SaveChangesAsync();
-            return new ApiResponse<bool>(true, "Feedback provided successfully", true);
+            return new ResponseViewModel<bool>(true, "Feedback provided successfully", true);
         }
     }
 }

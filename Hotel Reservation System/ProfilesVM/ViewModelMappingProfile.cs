@@ -42,7 +42,7 @@ namespace Hotel_Reservation_System.ProfilesVM
             .ReverseMap();
             CreateMap<Reservation, ReservationViewModel>().ReverseMap();
             CreateMap<CreateReservationDto, ReservationDto>().ReverseMap();
-            CreateMap<ApiResponse<ReservationViewModel> , ReservationDto>().ReverseMap();
+            CreateMap<ResponseViewModel<ReservationViewModel> , ReservationDto>().ReverseMap();
             CreateMap<ReservationViewModel, Reservation>().ReverseMap();
 
 

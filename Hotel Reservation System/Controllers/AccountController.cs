@@ -143,10 +143,10 @@ namespace Hotel_Reservation_System.Controllers
             {
                 var roomDto = new RoomDto
                 {
-                    Id = BookedRoom.RoomId,
-                    Facilities = BookedRoom.Facilities,
-                    ImageUrls = BookedRoom.ImageUrls,
-                    Price = BookedRoom.Price,
+                    //Id = BookedRoom.RoomId,
+                    //Facilities = BookedRoom.Facilities,
+                    //ImageUrls = BookedRoom.ImageUrls,
+                    //Price = BookedRoom.Price,
                 };
                 return Ok(roomDto);
 
