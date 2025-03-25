@@ -34,14 +34,12 @@ namespace Hotel_Reservation_System.Helpers
                     OnTokenValidated = async context =>
                     {
                         var claimsIdentity = context?.Principal?.Identity as ClaimsIdentity;
-                        if (claimsIdentity != null && claimsIdentity.)
+                        if (claimsIdentity != null && claimsIdentity.HasClaim(claim => claim.Type == ClaimTypes.Role && claim.Value == Roles.User.ToString()))
                         {
                             var role = Roles.User; // or any default role
                             claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
-                            var Role = Roles.Staff;
-                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Role.ToString()));
-
                         }
+                        else { var Role = Roles.Staff; claimsIdentity?.AddClaim(new Claim(ClaimTypes.Role, Role.ToString())); }
                     }
                 };
             });

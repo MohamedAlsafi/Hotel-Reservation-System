@@ -133,14 +133,14 @@ namespace Hotel_Reservation_System.Controllers
             var BookedRoom = await _reservationService.GetReservationByIdAsync(roomId);
             if (BookedRoom is null)
             {
-                var roomDto = new RoomDto
-                {
-                    //Id = BookedRoom.RoomId,
-                    //Facilities = BookedRoom.Facilities,
-                    //ImageUrls = BookedRoom.ImageUrls,
-                    //Price = BookedRoom.Price,
-                };
-                return Ok(roomDto);
+                //var roomDto = new RoomDto
+                //{
+                //    //Id = BookedRoom.RoomId,
+                //    //Facilities = BookedRoom.Facilities,
+                //    //ImageUrls = BookedRoom.ImageUrls,
+                //    //Price = BookedRoom.Price,
+                //};
+                //return Ok(roomDto);
 
             }
             if (BookedRoom is not null)
