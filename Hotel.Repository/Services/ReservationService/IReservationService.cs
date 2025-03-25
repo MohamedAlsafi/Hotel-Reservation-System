@@ -1,7 +1,5 @@
-﻿using Hotel.Core.Data.Configuration;
-using Hotel.Core.Dtos.FeedbackDtos;
+﻿using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Reservation;
-using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.ViewModels;
 
 namespace Hotel.Repository.Services.ReservationService

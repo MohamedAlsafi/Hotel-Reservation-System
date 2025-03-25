@@ -131,7 +131,7 @@ namespace Hotel_Reservation_System.Controllers
         {
             if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
             var BookedRoom = await _reservationService.GetReservationByIdAsync(roomId);
-            if (BookedRoom is null)
+            if (BookedRoom is null) 
             {
                 //var roomDto = new RoomDto
                 //{
