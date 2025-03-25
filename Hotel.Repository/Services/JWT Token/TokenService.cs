@@ -36,7 +36,7 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
                     { ClaimTypes.Email, user.Email },
                     { ClaimTypes.MobilePhone, user.PhoneNumber },
                     // Convert enum to string before adding to claims
-                    { ClaimTypes.Role, Roles.Admin.ToString() }
+                    { ClaimTypes.Role, Roles.User.ToString() }
                 },
 
                 Expires = DateTime.UtcNow.AddDays(double.Parse(_configuration["Jwt:DurationInDays"])),
@@ -54,7 +54,7 @@ namespace Hotel.Repository.Services.OfferService.JWT_Token
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Role, role.ToString())
+                new Claim(ClaimTypes.Role, Roles.Staff.ToString())
             };
 
             var authKeyString = _configuration["Jwt:Key"];

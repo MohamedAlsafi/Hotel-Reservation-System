@@ -3,7 +3,6 @@ using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.customer;
-using Hotel.Core.Entities.Enum;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Hotel.Repository.Services.PasswordHashing;
 using Hotel.Repository.Services.ReservationService;
@@ -12,14 +11,7 @@ using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.Room;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Hotel_Reservation_System.Controllers
 {

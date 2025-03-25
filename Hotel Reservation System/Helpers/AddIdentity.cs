@@ -33,17 +33,21 @@ namespace Hotel_Reservation_System.Helpers
                 {
                     OnTokenValidated = async context =>
                     {
+                        var claimsIdentity = context?.Principal?.Identity as ClaimsIdentity;
+                        if (claimsIdentity != null && claimsIdentity.)
+                        {
+                            var role = Roles.User; // or any default role
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
+                            var Role = Roles.Staff;
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Role.ToString()));
 
-                        var claimsIdentity = context?.Principal?.Identity as ClaimsIdentity; 
-                       claimsIdentity?.AddClaim(new Claim(ClaimTypes.Role, Roles.User.ToString()));
+                        }
                     }
-                    
                 };
             });
             Services.AddAuthorization(options =>
             {
-                options.AddPolicy("ElavatedRights", policy => policy.RequireRole("Admin" , "User" , "Staff"));
-               
+                options.AddPolicy("ElavatedRights", policy => policy.RequireRole("User", "Staff"));
             });
             Services.AddScoped<ITokenService, TokenService>();
             return Services;

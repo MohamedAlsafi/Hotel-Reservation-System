@@ -8,8 +8,7 @@ namespace Hotel.Core.Entities.Enum
 {
    public enum Roles
     {
-         Admin,
-       Staff ,
-     User 
+         
+       Staff ,User 
     }
 }
