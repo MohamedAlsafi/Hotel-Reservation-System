@@ -61,12 +61,17 @@ namespace Hotel_Reservation_System.Controllers
             var result = await _reservationService.UpdateReservationAsync(id, reservationDto);
             return StatusCode(result.Success ? 200 : 400, result);
         }
-        //[HttpPost("feedback")]
-        //public async Task<ActionResult<ResponseViewModel<bool>>> ProvideFeedback([FromBody] FeedbackDto feedbackDto)
-        //{
-        //    var result = await _reservationService.ProvideFeedbackAsync(feedbackDto);
-        //    return StatusCode(result.Success ? 201 : 400, result);
-        //}
+        [Authorize(Roles = "User")]
 
+        [HttpPost("MakeReservation")]
+
+        public async Task<ActionResult<ReservationDto>> MakeReservationForSpecificCustomer(ReservationDto reservationDto)
+        {
+            if (reservationDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
+            var mappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
+            var reservation = await _reservationService.CreateReservationAsync(mappedReservation);
+            if (reservation is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
+            return Ok(reservation);
+        }
     }
 }

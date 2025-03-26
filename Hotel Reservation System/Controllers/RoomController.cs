@@ -2,6 +2,7 @@
 using Hotel.Core.Dtos.Room.Create;
 using Hotel.Core.Dtos.Room.Update;
 using Hotel.Repository.Services.RoomService;
+using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Room;
 using Microsoft.AspNetCore.Authorization;
@@ -135,6 +136,18 @@ namespace Hotel_Reservation_System.Controllers
                 return Ok(true);
             
             
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost("SearchForRoom/{roomId}")]
+        public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
+        {
+            if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
+            var room = await _roomServices.SearchForRoomAsync(roomId);
+            if (room is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
+            var roomDto = _mapper.Map<RoomDto>(room);
+            return Ok(roomDto);
+
         }
     }
 

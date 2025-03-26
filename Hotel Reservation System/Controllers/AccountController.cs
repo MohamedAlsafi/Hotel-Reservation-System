@@ -22,30 +22,21 @@ namespace Hotel_Reservation_System.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ITokenService _tokenService;
-        private readonly IReservationService _reservationService;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUsernameHasher _usernameHasher;
-        private readonly IRoomServices _roomServices;
 
-        public AccountController(ITokenService tokenService,IReservationService reservationService,
-            IMapper mapper,IUnitOfWork unitOfWork , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher , IRoomServices roomServices)
+        public AccountController(ITokenService tokenService,IUnitOfWork unitOfWork , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher)
         {
            _tokenService = tokenService;
-           _reservationService = reservationService;
-           _mapper = mapper;
            _unitOfWork = unitOfWork;
            _passwordHasher = passwordHasher;
            _usernameHasher = usernameHasher;
-            this._roomServices = roomServices;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO userDTO)
         {
             if (userDTO is null) return BadRequest(new ApiExcaptionResponse(400));
-            //  "password": "P@ssw0rd",
-           // "email": "Hussam@yahoo.com",
             var existingUser = await _unitOfWork.Repository<Customer>().GetByCriteriaAsync(x => x.Email == userDTO.Email);
             if (existingUser != null)
                 return BadRequest(new ApiExcaptionResponse(400, "Email already exists"));
@@ -115,41 +106,8 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(ResultDto);
         }
      
-        [Authorize(Roles ="User")]
-        [HttpPost("SearchForRoom/{roomId}")]
-        public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
-        {
-            if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
-           var room = await _roomServices.SearchForRoomAsync(roomId);
-            if (room is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
-            var roomDto = _mapper.Map<RoomDto>(room);
-            return Ok(roomDto);
-
-        }
-        [Authorize(Roles = "User")]
-
-        [HttpPost("MakeReservation")]
-
-        public async Task<ActionResult<ReservationDto>> MakeReservationForSpecificCustomer(ReservationDto reservationDto)
-        {
-            if (reservationDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
-            var mappedReservation = _mapper.Map<CreateReservationDto>(reservationDto);
-            var reservation = await _reservationService.CreateReservationAsync(mappedReservation);
-            if (reservation is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
-            return Ok(reservation);
-        }
-        [Authorize(Roles = "User")]
-
-        [HttpPost("ProvideFeedback")]
-
-        public async Task<ActionResult<FeedbackDto>> ProvideFeedbackFromSpecificCustomer(FeedbackDto feedbackDto)
-        {
-            if (feedbackDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
-            var mappedFeedback = _mapper.Map<FeedbackDto>(feedbackDto);
-            var feedback = await _reservationService.ProvideFeedbackAsync(mappedFeedback);
-            if (feedback is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
-            return Ok(feedback);
-        }
+   
+       
 
     }
 }

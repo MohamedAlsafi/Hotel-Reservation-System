@@ -2,6 +2,8 @@
 using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Repository.Services.FeedbackServices;
+using Hotel.Repository.Services.ReservationService;
+using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.Feedback;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +16,13 @@ namespace Hotel_Reservation_System.Controllers
     {
         private readonly IFeedbackService _feedbackService;
         private readonly IMapper _mapper;
+        private readonly IReservationService _reservationService;
 
-        public FeedbackController(IFeedbackService feedbackService, IMapper mapper)
+        public FeedbackController(IFeedbackService feedbackService, IMapper mapper , IReservationService reservationService)
         {
             _feedbackService = feedbackService;
             _mapper = mapper;
+            this._reservationService = reservationService;
         }
 
         [HttpPost]
@@ -69,6 +73,17 @@ namespace Hotel_Reservation_System.Controllers
             var responseViewModels = _mapper.Map<List<FeedbackResponseViewModel>>(feedbacks);
             return ResponseViewModel<List<FeedbackResponseViewModel>>.SuccessResult(responseViewModels, "Feedbacks retrieved successfully");
         }
+        [Authorize(Roles = "User")]
 
+        [HttpPost("ProvideFeedback")]
+
+        public async Task<ActionResult<FeedbackDto>> ProvideFeedbackFromSpecificCustomer(FeedbackDto feedbackDto)
+        {
+            if (feedbackDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
+            var mappedFeedback = _mapper.Map<FeedbackDto>(feedbackDto);
+            var feedback = await _reservationService.ProvideFeedbackAsync(mappedFeedback);
+            if (feedback is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Feedback Data"));
+            return Ok(feedback);
+        }
     }
 }
