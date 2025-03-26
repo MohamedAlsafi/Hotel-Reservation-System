@@ -8,9 +8,18 @@ namespace Hotel.Repository.Services.ReservationService
     {
 
         Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto);
-        Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id);
+        Task<ResponseViewModel<bool>> CancelReservationAsync(int id);
         Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id);
         Task<ResponseViewModel<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto);
         Task<ResponseViewModel<bool>> ProvideFeedbackAsync(FeedbackDto mappedFeedback);
+        Task<ResponseViewModel<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync();
     }
-}
+   
+       
+    }
+
+
+
+
+
+

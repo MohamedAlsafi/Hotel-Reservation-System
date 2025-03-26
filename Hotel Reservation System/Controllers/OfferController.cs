@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Offer;
 using Hotel.Repository.Services.OfferService;
+using Hotel_Reservation_System.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -12,51 +13,54 @@ namespace Hotel_Reservation_System.Controllers
         private readonly IOfferService _offerService;
         private readonly IMapper _mapper;
 
-        public OfferController(IOfferService offerService , IMapper mapper)
+        public OfferController(IOfferService offerService, IMapper mapper)
         {
             _offerService = offerService;
             _mapper = mapper;
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetAllAvailableOffers()
-        {
-            var offers = await _offerService.GetAllOffersAsync();
-            return Ok(offers);
-        }
-
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOfferById(int id)
-        {
-            var offer = await _offerService.GetOfferByIdAsync(id);
-            if (offer == null) return NotFound();
-            return Ok(offer);
-        }
-
-
         [HttpPost]
-        public async Task<ActionResult<OfferDto>> CreateOffer([FromBody] CreateOfferDto offerDto)
+        public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> CreateOffer([FromBody] CreateOfferDto offerDto)
         {
-            var createdOffer = await _offerService.CreateOfferAsync(offerDto);
-            return CreatedAtAction(nameof(GetOfferById), new { id = createdOffer }, createdOffer);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseViewModel<OfferViewModel>(false, "Invalid offer data", null));
+            }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOffer(int id, [FromBody] CreateOfferDto offerDto)
-        {
-            var MappedOffer = _mapper.Map<UpdateOfferDto>(offerDto);
-            var Result = await _offerService.UpdateOfferAsync(id, MappedOffer);
-            if (!Result.Success) return NotFound();
-            return NoContent();
+            var result = await _offerService.CreateOfferAsync(offerDto);
+            return StatusCode(result.Success ? 201 : 400, result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOffer(int id)
+        public async Task<ActionResult<ResponseViewModel<bool>>> DeleteOffer(int id)
         {
-            var response = await _offerService.DeleteOfferAsync(id);
-            if (!response.Success) return NotFound();
-            return NoContent();
+            var result = await _offerService.DeleteOfferAsync(id);
+            return StatusCode(result.Success ? 200 : 404, result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ResponseViewModel<IEnumerable<OfferViewModel>>>> GetAllOffers()
+        {
+            var result = await _offerService.GetAllOffersAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> GetOfferById(int id)
+        {
+            var result = await _offerService.GetOfferByIdAsync(id);
+            return StatusCode(result.Success ? 200 : 404, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseViewModel<bool>>> UpdateOffer(int id, [FromBody] UpdateOfferDto offerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseViewModel<bool>(false, "Invalid offer data", false));
+            }
+
+            var result = await _offerService.UpdateOfferAsync(id, offerDto);
+            return StatusCode(result.Success ? 200 : 400, result);
         }
     }
 }
