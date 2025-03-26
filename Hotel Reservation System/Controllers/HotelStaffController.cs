@@ -1,6 +1,7 @@
 ﻿using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos;
 using Hotel.Core.Dtos.HotelDTO;
+using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
@@ -9,6 +10,7 @@ using Hotel.Repository.Services.Username_Hashing;
 using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -92,7 +94,22 @@ namespace Hotel_Reservation_System.Controllers
 
             return Ok(ResultDto);
         }
+        [Authorize(Roles = "Staff")]
+        [HttpGet("CurrentUser")]
+        public async Task<ActionResult<UserDTO>> GetCurrentUser(string Email)
+        {
+            if (Email is null) return Unauthorized(new ApiExcaptionResponse(401));
+            var user = await _unitOfWork.Repository<Customer>().GetByCriteriaAsync(x => x.Email == Email);
+            if (user is null) return Unauthorized(new ApiExcaptionResponse(401));
+            var obj = new UserDTO()
+            {
+                UserName = user.UserName,
+                Email = Email,
+                Token = await _tokenService.GetTokenAsync(user, user.Email)
+            };
+            return Ok(obj);
 
-     
+        }
+
     }
 }

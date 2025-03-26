@@ -114,22 +114,7 @@ namespace Hotel_Reservation_System.Controllers
             };
             return Ok(ResultDto);
         }
-        [Authorize(Roles = "Staff")]
-        [HttpGet("CurrentUser")]
-        public async Task<ActionResult<UserDTO>> GetCurrentUser(string Email)
-        {
-            if (Email is null) return Unauthorized(new ApiExcaptionResponse(401));
-            var user = await _unitOfWork.Repository<Customer>().GetByCriteriaAsync(x => x.Email == Email);
-            if (user is null) return Unauthorized(new ApiExcaptionResponse(401));
-            var obj = new UserDTO()
-            {
-                UserName = user.UserName,
-                Email = Email,
-                Token = await _tokenService.GetTokenAsync(user,user.Email)
-            };
-            return Ok(obj);
-
-        }
+     
         [Authorize(Roles ="User")]
         [HttpPost("SearchForRoom/{roomId}")]
         public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
