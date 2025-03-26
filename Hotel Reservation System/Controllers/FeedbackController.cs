@@ -22,7 +22,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize(Roles = "User")]
+
         public async Task<ResponseViewModel<FeedbackResponseViewModel>> AddFeedback(AddFeedbackViewModel model)
         {
             var feedback = _mapper.Map<AddFeedbackDto>(model);
@@ -33,14 +34,14 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>> GetAllFeedback()
         {
             var feedbacks = await _feedbackService.GetAllFeedbackAsync();
             var responseViewModels = _mapper.Map<IEnumerable<FeedbackResponseViewModel>>(feedbacks);
             return new ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
         }
-
+        [Authorize(Roles = "Staff")]
         [HttpGet("{id}")]
         public async Task<ResponseViewModel<FeedbackResponseViewModel>> GetFeedbackById(int id)
         {
@@ -50,7 +51,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPost("{id}/respond")]
-        //[Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseViewModel<FeedbackResponseViewModel>> RespondToFeedback(int id, [FromBody] FeedbackToResponseViewModel model)
         {
             var responseDto = _mapper.Map<FeedbackResponseDto>(model);
@@ -60,6 +61,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet("user/{userId}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ResponseViewModel<List<FeedbackResponseViewModel>>> GetFeedbackByUserId(int userId)
         {
             var feedbacks = await _feedbackService.GetFeedbackByUserIdAsync(userId);

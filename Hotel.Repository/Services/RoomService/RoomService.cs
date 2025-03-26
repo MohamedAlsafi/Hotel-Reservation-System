@@ -59,12 +59,11 @@ namespace Hotel.Repository.Services.RoomService
         }
 
 
-        public async Task<RoomResponseDTO> GetRoomByIdAsync(int id)
+        public async Task<RoomResponseDTO?> GetRoomByIdAsync(int id)
         {
             return await SelectRoomDto<RoomResponseDTO>(
-        _unitOfWork.Repository<Room>().GetAll().Where(r => r.Id == id)
-             ).FirstOrDefaultAsync();
-
+                _unitOfWork.Repository<Room>().GetAll().Where(r => r.Id == id)
+            ).FirstOrDefaultAsync();
         }
 
         public async Task<List<RoomResponseDTO>> GetAllRoomsAsync()
@@ -239,8 +238,12 @@ namespace Hotel.Repository.Services.RoomService
             return $"/uploads/{fileName}";
         }
 
-
-
-
+        public async Task<RoomResponseDTO> SearchForRoomAsync(int roomId)
+        {
+            if (roomId <= 0) return null!;
+            return await SelectRoomDto<RoomResponseDTO>(
+                _unitOfWork.Repository<Room>().GetAll().Where(r => r.Id == roomId)
+            ).FirstOrDefaultAsync();
+        }
     }
 }

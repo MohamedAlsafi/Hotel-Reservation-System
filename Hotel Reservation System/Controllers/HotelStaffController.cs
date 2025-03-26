@@ -22,7 +22,8 @@ namespace Hotel_Reservation_System.Controllers
         private readonly ITokenService _tokenService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUsernameHasher _usernameHasher;
-public HotelStaffController(IUnitOfWork unitOfWork ,ITokenService tokenService , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher)
+        public HotelStaffController(IUnitOfWork unitOfWork ,ITokenService tokenService
+         , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher)
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;

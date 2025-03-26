@@ -45,7 +45,7 @@ namespace Hotel_Reservation_System.ProfilesVM
             CreateMap<ResponseViewModel<ReservationViewModel> , ReservationDto>().ReverseMap();
             CreateMap<ReservationViewModel, Reservation>().ReverseMap();
 
-
+            CreateMap<RoomResponseDTO, RoomDto>();
 
 
             #region Feedback

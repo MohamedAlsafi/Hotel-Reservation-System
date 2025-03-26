@@ -2,6 +2,7 @@
 using Hotel.Core.Dtos.Facility;
 using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace Hotel_Reservation_System.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        [Authorize(Roles = "Staff")]
         [HttpPost("Add")]
         public async Task<IActionResult> AddFacility([FromBody] FacilityDTO facilityDTO)
         {
@@ -39,7 +40,8 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(facility);
         }
 
-        
+        [Authorize(Roles = "Staff")]
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllFacilities()
         {
@@ -48,7 +50,8 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(facilities);
         }
 
-        
+        [Authorize(Roles = "Staff")]
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFacilityById(int id)
         {
@@ -59,6 +62,7 @@ namespace Hotel_Reservation_System.Controllers
 
             return Ok(facility);
         }
+        [Authorize(Roles = "Staff")]
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateFacility(int id, [FromBody] FacilityDTO facilityDTO)
@@ -74,7 +78,7 @@ namespace Hotel_Reservation_System.Controllers
 
             return Ok(facility);
         }
-
+        [Authorize(Roles = "Staff")]
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteFacility(int id)
         {

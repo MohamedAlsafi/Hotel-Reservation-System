@@ -2,6 +2,7 @@
 using Hotel.Core.Dtos.Offer;
 using Hotel.Repository.Services.OfferService;
 using Hotel_Reservation_System.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -19,6 +20,8 @@ namespace Hotel_Reservation_System.Controllers
             _mapper = mapper;
         }
         [HttpPost]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> CreateOffer([FromBody] CreateOfferDto offerDto)
         {
             if (!ModelState.IsValid)
@@ -31,6 +34,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<bool>>> DeleteOffer(int id)
         {
             var result = await _offerService.DeleteOfferAsync(id);
@@ -38,6 +43,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<IEnumerable<OfferViewModel>>>> GetAllOffers()
         {
             var result = await _offerService.GetAllOffersAsync();
@@ -45,6 +52,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> GetOfferById(int id)
         {
             var result = await _offerService.GetOfferByIdAsync(id);
@@ -52,6 +61,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<bool>>> UpdateOffer(int id, [FromBody] UpdateOfferDto offerDto)
         {
             if (!ModelState.IsValid)

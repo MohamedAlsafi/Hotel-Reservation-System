@@ -5,6 +5,7 @@ using Hotel.Core.Entities.Reservation;
 using Hotel.Repository.Services.ReservationService;
 using Hotel.Repository.ViewModels;
 using Hotel_Reservation_System.Error;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -22,6 +23,7 @@ namespace Hotel_Reservation_System.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<ActionResult<ResponseViewModel<ReservationViewModel>>> CreateReservation([FromBody] CreateReservationDto reservationDto)
         {
@@ -33,7 +35,7 @@ namespace Hotel_Reservation_System.Controllers
             var result = await _reservationService.CreateReservationAsync(reservationDto);
             return StatusCode(result.Success ? 201 : 400, result);
         }
-
+        [Authorize(Roles = "Staff")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseViewModel<bool>>> CancelReservation(int id)
         {
@@ -41,14 +43,10 @@ namespace Hotel_Reservation_System.Controllers
             return StatusCode(result.Success ? 200 : 404, result);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ResponseViewModel<IEnumerable<ReservationViewModel>>>> GetAllReservations()
-        {
-            var result = await _reservationService.GetAllReservationsAsync();
-            return Ok(result);
-        }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<ReservationViewModel>>> GetReservationById(int id)
         {
             var result = await _reservationService.GetReservationByIdAsync(id);
@@ -56,17 +54,19 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<ResponseViewModel<ReservationViewModel>>> UpdateReservation(int id, [FromBody] UpdateReservationDto reservationDto)
         {
             var result = await _reservationService.UpdateReservationAsync(id, reservationDto);
             return StatusCode(result.Success ? 200 : 400, result);
         }
-        [HttpPost("feedback")]
-        public async Task<ActionResult<ResponseViewModel<bool>>> ProvideFeedback([FromBody] FeedbackDto feedbackDto)
-        {
-            var result = await _reservationService.ProvideFeedbackAsync(feedbackDto);
-            return StatusCode(result.Success ? 201 : 400, result);
-        }
+        //[HttpPost("feedback")]
+        //public async Task<ActionResult<ResponseViewModel<bool>>> ProvideFeedback([FromBody] FeedbackDto feedbackDto)
+        //{
+        //    var result = await _reservationService.ProvideFeedbackAsync(feedbackDto);
+        //    return StatusCode(result.Success ? 201 : 400, result);
+        //}
 
     }
 }

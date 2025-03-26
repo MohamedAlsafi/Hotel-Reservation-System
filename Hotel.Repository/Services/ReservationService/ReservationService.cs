@@ -15,7 +15,6 @@ namespace Hotel.Repository.Services.ReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly HotelDbContext _dbContext;
 
         public ReservationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -33,19 +32,6 @@ namespace Hotel.Repository.Services.ReservationService
 
             var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
-        }
-
-
-        public async Task<ResponseViewModel<bool>> CancelReservationAsync(int id)
-        {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null)
-                return new ResponseViewModel<bool>(false, "Reservation not found", false);
-
-            _unitOfWork.Repository<Reservation>().HardDelete(reservation);
-            await _unitOfWork.SaveChangesAsync();
-
-            return new ResponseViewModel<bool>(true, "Reservation canceled successfully", true);
         }
 
 
@@ -88,6 +74,18 @@ namespace Hotel.Repository.Services.ReservationService
             return new ResponseViewModel<bool>(true, "Feedback submitted successfully", true);
         }
 
+        public async Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id)
+        {
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+            if (reservation == null)
+                return new ResponseViewModel<ReservationViewModel>(false, "Reservation not found", null);
+
+            _unitOfWork.Repository<Reservation>().HardDelete(reservation);
+            await _unitOfWork.SaveChangesAsync();
+
+            var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation canceled successfully", reservationVm);
+        }
     }
 }
 

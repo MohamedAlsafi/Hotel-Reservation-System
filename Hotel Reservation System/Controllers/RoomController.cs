@@ -4,6 +4,7 @@ using Hotel.Core.Dtos.Room.Update;
 using Hotel.Repository.Services.RoomService;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Room;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoomCreateViewModel = Hotel_Reservation_System.ViewModels.Room.RoomCreateViewModel;
 using RoomResponseViewModel = Hotel_Reservation_System.ViewModels.Room.RoomResponseViewModel;
@@ -23,6 +24,7 @@ namespace Hotel_Reservation_System.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult<List<RoomResponseViewModel>>> GetAllRooms()
         {
             
@@ -33,6 +35,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult<RoomResponseViewModel>> GetRoomById(int id)
         {
             if (id <= 0)
@@ -48,7 +51,9 @@ namespace Hotel_Reservation_System.Controllers
             
         }
 
+        [Authorize(Roles = "Staff")]
         [HttpPost]
+
         public async Task<ActionResult<RoomResponseViewModel>> AddRoom([FromForm] RoomCreateViewModel roomVM)
         {
             if (roomVM is null)
@@ -63,6 +68,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("basic-info")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<RoomBasicInfoResponseViewModel>> UpdateRoomBasicInfo([FromForm] UpdateRoomDetailsViewModel roomVM)
         {
             if (roomVM.Id <= 0)
@@ -79,6 +86,8 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPut("facilities")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<RoomFacilitiesResponseViewModel>> UpdateRoomFacilities([FromForm] UpdateRoomFacilitiesViewModel roomVM)
         {
             if (roomVM.RoomId <= 0)
@@ -94,6 +103,8 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpPut("images")]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult<RoomImagesResponseViewModel>> UpdateRoomImages([FromForm] UpdateRoomImagesViewModel roomVM)
         {
             if (roomVM.RoomId <= 0)
@@ -109,7 +120,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
 
-
+        [Authorize(Roles = "Staff")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> DeleteRoom(int id)
         {

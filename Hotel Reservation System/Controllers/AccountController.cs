@@ -6,11 +6,13 @@ using Hotel.Core.Entities.customer;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Hotel.Repository.Services.PasswordHashing;
 using Hotel.Repository.Services.ReservationService;
+using Hotel.Repository.Services.RoomService;
 using Hotel.Repository.Services.Username_Hashing;
 using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels.Room;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -25,9 +27,10 @@ namespace Hotel_Reservation_System.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUsernameHasher _usernameHasher;
+        private readonly IRoomServices _roomServices;
 
         public AccountController(ITokenService tokenService,IReservationService reservationService,
-            IMapper mapper,IUnitOfWork unitOfWork , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher)
+            IMapper mapper,IUnitOfWork unitOfWork , IPasswordHasher passwordHasher , IUsernameHasher usernameHasher , IRoomServices roomServices)
         {
            _tokenService = tokenService;
            _reservationService = reservationService;
@@ -35,6 +38,7 @@ namespace Hotel_Reservation_System.Controllers
            _unitOfWork = unitOfWork;
            _passwordHasher = passwordHasher;
            _usernameHasher = usernameHasher;
+            this._roomServices = roomServices;
         }
         [HttpPost("Register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO userDTO)
@@ -110,6 +114,7 @@ namespace Hotel_Reservation_System.Controllers
             };
             return Ok(ResultDto);
         }
+        [Authorize(Roles = "Staff")]
         [HttpGet("CurrentUser")]
         public async Task<ActionResult<UserDTO>> GetCurrentUser(string Email)
         {
@@ -125,28 +130,18 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(obj);
 
         }
-
+        [Authorize(Roles ="User")]
         [HttpPost("SearchForRoom/{roomId}")]
         public async Task<ActionResult<RoomDto>> SearchForRoom(int roomId)
         {
             if (roomId <= 0) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
-            var BookedRoom = await _reservationService.GetReservationByIdAsync(roomId);
-            if (BookedRoom is null) 
-            {
-                //var roomDto = new RoomDto
-                //{
-                //    //Id = BookedRoom.RoomId,
-                //    //Facilities = BookedRoom.Facilities,
-                //    //ImageUrls = BookedRoom.ImageUrls,
-                //    //Price = BookedRoom.Price,
-                //};
-                //return Ok(roomDto);
+           var room = await _roomServices.SearchForRoomAsync(roomId);
+            if (room is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid RoomId"));
+            var roomDto = _mapper.Map<RoomDto>(room);
+            return Ok(roomDto);
 
-            }
-            if (BookedRoom is not null)
-                return BadRequest(new ApiExcaptionResponse(400, "Room Is Not Available!"));
-            return Ok();
         }
+        [Authorize(Roles = "User")]
 
         [HttpPost("MakeReservation")]
 
@@ -158,6 +153,7 @@ namespace Hotel_Reservation_System.Controllers
             if (reservation is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid Reservation Data"));
             return Ok(reservation);
         }
+        [Authorize(Roles = "User")]
 
         [HttpPost("ProvideFeedback")]
 

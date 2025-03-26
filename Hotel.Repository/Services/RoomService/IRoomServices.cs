@@ -18,5 +18,6 @@ namespace Hotel.Repository.Services.RoomService
         Task<bool> DeleteRoomAsync(int id);
         Task<List<RoomResponseDTO>> GetAllRoomsAsync();
         Task<RoomResponseDTO> GetRoomByIdAsync(int id);
+        public Task<RoomResponseDTO> SearchForRoomAsync(int roomId);
     }
 }
