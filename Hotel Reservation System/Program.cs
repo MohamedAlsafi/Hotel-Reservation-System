@@ -46,7 +46,7 @@ namespace Hotel_Reservation_System
             builder.Services.AddScoped<IFeedbackService, FeedbackService>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IUsernameHasher, UserNameHaser>();
-
+            builder.Services.AddScoped<IReservationService, ReservationService>();
 
             builder.Services.AddScoped<GlobalTransactionMiddleware>();
             builder.Services.AddAutoMapper(typeof(DomainMappingProfile), typeof(ViewModelMappingProfile));
