@@ -1,7 +1,6 @@
-﻿using Hotel.Core.Entities.Enum.HotelStaff;
+﻿using Hotel.Core.Entities.HotelStaffs;
 using Hotel.Core.Entities.Rooms;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

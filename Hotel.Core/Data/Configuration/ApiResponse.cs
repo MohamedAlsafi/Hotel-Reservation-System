@@ -4,13 +4,13 @@ using Hotel.Core.Entities.Enum;
 public class ResponseViewModel<T>
 {
     public bool Success { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
     public T Data { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] // Hides null values
     public ErrorCode? ErrorCode { get; set; }
 
-    public ResponseViewModel(bool success, string message, T data, ErrorCode? errorCode = null)
+    public ResponseViewModel(bool success, string? message, T data, ErrorCode? errorCode = null)
     {
         Success = success;
         Message = message;

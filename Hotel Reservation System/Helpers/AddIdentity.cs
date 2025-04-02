@@ -1,8 +1,9 @@
 ﻿using Hotel.Core.Data.Context;
+using Hotel.Core.Entities;
 using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.Enum;
-using Hotel.Core.Entities.Enum.HotelStaff;
 using Hotel.Repository.Services.OfferService.JWT_Token;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -16,9 +17,19 @@ namespace Hotel_Reservation_System.Helpers
     {
         public static IServiceCollection AddIdentityService(this IServiceCollection Services, IConfiguration configuration)
         {
-            Services.AddAuthentication().AddJwtBearer(Options =>
+            var existingScheme = Services.FirstOrDefault(s =>
+           s.ServiceType == typeof(JwtBearerOptions) &&((JwtBearerOptions)s.ImplementationInstance)?.ForwardAuthenticate == JwtBearerDefaults.AuthenticationScheme);
+
+            if (existingScheme == null)
             {
-                Options.TokenValidationParameters = new TokenValidationParameters()
+                Services.AddAuthentication(opt => 
+                { 
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                }).AddJwtBearer(Options =>
+                {
+                    Options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     AuthenticationType = JwtBearerDefaults.AuthenticationScheme,
                     ValidateIssuer = true,
@@ -27,25 +38,37 @@ namespace Hotel_Reservation_System.Helpers
                     ValidAudience = configuration["Jwt:Audience"],
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+
                 };
                 Options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = async context =>
+                    OnTokenValidated = context =>
                     {
                         var claimsIdentity = context?.Principal?.Identity as ClaimsIdentity;
-                        if (claimsIdentity != null && claimsIdentity.HasClaim(claim => claim.Type == ClaimTypes.Role && claim.Value == Roles.User.ToString()))
+                        if (claimsIdentity != null && claimsIdentity.HasClaim(claim => claim.Type == ClaimTypes.Role && claim.Value == Roles.Customer.ToString()))
                         {
-                            var role = Roles.User; // or any default role
+                            var role = Roles.Customer; // or any default role
                             claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
                         }
-                        else { var Role = Roles.Staff; claimsIdentity?.AddClaim(new Claim(ClaimTypes.Role, Role.ToString())); }
+                        else
+                        {
+                            var role = Roles.Receptionist;
+                            claimsIdentity?.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
+                        }
+                        return Task.CompletedTask;
                     }
                 };
-            });
+
+            }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+            }); ;
+            }
             Services.AddAuthorization(options =>
             {
-                options.AddPolicy("ElavatedRights", policy => policy.RequireRole("User", "Staff"));
+                options.AddPolicy("ElavatedRights", policy => policy.RequireRole("Customer", "Receptionist" , "Admin" , "Accountant"));
             });
             Services.AddScoped<ITokenService, TokenService>();
             return Services;

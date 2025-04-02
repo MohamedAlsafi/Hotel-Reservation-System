@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Offer;
 using Hotel.Repository.Services.OfferService;
+using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,8 @@ namespace Hotel_Reservation_System.Controllers
 
         public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> CreateOffer([FromBody] CreateOfferDto offerDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ResponseViewModel<OfferViewModel>(false, "Invalid offer data", null));
-            }
+            if (offerDto is null) return BadRequest(new ApiExcaptionResponse(400, "Invalid offer data"));
+
 
             var result = await _offerService.CreateOfferAsync(offerDto);
             return StatusCode(result.Success ? 201 : 400, result);
@@ -45,7 +44,7 @@ namespace Hotel_Reservation_System.Controllers
         [HttpGet]
         [Authorize(Roles = "Staff")]
 
-        public async Task<ActionResult<ResponseViewModel<IEnumerable<OfferViewModel>>>> GetAllOffers()
+        public async Task<ActionResult<ResponseViewModel<IEnumerable<Hotel_Reservation_System.ViewModels.OfferViewModel>>>> GetAllOffers()
         {
             var result = await _offerService.GetAllOffersAsync();
             return Ok(result);
@@ -54,7 +53,7 @@ namespace Hotel_Reservation_System.Controllers
         [HttpGet("{id}")]
         [Authorize(Roles = "Staff")]
 
-        public async Task<ActionResult<ResponseViewModel<OfferViewModel>>> GetOfferById(int id)
+        public async Task<ActionResult<ResponseViewModel<Hotel_Reservation_System.ViewModels.OfferViewModel>>> GetOfferById(int id)
         {
             var result = await _offerService.GetOfferByIdAsync(id);
             return StatusCode(result.Success ? 200 : 404, result);

@@ -13,7 +13,7 @@ namespace Hotel_Reservation_System.Middleware
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            IDbContextTransaction Transaction = null;
+            IDbContextTransaction Transaction = null!;
             try
             {
                 Transaction = _dbContext.Database.BeginTransaction();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Reservation;
+using Hotel.Core.Entities.Enum;
 using Hotel.Repository.Services.ReservationService;
 using Microsoft.Extensions.Configuration;
 using Stripe;
@@ -37,7 +38,7 @@ namespace Hotel.Repository.Services.Payment
             {
                 Amount = mappedReservation.TotalPrice;
             }
-            var SubTotal = mappedReservation.PaymentStatus == "Paid" ? Amount : 0m;
+            var SubTotal = mappedReservation.PaymentStatus == PaymentStatus.Pending ? Amount : 0m;
             var Service = new PaymentIntentService();
 
             PaymentIntent paymentIntent;
@@ -56,7 +57,7 @@ namespace Hotel.Repository.Services.Payment
 
              paymentIntent=   await  Service.CreateAsync(options);
                 mappedReservation.PaymentIntentId = paymentIntent.Id;
-                mappedReservation.PaymentStatus = "Paid";
+                mappedReservation.PaymentStatus = PaymentStatus.Pending;
             }
             else
             {
@@ -69,7 +70,7 @@ namespace Hotel.Repository.Services.Payment
 
             }
             var updateReservationDto = _mapper.Map<UpdateReservationDto>(mappedReservation);
-            await _reservationService.UpdateReservationAsync(customerId, updateReservationDto);
+            await _reservationService.UpdateReservationAsync(updateReservationDto);
             return  mappedReservation;
 
           

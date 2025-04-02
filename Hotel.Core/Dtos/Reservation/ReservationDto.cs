@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.Core.Entities.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Hotel.Core.Dtos.Reservation
         public decimal Discount { get; set; } = 0;
         public string? PaymentIntentId { get; set; }
         public List<string> PictureUrl { get; set; } = new List<string>();
-        public string PaymentStatus { get; set; }
-
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+         
     }
 }

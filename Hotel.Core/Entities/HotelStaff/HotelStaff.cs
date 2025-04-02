@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Hotel.Core.Entities.Enum;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.Core.Entities.Enum.HotelStaff
+namespace Hotel.Core.Entities.HotelStaffs
 {
   public class HotelStaff : BaseEntity
    {
@@ -16,6 +17,6 @@ namespace Hotel.Core.Entities.Enum.HotelStaff
         public string Email { get; set; }
         public string Password { get; set; }
         public string Address { get; set; }
-        public HotelStaffRole Role { get; set; } 
+        public Roles Role { get; set; } 
     }
 }

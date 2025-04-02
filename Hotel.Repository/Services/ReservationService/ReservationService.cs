@@ -22,24 +22,16 @@ namespace Hotel.Repository.Services.ReservationService
             _mapper = mapper;
         }
 
-
-        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto)
+        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservation , int CustomerId)
         {
-            var reservation = _mapper.Map<Reservation>(reservationDto);
+            var mappedReservation = _mapper.Map<Reservation>(reservation);
+            mappedReservation.CustomerId = CustomerId;
 
-            await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
+            await _unitOfWork.Repository<Reservation>().AddAsync(mappedReservation);
             await _unitOfWork.SaveChangesAsync();
 
-            var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
+            var reservationVm = _mapper.Map<ReservationViewModel>(mappedReservation);
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
-        }
-
-
-        public async Task<ResponseViewModel<IEnumerable<ReservationViewModel>>> GetAllReservationsAsync()
-        {
-            var reservations = await _unitOfWork.Repository<Reservation>().GetAll().ToListAsync();
-            var reservationVms = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
-            return new ResponseViewModel<IEnumerable<ReservationViewModel>>(true, "Reservations retrieved successfully", reservationVms);
         }
 
         public async Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id)
@@ -52,26 +44,19 @@ namespace Hotel.Repository.Services.ReservationService
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation retrieved successfully", reservationVm);
         }
 
-        public async Task<ResponseViewModel<bool>> UpdateReservationAsync(int id, UpdateReservationDto reservationDto)
+        public async Task<ResponseViewModel<ReservationViewModel>> UpdateReservationAsync(UpdateReservationDto reservationDto)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null)
-                return new ResponseViewModel<bool>(false, "Reservation not found", false);
+           if(reservationDto is null)
+                return new ResponseViewModel<ReservationViewModel>(false, "", null);
 
-            _mapper.Map(reservationDto, reservation);
-            _unitOfWork.Repository<Reservation>().UpdateExclude(reservation);
-            await _unitOfWork.SaveChangesAsync();
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(reservationDto.Id);
+            if (reservation is null)
+                return new ResponseViewModel<ReservationViewModel>(false, "Reservation not found", null);
+            var mappedReservation = _mapper.Map(reservationDto, reservation);
 
-            return new ResponseViewModel<bool>(true, "Reservation updated successfully", true);
-        }
+            _unitOfWork.Repository<Reservation>().UpdateInclude(mappedReservation);
 
-        public async Task<ResponseViewModel<bool>> ProvideFeedbackAsync(FeedbackDto feedbackDto)
-        {
-            var feedback = _mapper.Map<Feedback>(feedbackDto);
-            await _unitOfWork.Repository<Feedback>().AddAsync(feedback);
-            await _unitOfWork.SaveChangesAsync();
-
-            return new ResponseViewModel<bool>(true, "Feedback submitted successfully", true);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation updated successfully", null);
         }
 
         public async Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id)
@@ -86,6 +71,8 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation canceled successfully", reservationVm);
         }
+
+       
     }
 }
 

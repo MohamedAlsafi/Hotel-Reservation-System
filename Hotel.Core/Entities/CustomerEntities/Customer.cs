@@ -1,4 +1,5 @@
-﻿using Hotel.Core.Entities.FeedbackModel;
+﻿using Hotel.Core.Entities.Enum;
+using Hotel.Core.Entities.FeedbackModel;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -31,5 +32,6 @@ namespace Hotel.Core.Entities.customer
         [Required]
         public string UserName { get; set; }
 
+        public Roles Role { get; set; } = Roles.Customer;
     }
 }

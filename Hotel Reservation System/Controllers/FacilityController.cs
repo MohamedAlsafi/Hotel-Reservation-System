@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Hotel.Core.Dtos.Facility;
+using Hotel.Core.Entities.Enum;
 using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.UnitOfWork;
+using Hotel_Reservation_System.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +15,12 @@ namespace Hotel_Reservation_System.Controllers
     public class FacilityController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public FacilityController(IUnitOfWork unitOfWork, IMapper mapper)
+        public FacilityController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
-        [Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.AddFacility })]
         [HttpPost("Add")]
         public async Task<IActionResult> AddFacility([FromBody] FacilityDTO facilityDTO)
         {
@@ -40,17 +40,16 @@ namespace Hotel_Reservation_System.Controllers
             return Ok(facility);
         }
 
-        [Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllFacilities })]
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllFacilities()
+        public IActionResult GetAllFacilities()
         {
-            var facilityRepo = _unitOfWork.Repository<Facility>();
-            var facilities = facilityRepo.GetAll().ToList();
+            var facilities = _unitOfWork.Repository<Facility>().GetAll().ToList();
             return Ok(facilities);
         }
 
-        [Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetFacilityById })]
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFacilityById(int id)
@@ -62,7 +61,7 @@ namespace Hotel_Reservation_System.Controllers
 
             return Ok(facility);
         }
-        [Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.UpdateFacility })]
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateFacility(int id, [FromBody] FacilityDTO facilityDTO)
@@ -73,12 +72,12 @@ namespace Hotel_Reservation_System.Controllers
                 return NotFound("Facility not found");
 
             facility.Name = facilityDTO.Name;
-            facilityRepo.UpdateInclude(facility, nameof(Facility.Name));
+          await  facilityRepo.UpdateInclude(facility, nameof(Facility.Name));
             await _unitOfWork.CompleteAsync();
 
             return Ok(facility);
         }
-        [Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.DeleteFacility })]
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteFacility(int id)
         {
@@ -87,7 +86,7 @@ namespace Hotel_Reservation_System.Controllers
             if (facility == null)
                 return NotFound("Facility not found");
 
-            facilityRepo.SoftDelete(facility);
+           await facilityRepo.SoftDelete(facility);
             await _unitOfWork.CompleteAsync();
 
             return Ok("Facility deleted successfully");

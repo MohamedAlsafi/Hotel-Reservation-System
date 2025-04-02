@@ -3,12 +3,13 @@ using Hotel.Core.Dtos;
 using Hotel.Core.Dtos.HotelDTO;
 using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.Enum;
-using Hotel.Core.Entities.Enum.HotelStaff;
+using Hotel.Core.Entities.HotelStaffs;
 using Hotel.Repository.Services.OfferService.JWT_Token;
 using Hotel.Repository.Services.PasswordHashing;
 using Hotel.Repository.Services.Username_Hashing;
 using Hotel.Repository.UnitOfWork;
 using Hotel_Reservation_System.Error;
+using Hotel_Reservation_System.Filter;
 using Hotel_Reservation_System.ViewModels.UserIdentity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,7 @@ namespace Hotel_Reservation_System.Controllers
             _usernameHasher = usernameHasher;
         }
         [HttpPost("Register")]
+        [AllowAnonymous]
         public async Task<ActionResult<HotelStaffDTO>> Register(RegisterStaffDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
@@ -47,7 +49,7 @@ namespace Hotel_Reservation_System.Controllers
                 LastName = model.LastName,
                 Password = _passwordHasher.HashPassword(model.Password),
                 PhoneNumber = model.PhoneNumber, 
-               Role = (HotelStaffRole)Enum.Parse(typeof(HotelStaffRole), model.Role),
+               Role = (Roles)Enum.Parse(typeof(Roles), model.Role),
                UserName = _usernameHasher.HashUserName(model.Email.Split('@')[0])
             };
             if(User is null) return BadRequest(new ApiExcaptionResponse(400));
@@ -66,7 +68,7 @@ namespace Hotel_Reservation_System.Controllers
             {
                 Email = model.Email,
                 UserName = model.Email.Split('@')[0],
-                Token = _tokenService.GetTokenAsyncForHotelStaff(User.Id, User.Email, User.Role).Result
+                Token = _tokenService.GetTokenAsync(User.Id, User.Email, User.Role).Result
 
             };
             return Ok(ResultDto);
@@ -75,6 +77,8 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpPost("Login")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.Login })]
+
         public async Task<ActionResult<HotelStaffDTO>> Login(LoginDTO model)
         {
             if (model is null) return BadRequest(new ApiExcaptionResponse(400));
@@ -85,7 +89,7 @@ namespace Hotel_Reservation_System.Controllers
             {
                 Email = user.Email,
                 UserName = user.Email.Split('@')[0],
-                Token = await _tokenService.GetTokenAsyncForHotelStaff(user.Id, user.Email, user.Role)
+                Token = await _tokenService.GetTokenAsync(user.Id, user.Email, user.Role)
             };
             if (!_passwordHasher.VerifyPassword(model.Password, user.Password))
                 return Unauthorized(new ApiExcaptionResponse(401));
@@ -96,7 +100,7 @@ namespace Hotel_Reservation_System.Controllers
         }
         [Authorize(Roles = "Staff")]
         [HttpGet("CurrentUser")]
-        public async Task<ActionResult<UserDTO>> GetCurrentUser(string Email)
+        public async Task<ActionResult<UserDTO>> GetCurrentUser(string Email , Roles roles)
         {
             if (Email is null) return Unauthorized(new ApiExcaptionResponse(401));
             var user = await _unitOfWork.Repository<Customer>().GetByCriteriaAsync(x => x.Email == Email);
@@ -105,7 +109,7 @@ namespace Hotel_Reservation_System.Controllers
             {
                 UserName = user.UserName,
                 Email = Email,
-                Token = await _tokenService.GetTokenAsync(user, user.Email)
+                Token = await _tokenService.GetTokenAsync(user.Id, user.Email , roles)
             };
             return Ok(obj);
 
