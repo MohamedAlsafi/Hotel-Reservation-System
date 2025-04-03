@@ -3,6 +3,7 @@ using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.FeedbackDtos.FeedbackResponseDtos;
 using Hotel.Core.Entities.FeedbackModel;
 using Hotel.Repository.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Hotel.Repository.Services.FeedbackServices
@@ -51,11 +52,26 @@ namespace Hotel.Repository.Services.FeedbackServices
             }
         }
 
-        public async Task<IEnumerable<FeedbackDto>> GetAllFeedbackAsync()
+        public async Task<IEnumerable<FeedbackDto>> GetAllFeedbackAsync(string? fromDate, string? toDate)
         {
-            var feedbacks = await _unitOfWork.Repository<Feedback>().GetAllAsync();
-            return _mapper.Map<List<FeedbackDto>>(feedbacks);
+            var fromDateTime = string.IsNullOrEmpty(fromDate) ? DateTime.MinValue : DateTime.Parse(fromDate);
+            var toDateTime = string.IsNullOrEmpty(toDate) ? DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1) : DateTime.Parse(toDate);
+
+            return await _unitOfWork.Repository<Feedback>().GetAll()
+                .Where(f => f.CreatedAt >= fromDateTime && f.CreatedAt <= toDateTime)
+                .Select(f => new FeedbackDto
+                {
+                    Id = f.Id,
+                    CustomerId = f.CustomerId,
+                    ReservationId = f.ReservationId,
+                    Rating = f.Rating,
+                    Comment = f.Comment,
+                    ResponseDate = f.ResponseDate,
+                })
+                .ToListAsync();
         }
+
+
 
 
         public async Task<List<FeedbackDto>> GetFeedbackByUserIdAsync(int userId)
@@ -65,9 +81,9 @@ namespace Hotel.Repository.Services.FeedbackServices
                 throw new KeyNotFoundException($"Customer ID not found.");
             return _mapper.Map<List<FeedbackDto>>(feedbacks);
         }
-        public async Task<FeedbackDto> RespondToFeedbackAsync(int id, FeedbackResponseDto responseDto)
+        public async Task<FeedbackDto> RespondToFeedbackAsync( FeedbackResponseDto responseDto)
         {
-            if (id <= 0)
+            if (responseDto.Id <= 0)
             {
                 throw new ArgumentException("Invalid feedback ID.");
             }
@@ -77,16 +93,16 @@ namespace Hotel.Repository.Services.FeedbackServices
                 throw new ArgumentNullException(nameof(responseDto), "Response data cannot be null.");
             }
 
-            var feedback = await _unitOfWork.Repository<Feedback>().GetByIdAsync(id);
+            var feedback = await _unitOfWork.Repository<Feedback>().GetByIdAsync(responseDto.Id);
             if (feedback == null)
             {
-                throw new KeyNotFoundException($"Feedback with ID {id} not found.");
+                throw new KeyNotFoundException($"Feedback with ID {responseDto.Id} not found.");
             }
 
-            // Update only specific properties
              feedback.Response = responseDto.Response;
+             feedback.ResponseDate = DateTime.UtcNow;
 
-            await _unitOfWork.Repository<Feedback>().UpdateInclude(feedback, nameof(feedback.Response));
+            await _unitOfWork.Repository<Feedback>().UpdateInclude(feedback, nameof(feedback.Response), nameof(feedback.ResponseDate));
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<FeedbackDto>(feedback);

@@ -7,7 +7,8 @@ namespace Hotel_Reservation_System.ViewModels.Feedback
         public int Id { get; set; }
         public int? CustomerId { get; set; }
         public int ReservationId { get; set; }
-        public CustomerFeedback Rating { get; set; }  
+        public CustomerFeedback Rating { get; set; }
         public string? Comment { get; set; }
+        public DateTime? ResponseDate { get; set; }
     }
 }

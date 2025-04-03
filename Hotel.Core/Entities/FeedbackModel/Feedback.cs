@@ -15,7 +15,7 @@ namespace Hotel.Core.Entities.FeedbackModel
 
         public string? Response { get; set; } = null;
 
-        public new DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? ResponseDate { get; set; }
         [ForeignKey(nameof(ReservationId))]
         public Reservation.Reservation Reservation { get; set; }
     }

@@ -175,7 +175,7 @@ namespace Hotel.Repository.Services.RoomService
         private IQueryable<T> SelectRoomDto<T>(IQueryable<Room> query)
         {
             return query.ProjectTo<T>(_mapper.ConfigurationProvider);
-        }
+        }   
 
         private async Task AddRoomFacilitiesAsync(int roomId, List<int> facilityIds)
         {

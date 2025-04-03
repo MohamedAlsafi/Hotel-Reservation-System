@@ -10,6 +10,7 @@ namespace Hotel.Core.Dtos.FeedbackDtos
     public class FeedbackResponseDto
     {
         [Required]
+        public int Id { get; set; }
         public int StaffId { get; set; }
 
         [Required]
