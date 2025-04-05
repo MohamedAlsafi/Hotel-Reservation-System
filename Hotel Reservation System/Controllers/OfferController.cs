@@ -2,11 +2,9 @@
 using Hotel.Core.Dtos.Offer;
 using Hotel.Core.Entities.Enum;
 using Hotel.Repository.Services.OfferService;
-using Hotel_Reservation_System.Error;
 using Hotel_Reservation_System.Filter;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Offer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel_Reservation_System.Controllers
@@ -29,7 +27,7 @@ namespace Hotel_Reservation_System.Controllers
         public async Task<ResponseViewModel<OfferViewModel>> CreateOffer(CreateOfferViewModel offerVM)
         {
             var offerDto = _mapper.Map<CreateOfferDto>(offerVM);
-            var result = await _offerService.CreateOfferAsync(offerDto);
+            var result = await  _offerService.CreateOfferAsync(offerDto);
             var mappedResult = _mapper.Map<OfferViewModel>(result);
             return ResponseViewModel<OfferViewModel>.SuccessResult(mappedResult, "Offer Added Successfully");
         }

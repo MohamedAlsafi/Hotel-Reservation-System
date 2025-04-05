@@ -42,9 +42,6 @@ public class OfferService : IOfferService
         var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id)
             ?? throw new KeyNotFoundException($"Offer {id} not found");
 
-        //if (IsOfferActive(offer))
-        //    throw new InvalidOperationException("Cannot delete active offers");
-
         _unitOfWork.Repository<Offer>().HardDelete(offer);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
@@ -69,7 +66,6 @@ public class OfferService : IOfferService
         return _mapper.Map<OfferListingDto>(offer);
     }
 
-    // Adding a new method that gets offer by ID without checking if it's active
     public async Task<OfferDto> GetOfferDetailsByIdAsync(int id)
     {
         var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id)
@@ -78,16 +74,13 @@ public class OfferService : IOfferService
         return _mapper.Map<OfferDto>(offer);
     }
 
-    public async Task<OfferDto> UpdateOfferAsync(UpdateOfferDto dto)
+    public async Task<OfferDto> UpdateOfferAsync( UpdateOfferDto dto)
     {
-        // Validate offer data
         ValidateOfferData(dto.Title, dto.DiscountPercentage, dto.StartDate, dto.EndDate);
 
-        // Get existing offer
         var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(dto.Id)
             ?? throw new KeyNotFoundException($"Offer {dto.Id} not found");
 
-        // Update specific fields
         await _unitOfWork.Repository<Offer>().UpdateInclude(
             entity: offer,
             nameof(Offer.Title),
@@ -97,14 +90,12 @@ public class OfferService : IOfferService
             nameof(Offer.EndDate)
         );
 
-        // Update values
         offer.Title = dto.Title;
         offer.Description = dto.Description;
         offer.DiscountPercentage = dto.DiscountPercentage;
         offer.StartDate = dto.StartDate;
         offer.EndDate = dto.EndDate;
 
-        // Save and return
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<OfferDto>(offer);
     }
@@ -128,4 +119,5 @@ public class OfferService : IOfferService
         if (errors.Any())
             throw new ArgumentException(string.Join(". ", errors));
     }
+
 }
