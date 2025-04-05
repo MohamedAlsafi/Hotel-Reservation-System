@@ -3,6 +3,7 @@ using Hotel.Core.Dtos.Offer;
 using Hotel.Core.Entities.Enum;
 using Hotel.Repository.Services.OfferService;
 using Hotel_Reservation_System.Error;
+using Hotel_Reservation_System.Filter;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Offer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,8 @@ namespace Hotel_Reservation_System.Controllers
             _mapper = mapper;
         }
         [HttpPost]
-        //[Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.CreateOffer })]
+
         public async Task<ResponseViewModel<OfferViewModel>> CreateOffer(CreateOfferViewModel offerVM)
         {
             var offerDto = _mapper.Map<CreateOfferDto>(offerVM);
@@ -34,7 +36,8 @@ namespace Hotel_Reservation_System.Controllers
 
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.DeleteOffer })]
+
         public async Task<ResponseViewModel<bool>> DeleteOffer(int id)
         {
                 await _offerService.DeleteOfferAsync(id);
@@ -42,7 +45,7 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllOffers })]
         public async Task<ResponseViewModel<IEnumerable<OfferListingDto>>> GetAllOffers()
         {
             var offers = await _offerService.GetActiveOffersAsync();
@@ -50,14 +53,14 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetOfferById })]
         public async Task<ResponseViewModel<OfferListingDto>> GetOfferByID(int id)
         {
             var offer = await _offerService.GetOfferByIdAsync(id);
             return ResponseViewModel<OfferListingDto>.SuccessResult(offer, "Offer retrieved successfully");
         }
         [HttpPut]
-        //[Authorize(Roles = "Staff")]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.UpdateOffer })]
         public async Task<ResponseViewModel<bool>> UpdateOffer(UpdateOfferViewModel offerVM)
         {
             var offerDto = _mapper.Map<UpdateOfferDto>(offerVM);
