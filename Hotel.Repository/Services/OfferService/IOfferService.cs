@@ -11,10 +11,10 @@ namespace Hotel.Repository.Services.OfferService
 {
     public interface IOfferService
     {
-        Task<ResponseViewModel<OfferViewModel>> CreateOfferAsync(CreateOfferDto offerDto);
-        Task<ResponseViewModel<bool>> DeleteOfferAsync(int id);
-        Task<ResponseViewModel<IEnumerable<OfferViewModel>>> GetAllOffersAsync();
-        Task<ResponseViewModel<OfferViewModel>> GetOfferByIdAsync(int id);
-        Task<ResponseViewModel<bool>> UpdateOfferAsync(int id, UpdateOfferDto offerDto);
+        Task<OfferDto> CreateOfferAsync(CreateOfferDto offerDto);
+        Task<bool> DeleteOfferAsync(int id);
+        Task<IEnumerable<OfferListingDto>> GetActiveOffersAsync();
+        Task<OfferListingDto> GetOfferByIdAsync(int id);
+        Task<OfferDto> UpdateOfferAsync( UpdateOfferDto offerDto);
     }
 }

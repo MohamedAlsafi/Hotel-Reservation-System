@@ -1,92 +1,131 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Hotel.Core.Data.Configuration;
+﻿using AutoMapper;
 using Hotel.Core.Dtos.Offer;
+using Hotel.Core.Entities.HotelStaffs;
 using Hotel.Core.Entities.OfferModel;
-using Hotel.Repository.IGenericRepository;
+using Hotel.Repository.Services.OfferService;
 using Hotel.Repository.UnitOfWork;
-using Hotel_Reservation_System.ViewModels;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-
-namespace Hotel.Repository.Services.OfferService
+public class OfferService : IOfferService
 {
-    public class OfferService : IOfferService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public OfferService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public OfferService(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<ResponseViewModel<OfferViewModel>> CreateOfferAsync(CreateOfferDto offerDto)
-        {
-
-            if (string.IsNullOrWhiteSpace(offerDto.Title) || offerDto.Discount <= 0)
-            {
-                return new ResponseViewModel<OfferViewModel>(false, "Invalid offer data", null);
-            }
-
-            var offer = _mapper.Map<Offer>(offerDto);
-            await _unitOfWork.Repository<Offer>().AddAsync(offer);
-            await _unitOfWork.SaveChangesAsync();
-
-            var offerVm = _mapper.Map<OfferViewModel>(offer);
-            return new ResponseViewModel<OfferViewModel>(true, "Offer created successfully", offerVm);
-        }
-
-        public async Task<ResponseViewModel<bool>> DeleteOfferAsync(int id)
-        {
-            var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id);
-            if (offer == null)
-                return new ResponseViewModel<bool>(false, "Offer not found", false);
-
-            _unitOfWork.Repository<Offer>().HardDelete(offer);
-            await _unitOfWork.SaveChangesAsync();
-            return new ResponseViewModel<bool>(true, "Offer deleted successfully", true);
-        }
-
-        public async Task<ResponseViewModel<IEnumerable<OfferViewModel>>> GetAllOffersAsync()
-        {
-            var offers = await _unitOfWork.Repository<Offer>().GetAll().ToListAsync();
-            var offerVms = _mapper.Map<IEnumerable<OfferViewModel>>(offers);
-            return new ResponseViewModel<IEnumerable<OfferViewModel>>(true, "Offers retrieved successfully", offerVms);
-        }
-
-        public async Task<ResponseViewModel<OfferViewModel>> GetOfferByIdAsync(int id)
-        {
-            var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id);
-            if (offer == null)
-                return new ResponseViewModel<OfferViewModel>(false, "Offer not found", null);
-
-            var offerVm = _mapper.Map<OfferViewModel>(offer);
-            return new ResponseViewModel<OfferViewModel>(true, "Offer retrieved successfully", offerVm);
-        }
-
-        public async Task<ResponseViewModel<bool>> UpdateOfferAsync(int id, UpdateOfferDto offerDto)
-        {
-            var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id);
-            if (offer == null)
-                return new ResponseViewModel<bool>(false, "Offer not found", false);
-
-
-            if (string.IsNullOrWhiteSpace(offerDto.Name) || offerDto.Discount <= 0)
-            {
-                return new ResponseViewModel<bool>(false, "Invalid offer data", false);
-            }
-
-            _mapper.Map(offerDto, offer);
-            _unitOfWork.Repository<Offer>().UpdateInclude(offer);
-            await _unitOfWork.SaveChangesAsync();
-
-            return new ResponseViewModel<bool>(true, "Offer updated successfully", true);
-        }
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
+    public async Task<OfferDto> CreateOfferAsync(CreateOfferDto offerDto)
+    {
+        ValidateOfferData(offerDto.Title, offerDto.DiscountPercentage, offerDto.StartDate, offerDto.EndDate);
+
+        var offer = _mapper.Map<Offer>(offerDto);
+
+        if (offerDto.CreatedByStaff.HasValue)
+        {
+            var staff = await _unitOfWork.Repository<HotelStaff>()
+                                .GetByIdAsync(offerDto.CreatedByStaff.Value);
+            if (staff == null) throw new ArgumentException("Staff member not found.");
+            offer.CreatedByStaff = staff;
+        }
+
+        await _unitOfWork.Repository<Offer>().AddAsync(offer);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<OfferDto>(offer);
+    }
+
+    public async Task<bool> DeleteOfferAsync(int id)
+    {
+        var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Offer {id} not found");
+
+        //if (IsOfferActive(offer))
+        //    throw new InvalidOperationException("Cannot delete active offers");
+
+        _unitOfWork.Repository<Offer>().HardDelete(offer);
+        return await _unitOfWork.SaveChangesAsync() > 0;
+    }
+
+    public async Task<IEnumerable<OfferListingDto>> GetActiveOffersAsync()
+    {
+        return await _unitOfWork.Repository<Offer>()
+            .GetAll()
+            .Where(o => o.StartDate <= DateTime.UtcNow && o.EndDate >= DateTime.UtcNow)
+            .ProjectTo<OfferListingDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+    }
+
+    public async Task<OfferListingDto> GetOfferByIdAsync(int id)
+    {
+        var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Offer with ID {id} not found");
+
+        if (!IsOfferActive(offer))
+            throw new InvalidOperationException($"Offer {id} is not currently active");
+
+        return _mapper.Map<OfferListingDto>(offer);
+    }
+
+    // Adding a new method that gets offer by ID without checking if it's active
+    public async Task<OfferDto> GetOfferDetailsByIdAsync(int id)
+    {
+        var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Offer with ID {id} not found");
+
+        return _mapper.Map<OfferDto>(offer);
+    }
+
+    public async Task<OfferDto> UpdateOfferAsync(UpdateOfferDto dto)
+    {
+        // Validate offer data
+        ValidateOfferData(dto.Title, dto.DiscountPercentage, dto.StartDate, dto.EndDate);
+
+        // Get existing offer
+        var offer = await _unitOfWork.Repository<Offer>().GetByIdAsync(dto.Id)
+            ?? throw new KeyNotFoundException($"Offer {dto.Id} not found");
+
+        // Update specific fields
+        await _unitOfWork.Repository<Offer>().UpdateInclude(
+            entity: offer,
+            nameof(Offer.Title),
+            nameof(Offer.Description),
+            nameof(Offer.DiscountPercentage),
+            nameof(Offer.StartDate),
+            nameof(Offer.EndDate)
+        );
+
+        // Update values
+        offer.Title = dto.Title;
+        offer.Description = dto.Description;
+        offer.DiscountPercentage = dto.DiscountPercentage;
+        offer.StartDate = dto.StartDate;
+        offer.EndDate = dto.EndDate;
+
+        // Save and return
+        await _unitOfWork.SaveChangesAsync();
+        return _mapper.Map<OfferDto>(offer);
+    }
+
+    private static bool IsOfferActive(Offer offer)
+        => DateTime.UtcNow >= offer.StartDate && DateTime.UtcNow <= offer.EndDate;
+
+    private void ValidateOfferData(string title, decimal discountPercentage, DateTime startDate, DateTime endDate)
+    {
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(title))
+            errors.Add("Title is required");
+
+        if (discountPercentage <= 0 || discountPercentage > 100)
+            errors.Add("Discount percentage must be between 0 and 100");
+
+        if (startDate > endDate)
+            errors.Add("Start date must be before end date");
+
+        if (errors.Any())
+            throw new ArgumentException(string.Join(". ", errors));
+    }
 }

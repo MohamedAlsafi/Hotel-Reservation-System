@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.Core.Dtos.Offer
+﻿namespace Hotel_Reservation_System.ViewModels.Offer
 {
-    public class UpdateOfferDto
+    public class UpdateOfferViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
@@ -17,4 +11,3 @@ namespace Hotel.Core.Dtos.Offer
         public List<int> RoomIds { get; set; } = new List<int>();
     }
 }
-

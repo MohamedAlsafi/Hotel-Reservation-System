@@ -25,7 +25,7 @@ namespace Hotel_Reservation_System.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [Authorize(Roles = "Staff")]
+        //[Authorize(Roles = "Staff")]
         public async Task<ActionResult<List<RoomResponseViewModel>>> GetAllRooms()
         {
             

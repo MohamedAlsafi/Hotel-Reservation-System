@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotel.Core.Data.Configuration;
 using Hotel.Core.Dtos.FeedbackDtos;
+using Hotel.Core.Dtos.Offer;
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Dtos.Room;
 using Hotel.Core.Dtos.Room.Create;
@@ -12,6 +13,7 @@ using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.ViewModels;
 using Hotel_Reservation_System.ViewModels;
 using Hotel_Reservation_System.ViewModels.Feedback;
+using Hotel_Reservation_System.ViewModels.Offer;
 using Hotel_Reservation_System.ViewModels.Room;
 using RoomResponseViewModel = Hotel_Reservation_System.ViewModels.Room.RoomResponseViewModel;
 
@@ -47,6 +49,12 @@ namespace Hotel_Reservation_System.ProfilesVM
 
             CreateMap<RoomResponseDTO, RoomDto>();
 
+            #region Offer
+            CreateMap<CreateOfferViewModel,CreateOfferDto>();
+            CreateMap<OfferDto, OfferViewModel>();
+            CreateMap<UpdateOfferDto, UpdateOfferViewModel>().ReverseMap();
+
+            #endregion
 
             #region Feedback
 

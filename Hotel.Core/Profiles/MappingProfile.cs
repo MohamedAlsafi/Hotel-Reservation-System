@@ -50,12 +50,25 @@ namespace Hotel.Core.Profiles
                 .ForMember(dest => dest.Facilities, opt => opt.MapFrom(src => src.RoomFacilities.Select(rf => rf.Facility.Name)))
                 .ForMember(dest => dest.ImageUrls, opt => opt.MapFrom(src => src.Images.Select(img => img.ImageUrl).ToList()));
 
+            // Offer to DTO (includes mapping CreatedByStaff.Id)
+            #region Offer
             CreateMap<Offer, OfferDto>().ReverseMap();
-            CreateMap<Offer, CreateOfferDto>().ReverseMap();
+            // In your AutoMapper Profile (e.g., OfferProfile.cs)
+            CreateMap<Offer, OfferListingDto>()
+                .ForMember(dest => dest.ValidUntil, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title.Trim()));
+            #endregion
+
+            // CreateOfferDto to Offer (ignore CreatedByStaff completely)
+            CreateMap<CreateOfferDto, Offer>()
+                .ForMember(dest => dest.CreatedByStaff, opt => opt.Ignore()) // Explicitly ignore
+                .ReverseMap()
+                .ForMember(dest => dest.CreatedByStaff, opt => opt.MapFrom(src => src.CreatedByStaff != null ? src.CreatedByStaff.Id : (int?)null));
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Reservation, CreateReservationDto>().ReverseMap();
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Feedback , FeedbackDto>().ReverseMap();
+            
 
 
             //Mapping Feedback
@@ -64,6 +77,7 @@ namespace Hotel.Core.Profiles
             CreateMap<AddFeedbackDto, FeedbackDto>().ReverseMap();
             CreateMap<FeedbackResponseDto, FeedbackDto>().ReverseMap();
             CreateMap<FeedbackResponseDto, Feedback>().ReverseMap();
+
         }
     }
 }
