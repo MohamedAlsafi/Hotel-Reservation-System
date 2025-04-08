@@ -39,15 +39,15 @@ namespace Hotel_Reservation_System.Controllers
             return new ResponseViewModel<FeedbackResponseViewModel>(true, "Feedback submitted successfully", responseViewModel);
         }
 
-        //[HttpGet]
-        //[TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllFeedback})]
-        //public async Task<ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>> GetAllFeedback( [FromQuery] string? fromDate = null, [FromQuery] string? toDate = null)
-        //{
-        //    var feedbacks = await _feedbackService.GetAllFeedbackAsync();
-        //    var responseViewModels = _mapper.Map<IEnumerable<FeedbackResponseViewModel>>(feedbacks);
+        [HttpGet]
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllFeedback})]
+        public async Task<ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>> GetAllFeedback( [FromQuery] string? fromDate = null, [FromQuery] string? toDate = null)
+        {
+            var feedbacks = await _feedbackService.GetAllFeedbackAsync();
+            var responseViewModels = _mapper.Map<IEnumerable<FeedbackResponseViewModel>>(feedbacks);
 
-        //    return new ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
-        //}
+            return new ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
+        }
 
 
         [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetFacilityById })]
@@ -59,15 +59,15 @@ namespace Hotel_Reservation_System.Controllers
             return new ResponseViewModel<FeedbackResponseViewModel>(true, "Feedback retrieved successfully", responseViewModel);
         }
 
-       // [HttpPost("respond")]
-       //[TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.RespondToFeedback })]
-       // public async Task<ResponseViewModel<FeedbackResponseViewModel>> RespondToFeedback( FeedbackToResponseViewModel model)
-       // {
-       //     //var responseDto = _mapper.Map<FeedbackResponseDto>(model);
-       //     //var updatedFeedback = await _feedbackService.RespondToFeedbackAsync(responseDto.StaffId,responseDto);
-       //     //var responseViewModel = _mapper.Map<FeedbackResponseViewModel>(updatedFeedback);
-       //     //return new ResponseViewModel<FeedbackResponseViewModel>(true, "Response added successfully", responseViewModel);
-       // }
+        [HttpPost("respond")]
+       [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.RespondToFeedback })]
+        public async Task<ResponseViewModel<FeedbackResponseViewModel>> RespondToFeedback( FeedbackToResponseViewModel model)
+        {
+            var responseDto = _mapper.Map<FeedbackResponseDto>(model);
+            var updatedFeedback = await _feedbackService.RespondToFeedbackAsync(responseDto.StaffId,responseDto);
+            var responseViewModel = _mapper.Map<FeedbackResponseViewModel>(updatedFeedback);
+            return new ResponseViewModel<FeedbackResponseViewModel>(true, "Response added successfully", responseViewModel);
+        }
 
         [HttpGet("user/{userId}")]
         [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetFeedbackByCustomerId })]
