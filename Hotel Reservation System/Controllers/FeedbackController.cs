@@ -40,10 +40,11 @@ namespace Hotel_Reservation_System.Controllers
         }
 
         [HttpGet]
-        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllFeedback})]
-        public async Task<ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>> GetAllFeedback( [FromQuery] string? fromDate = null, [FromQuery] string? toDate = null)
+        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.GetAllFeedback })]
+        public async Task<ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>> GetAllFeedback([FromQuery] string? fromDate = null, [FromQuery] string? toDate = null)
         {
-            var feedbacks = await _feedbackService.GetAllFeedbackAsync();
+
+            var feedbacks = await _feedbackService.GetAllFeedbackAsync(fromDate ?? string.Empty, toDate ?? string.Empty);
             var responseViewModels = _mapper.Map<IEnumerable<FeedbackResponseViewModel>>(feedbacks);
 
             return new ResponseViewModel<IEnumerable<FeedbackResponseViewModel>>(true, "Feedbacks retrieved successfully", responseViewModels);
@@ -61,10 +62,10 @@ namespace Hotel_Reservation_System.Controllers
 
         [HttpPost("respond")]
        [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.RespondToFeedback })]
-        public async Task<ResponseViewModel<FeedbackResponseViewModel>> RespondToFeedback( FeedbackToResponseViewModel model)
+        public async Task<ResponseViewModel<FeedbackResponseViewModel>> RespondToFeedback(FeedbackToResponseViewModel model)
         {
             var responseDto = _mapper.Map<FeedbackResponseDto>(model);
-            var updatedFeedback = await _feedbackService.RespondToFeedbackAsync(responseDto.StaffId,responseDto);
+            var updatedFeedback = await _feedbackService.RespondToFeedbackAsync(responseDto); 
             var responseViewModel = _mapper.Map<FeedbackResponseViewModel>(updatedFeedback);
             return new ResponseViewModel<FeedbackResponseViewModel>(true, "Response added successfully", responseViewModel);
         }
