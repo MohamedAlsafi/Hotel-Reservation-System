@@ -27,33 +27,32 @@ namespace Hotel_Reservation_System.Controllers
 
         [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.CreateReservation })]
         [HttpPost]
-        public async Task<ActionResult<ResponseViewModel<ReservationViewModel>>> CreateReservation(CreateReservationDto reservationDto, int CustomerId)
+        public async Task<object> CreateReservation(CreateReservationDto reservationDto, int customerId)
         {
             if (reservationDto is null)
-                return BadRequest(new ApiExcaptionResponse(400));
-            if (CustomerId == 0)
-                return BadRequest(new ApiExcaptionResponse(400));
+                return new ApiResponse(400, "Invalid reservation data");
+
+            if (customerId == 0)
+                return new ApiResponse(400, "Customer ID is required");
+
             if (reservationDto.CheckInDate >= reservationDto.CheckOutDate)
-            {
-                return BadRequest(new ResponseViewModel<ReservationViewModel>(false, "Check-in date must be earlier than check-out date", null));
-            }
-            if (reservationDto.CheckInDate < System.DateTime.Now)
-            {
-                return BadRequest(new ResponseViewModel<ReservationViewModel>(false, "Check-in date must be later than today", null));
-            }
-            if (reservationDto.CheckOutDate < System.DateTime.Now)
-            {
-                return BadRequest(new ResponseViewModel<ReservationViewModel>(false, "Check-out date must be later than today", null));
-            }
-            if (reservationDto.CheckOutDate == reservationDto.CheckInDate)
-            {
-                return BadRequest(new ResponseViewModel<ReservationViewModel>(false, "Check-out date must be later than check-in date", null));
-            }
+                return new ApiResponse(400, "Check-in date must be earlier than check-out date");
 
+            if (reservationDto.CheckInDate < DateTime.Now)
+                return new ApiResponse(400, "Check-in date must be later than today");
 
-            var result = await _reservationService.CreateReservationAsync(reservationDto, CustomerId);
-            return Ok(result);
+            if (reservationDto.CheckOutDate < DateTime.Now)
+                return new ApiResponse(400, "Check-out date must be later than today");
+
+            var reservationVm = await _reservationService.CreateReservationAsync(reservationDto, customerId);
+
+            if (reservationVm == null)
+                return new ApiResponse(500, "Reservation could not be created");
+
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
         }
+
+
         [TypeFilter<CustomAuthorizeFilter>(Arguments = new object[] { Features.CancelReservation })]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseViewModel<bool>>> CancelReservation(int id)

@@ -20,6 +20,6 @@ namespace Hotel.Core.Dtos.Reservation
         public string? PaymentIntentId { get; set; }
         public List<string> PictureUrl { get; set; } = new List<string>();
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
-         
+ 
     }
 }

@@ -3,11 +3,16 @@ using Hotel.Core.Data.Configuration;
 using Hotel.Core.Data.Context;
 using Hotel.Core.Dtos.FeedbackDtos;
 using Hotel.Core.Dtos.Reservation;
+using Hotel.Core.Entities.customer;
 using Hotel.Core.Entities.FeedbackModel;
+using Hotel.Core.Entities.HotelStaffs;
+using Hotel.Core.Entities.OfferModel;
 using Hotel.Core.Entities.Reservation;
+using Hotel.Core.Entities.Rooms;
 using Hotel.Repository.UnitOfWork;
 using Hotel.Repository.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Hotel.Repository.Services.ReservationService
 {
@@ -22,17 +27,64 @@ namespace Hotel.Repository.Services.ReservationService
             _mapper = mapper;
         }
 
-        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservation , int CustomerId)
+        public async Task<ReservationViewModel> CreateReservationAsync(CreateReservationDto reservationDto, int customerId)
         {
-            var mappedReservation = _mapper.Map<Reservation>(reservation);
-            mappedReservation.CustomerId = CustomerId;
+         
+            var room = await _unitOfWork.Repository<Room>().GetByIdAsync(reservationDto.RoomId);
+            if (room == null)
+                return null;
 
-            await _unitOfWork.Repository<Reservation>().AddAsync(mappedReservation);
+        
+            var selectedFacilities = new List<Facility>();
+            if (reservationDto.FacilityIds is IEnumerable<int> facilityIds && facilityIds.Any())
+            {
+                selectedFacilities = await _unitOfWork.Repository<Facility>()
+                    .GetAll()
+                    .Where(f => facilityIds.Contains(f.Id))
+                    .ToListAsync();
+            }
+
+      
+            var offer = await _unitOfWork.Repository<Offer>()
+                .GetAll()
+                .FirstOrDefaultAsync(o => o.RoomId == room.Id && o.StartDate <= reservationDto.CheckInDate && o.EndDate >= reservationDto.CheckOutDate);
+
+            decimal roomPrice = room.Price;
+            if (offer != null)
+            {
+          
+                roomPrice -= (roomPrice * offer.DiscountPercentage / 100);
+            }
+
+      
+            decimal facilitiesTotal = selectedFacilities.Sum(f => f.Price);
+
+    
+            decimal totalPrice = roomPrice + facilitiesTotal;
+
+            var reservation = new Reservation
+            {
+                CustomerId = customerId,
+                RoomId = room.Id,
+                CheckInDate = reservationDto.CheckInDate,
+                CheckOutDate = reservationDto.CheckOutDate,
+                Facilities = selectedFacilities,
+                TotalPrice = totalPrice
+            };
+
+            await _unitOfWork.Repository<Reservation>().AddAsync(reservation);
             await _unitOfWork.SaveChangesAsync();
 
-            var reservationVm = _mapper.Map<ReservationViewModel>(mappedReservation);
-            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
+            var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
+            reservationVm.TotalPrice = totalPrice;
+
+            return reservationVm;
         }
+
+
+
+
+
 
         public async Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id)
         {
@@ -74,5 +126,6 @@ namespace Hotel.Repository.Services.ReservationService
 
        
     }
+
 }
 

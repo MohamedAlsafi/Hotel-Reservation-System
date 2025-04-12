@@ -17,6 +17,7 @@ namespace Hotel.Core.Entities.OfferModel
         public HotelStaff? CreatedByStaff { get; set; }
         public ICollection<RoomOffer>? RoomOffers { get; set; } = new List<RoomOffer>();
         public bool IsRoomAvailable { get; set; }
-
+        public int RoomId { get; set; }
+        public bool IsActive { get; set; }
     }
 }

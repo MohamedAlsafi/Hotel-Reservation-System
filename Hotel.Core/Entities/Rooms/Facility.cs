@@ -9,6 +9,7 @@ namespace Hotel.Core.Entities.Rooms
     public class Facility : BaseEntity
     {
         public string Name { get; set; }
-        public ICollection<RoomFacility> RoomFacilities { get; set; } 
+        public ICollection<RoomFacility> RoomFacilities { get; set; }
+        public decimal Price { get; set; }
     }
 }

@@ -7,7 +7,8 @@ namespace Hotel.Repository.Services.ReservationService
     public interface IReservationService
     {
 
-        Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto , int CustomerId);
+        Task<ReservationViewModel> CreateReservationAsync(CreateReservationDto reservationDto, int customerId);
+
         Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id);
         Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id);
         Task<ResponseViewModel<ReservationViewModel>> UpdateReservationAsync( UpdateReservationDto reservationDto);
