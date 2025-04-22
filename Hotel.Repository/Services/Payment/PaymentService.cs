@@ -15,29 +15,32 @@ namespace Hotel.Repository.Services.Payment
         private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
 
-        public PaymentService(IConfiguration configuration , IReservationService reservationService , IMapper mapper)
+        public PaymentService(IConfiguration configuration, IReservationService reservationService, IMapper mapper)
         {
             _configuration = configuration;
             _reservationService = reservationService;
-            this._mapper = mapper;
+            _mapper = mapper;
         }
-        public async Task<PaymentProcessViewModel?> MakePaymentOrUpdateAsync(int customerId, int reservationId)
+
+        public async Task<ReservationDto> MakePaymentOrUpdateAsync(int customerId, int reservationId)
         {
-            var reservation = await _reservationService.GetReservationByIdAsync(reservationId);
-            if (reservation == null)
+            var reservationResponse = await _reservationService.GetReservationByIdAsync(reservationId);
+            if (reservationResponse == null || !reservationResponse.Success || reservationResponse.Data == null)
                 return null;
+
+            var reservation = reservationResponse.Data;
 
             var options = new PaymentIntentCreateOptions
             {
-                Amount = (long)(reservation. * 100),
+                Amount = (long)(reservation.TotalPrice * 100),
                 Currency = "usd",
                 PaymentMethodTypes = new List<string> { "card" },
                 Description = $"Hotel reservation payment for customer {customerId}",
                 Metadata = new Dictionary<string, string>
-        {
-            { "ReservationId", reservationId.ToString() },
-            { "CustomerId", customerId.ToString() }
-        }
+                    {
+                        { "ReservationId", reservationId.ToString() },
+                        { "CustomerId", customerId.ToString() }
+                    }
             };
 
             var service = new PaymentIntentService();
@@ -45,13 +48,29 @@ namespace Hotel.Repository.Services.Payment
 
             if (paymentIntent.Status == "succeeded")
             {
-                reservation.PaymentStatus = "Success";
-                await _reservationService.UpdateReservationAsync(reservation);
+                reservation.PaymentStatus = PaymentStatus.Paid;
 
-                return new PaymentProcessViewModel
+                var updateReservationDto = new UpdateReservationDto
                 {
-                    PaymentIntentId = paymentIntent.Id,
-                    PaymentStatus = paymentIntent.Status
+                    Id = reservation.Id,
+                    CheckInDate = reservation.StartDate,
+                    CheckOutDate = reservation.EndDate,
+                    RoomId = reservation.RoomId,
+                    PaymenyIntentId = paymentIntent.Id,
+                    PaymentStatus = reservation.PaymentStatus,
+                    TotalPrice = reservation.TotalPrice,
+                };
+
+                await _reservationService.UpdateReservationAsync(updateReservationDto);
+
+                return new ReservationDto
+                {
+                    Id = reservation.Id,
+                    CheckInDate = reservation.StartDate,
+                    CheckOutDate = reservation.EndDate,
+                    RoomId = reservation.RoomId,
+                    PaymentStatus = reservation.PaymentStatus,
+                    TotalPrice = reservation.TotalPrice
                 };
             }
 

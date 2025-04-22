@@ -15,5 +15,6 @@ namespace Hotel.Core.Dtos.Reservation
         public int RoomId { get; set; }  
         public string? PaymenyIntentId { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

@@ -46,10 +46,10 @@ namespace Hotel_Reservation_System.Controllers
 
             var reservationVm = await _reservationService.CreateReservationAsync(reservationDto, customerId);
 
-            if (reservationVm == null)
+            if (reservationVm is null)
                 return new ApiResponse(500, "Reservation could not be created");
 
-            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm.Data);
         }
 
 

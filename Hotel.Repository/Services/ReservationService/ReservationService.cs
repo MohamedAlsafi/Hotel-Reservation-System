@@ -27,14 +27,12 @@ namespace Hotel.Repository.Services.ReservationService
             _mapper = mapper;
         }
 
-        public async Task<ReservationViewModel> CreateReservationAsync(CreateReservationDto reservationDto, int customerId)
+        public async Task<ResponseViewModel<ReservationViewModel>> CreateReservationAsync(CreateReservationDto reservationDto, int customerId)
         {
-         
             var room = await _unitOfWork.Repository<Room>().GetByIdAsync(reservationDto.RoomId);
             if (room == null)
-                return null;
+                return new ResponseViewModel<ReservationViewModel>(false, "Room not found", null);
 
-        
             var selectedFacilities = new List<Facility>();
             if (reservationDto.FacilityIds is IEnumerable<int> facilityIds && facilityIds.Any())
             {
@@ -44,7 +42,6 @@ namespace Hotel.Repository.Services.ReservationService
                     .ToListAsync();
             }
 
-      
             var offer = await _unitOfWork.Repository<Offer>()
                 .GetAll()
                 .FirstOrDefaultAsync(o => o.Id == room.Id && o.StartDate <= reservationDto.CheckInDate && o.EndDate >= reservationDto.CheckOutDate);
@@ -52,14 +49,10 @@ namespace Hotel.Repository.Services.ReservationService
             decimal roomPrice = room.Price;
             if (offer != null)
             {
-          
                 roomPrice -= (roomPrice * offer.DiscountPercentage / 100);
             }
 
-      
-            decimal facilitiesTotal = selectedFacilities.Sum(f => f.Price);
-
-    
+            decimal facilitiesTotal = selectedFacilities.Sum(f => f.RoomFacilities.Count);
             decimal totalPrice = roomPrice + facilitiesTotal;
 
             var reservation = new Reservation
@@ -78,13 +71,8 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
             reservationVm.TotalPrice = totalPrice;
 
-            return reservationVm;
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
         }
-
-
-
-
-
 
         public async Task<ResponseViewModel<ReservationViewModel>> GetReservationByIdAsync(int id)
         {
@@ -98,17 +86,19 @@ namespace Hotel.Repository.Services.ReservationService
 
         public async Task<ResponseViewModel<ReservationViewModel>> UpdateReservationAsync(UpdateReservationDto reservationDto)
         {
-           if(reservationDto is null)
-                return new ResponseViewModel<ReservationViewModel>(false, "", null);
+            if (reservationDto is null)
+                return new ResponseViewModel<ReservationViewModel>(false, "Invalid reservation data", null);
 
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(reservationDto.Id);
             if (reservation is null)
                 return new ResponseViewModel<ReservationViewModel>(false, "Reservation not found", null);
+
             var mappedReservation = _mapper.Map(reservationDto, reservation);
-
             _unitOfWork.Repository<Reservation>().UpdateInclude(mappedReservation);
+            await _unitOfWork.SaveChangesAsync();
 
-            return new ResponseViewModel<ReservationViewModel>(true, "Reservation updated successfully", null);
+            var reservationVm = _mapper.Map<ReservationViewModel>(mappedReservation);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation updated successfully", reservationVm);
         }
 
         public async Task<ResponseViewModel<ReservationViewModel>> CancelReservationAsync(int id)
@@ -123,8 +113,6 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation canceled successfully", reservationVm);
         }
-
-       
     }
 
 }
