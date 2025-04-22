@@ -15,6 +15,6 @@ namespace Hotel.Core.Dtos.Reservation
         public string CustomerName { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal Discount { get; set; } = 0;
-        public object FacilityIds { get; set; }
+        public int FacilityIds { get; set; }
     }
 }

@@ -16,23 +16,54 @@ namespace Hotel_Reservation_System.Controllers
     {
         private readonly IPaymentService _paymentService;
 
-        public PaymentController(IPaymentService paymentService )
+        public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }
-        [HttpPost]
-        public async Task<ActionResult<PaymentProcessViewModel>> MakePaymentAsync(int ReservationId ,int customerId)
+        [HttpPost("MakePayment")]
+        public async Task<ResponseViewModel<PaymentProcessViewModel>> MakePaymentAsync(int ReservationId, int customerId)
         {
-            if(ReservationId == 0) return BadRequest(new ApiExcaptionResponse(400));
+            if (ReservationId == 0)
+            {
+                return new ResponseViewModel<PaymentProcessViewModel>(
+                    success: false,
+                    message: "Invalid Reservation ID",
+                    data: null!,
+                    errorCode: null
+                );
+            }
+
             var result = await _paymentService.MakePaymentOrUpdateAsync(customerId, ReservationId);
-            if(result is null) return BadRequest(new ApiExcaptionResponse(400));
-         
+            if (result is null)
+            {
+                return new ResponseViewModel<PaymentProcessViewModel>(
+                    success: false,
+                    message: "Payment processing failed",
+                    data: null!,
+                    errorCode: null
+                );
+            }
+
             if (!string.IsNullOrEmpty(result.PaymentIntentId))
             {
-                return Ok("Payment Succeeded.");
+                return new ResponseViewModel<PaymentProcessViewModel>(
+                    success: true,
+                    message: "Payment Succeeded",
+                    data: new PaymentProcessViewModel
+                    {
+                        PaymentIntentId = result.PaymentIntentId,
+                        PaymentStatus = result.PaymentStatus
+                    },
+                    errorCode: null
+                );
             }
-            return BadRequest(new ApiExcaptionResponse(400)); 
-        }
 
+            return new ResponseViewModel<PaymentProcessViewModel>(
+                success: false,
+                message: "Payment failed",
+                data: null!,
+                errorCode: null
+            );
+        }
     }
 }

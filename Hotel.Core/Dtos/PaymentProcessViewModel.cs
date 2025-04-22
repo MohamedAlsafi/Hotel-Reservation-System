@@ -1,4 +1,6 @@
-﻿namespace Hotel_Reservation_System.ViewModels
+﻿using Hotel.Core.Entities.Enum;
+
+namespace Hotel_Reservation_System.ViewModels
 {
     public class PaymentProcessViewModel
     {
@@ -10,6 +12,7 @@
         public decimal TotalPrice { get; set; }
         public decimal TotalDiscount { get; set; } = 0m;
         public string?PaymentIntentId { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
 
 
 

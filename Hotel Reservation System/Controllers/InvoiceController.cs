@@ -10,10 +10,18 @@ namespace Hotel_Reservation_System.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult<HotelInvoiceViewModel>> GenerateInvoice([FromBody] HotelInvoiceDto invoice)
+        [HttpPost("GenerateInvoice")]
+        public async Task<ResponseViewModel<HotelInvoiceViewModel>> GenerateInvoice( HotelInvoiceDto invoice)
         {
-            if (invoice is null) return BadRequest("Invoice data is required.");
+            if (invoice is null)
+            {
+                return new ResponseViewModel<HotelInvoiceViewModel>(
+                    success: false,
+                    message: "Invoice data is required.",
+                    data: null!,
+                    errorCode: null
+                );
+            }
 
             await Task.Run(() =>
             {
@@ -22,12 +30,18 @@ namespace Hotel_Reservation_System.Controllers
                 invoice.TotalAmount = invoice.SubTotal + invoice.Tax;
             });
 
-            return Ok(new
-            {
-                Message = "Hotel invoice generated successfully!",
-                Invoice = invoice
-            });
-
+            return new ResponseViewModel<HotelInvoiceViewModel>(
+                success: true,
+                message: "Hotel invoice generated successfully!",
+                data: new HotelInvoiceViewModel
+                {
+                    InvoiceNumber = invoice.InvoiceNumber,
+                    SubTotal = invoice.SubTotal,
+                    Tax = invoice.Tax,
+                    TotalAmount = invoice.TotalAmount
+                },
+                errorCode: null
+            );
         }
     }
 }

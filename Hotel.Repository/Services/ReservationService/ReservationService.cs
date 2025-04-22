@@ -47,7 +47,7 @@ namespace Hotel.Repository.Services.ReservationService
       
             var offer = await _unitOfWork.Repository<Offer>()
                 .GetAll()
-                .FirstOrDefaultAsync(o => o.RoomId == room.Id && o.StartDate <= reservationDto.CheckInDate && o.EndDate >= reservationDto.CheckOutDate);
+                .FirstOrDefaultAsync(o => o.Id == room.Id && o.StartDate <= reservationDto.CheckInDate && o.EndDate >= reservationDto.CheckOutDate);
 
             decimal roomPrice = room.Price;
             if (offer != null)

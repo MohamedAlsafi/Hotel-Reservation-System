@@ -2,6 +2,7 @@
 using Hotel.Core.Dtos.Reservation;
 using Hotel.Core.Entities.Enum;
 using Hotel.Repository.Services.ReservationService;
+using Hotel_Reservation_System.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 
@@ -20,61 +21,41 @@ namespace Hotel.Repository.Services.Payment
             _reservationService = reservationService;
             this._mapper = mapper;
         }
-        public async Task<ReservationDto> MakePaymentOrUpdateAsync(int customerId, int ReservationId)
+        public async Task<PaymentProcessViewModel?> MakePaymentOrUpdateAsync(int customerId, int reservationId)
         {
-            if(ReservationId ==0) return null!;
-            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
-          var Reservation=await _reservationService.GetReservationByIdAsync(customerId);
-            var mappedReservation = _mapper.Map<ReservationDto>(Reservation);
+            var reservation = await _reservationService.GetReservationByIdAsync(reservationId);
+            if (reservation == null)
+                return null;
 
-            if ( Reservation is null) return null;
-            //Amount = total amount of reservation + discout if any
-            var Amount = 0m;
-            if(mappedReservation.Discount!= 0m)
+            var options = new PaymentIntentCreateOptions
             {
-                Amount = mappedReservation.TotalPrice - mappedReservation.Discount;
-            }
-            else
-            {
-                Amount = mappedReservation.TotalPrice;
-            }
-            var SubTotal = mappedReservation.PaymentStatus == PaymentStatus.Pending ? Amount : 0m;
-            var Service = new PaymentIntentService();
+                Amount = (long)(reservation. * 100),
+                Currency = "usd",
+                PaymentMethodTypes = new List<string> { "card" },
+                Description = $"Hotel reservation payment for customer {customerId}",
+                Metadata = new Dictionary<string, string>
+        {
+            { "ReservationId", reservationId.ToString() },
+            { "CustomerId", customerId.ToString() }
+        }
+            };
 
-            PaymentIntent paymentIntent;
-            if (string.IsNullOrEmpty(mappedReservation.PaymentIntentId))
-            {
+            var service = new PaymentIntentService();
+            var paymentIntent = await service.CreateAsync(options);
 
-                var options = new PaymentIntentCreateOptions
-               
+            if (paymentIntent.Status == "succeeded")
+            {
+                reservation.PaymentStatus = "Success";
+                await _reservationService.UpdateReservationAsync(reservation);
+
+                return new PaymentProcessViewModel
                 {
-                    Amount = (long?)Amount ,
-                    Currency = "usd",
-                  PaymentMethodTypes = new List<string>()
-                { "Card"},
+                    PaymentIntentId = paymentIntent.Id,
+                    PaymentStatus = paymentIntent.Status
                 };
-
-
-             paymentIntent=   await  Service.CreateAsync(options);
-                mappedReservation.PaymentIntentId = paymentIntent.Id;
-                mappedReservation.PaymentStatus = PaymentStatus.Pending;
             }
-            else
-            {
-                var Options = new PaymentIntentUpdateOptions
-                {
-                    Amount = (long?)Amount,
-                };
-               var updatedPaymentIntent =  await Service.UpdateAsync(mappedReservation.PaymentIntentId , Options);
-               mappedReservation.PaymentIntentId= updatedPaymentIntent.Id;
 
-            }
-            var updateReservationDto = _mapper.Map<UpdateReservationDto>(mappedReservation);
-            await _reservationService.UpdateReservationAsync(updateReservationDto);
-            return  mappedReservation;
-
-          
-
+            return null;
         }
     }
 }

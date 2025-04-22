@@ -25,6 +25,6 @@ namespace Hotel.Core.Entities.Reservation
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public Feedback? Feedback { get; set; }
         public string? PaymentIntentId { get; set; }
-        public List<Facility> Facilities { get; set; }
+        public ICollection<Facility> Facilities { get; set; } = new HashSet<Facility>();
     }
 }
