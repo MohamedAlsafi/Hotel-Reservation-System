@@ -49,7 +49,7 @@ namespace Hotel_Reservation_System.Controllers
             if (reservationVm is null)
                 return new ApiResponse(500, "Reservation could not be created");
 
-            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm.Data);
+            return new ResponseViewModel<ReservationViewModel>(true, "Reservation created successfully", reservationVm);
         }
 
 

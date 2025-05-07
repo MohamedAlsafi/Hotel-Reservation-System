@@ -113,6 +113,11 @@ namespace Hotel.Repository.Services.ReservationService
             var reservationVm = _mapper.Map<ReservationViewModel>(reservation);
             return new ResponseViewModel<ReservationViewModel>(true, "Reservation canceled successfully", reservationVm);
         }
+
+        Task<ReservationViewModel> IReservationService.CreateReservationAsync(CreateReservationDto reservationDto, int customerId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
